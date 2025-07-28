@@ -81,7 +81,7 @@ CREATE TABLE stock_location (
 
 CREATE TABLE role (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    name VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE "user" (
