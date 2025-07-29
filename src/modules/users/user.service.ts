@@ -73,30 +73,59 @@ export class UserService {
   async update(id: number, dto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
 
+    let isChanged = false;
+
+    // Verifica e trata role
     if (dto.role) {
       const role = await this.roleRepository.findOne({
-        where: { name: dto.role.toLocaleUpperCase() },
+        where: { name: dto.role.toUpperCase() },
       });
 
       if (!role) {
         throw new BadRequestException('Função inválida');
       }
 
-      user.role = role;
+      if (user.role?.name !== role.name) {
+        user.role = role;
+        isChanged = true;
+      }
 
       delete dto.role;
     }
 
+    // Verifica e trata password
     if (dto.password) {
-      dto.password = await bcrypt.hash(dto.password, 10);
+      const hashed = await bcrypt.hash(dto.password, 10);
+      if (!(await bcrypt.compare(dto.password, user.password))) {
+        dto.password = hashed;
+        isChanged = true;
+      } else {
+        delete dto.password; // evita salvar hash igual
+      }
     }
 
+    // Verifica e trata status
     if (dto.status) {
-      user.status = StatusEnum[dto.status as keyof typeof StatusEnum];
+      const novoStatus = StatusEnum[dto.status as keyof typeof StatusEnum];
+      if (user.status !== novoStatus) {
+        user.status = novoStatus;
+        isChanged = true;
+      }
       delete dto.status;
     }
 
-    Object.assign(user, dto);
+    // Campos restantes do DTO
+    for (const [key, value] of Object.entries(dto)) {
+      if (value !== undefined && (user as any)[key] !== value) {
+        (user as any)[key] = value;
+        isChanged = true;
+      }
+    }
+
+    // Se nada mudou, retorna erro
+    if (!isChanged) {
+      throw new BadRequestException('Nenhuma alteração foi realizada');
+    }
 
     return this.userRepository.save(user);
   }
