@@ -12,6 +12,7 @@ import { CreateUserDto } from './DTOs/create.user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './DTOs/update.user.dto';
 import { StatusEnum } from 'src/common/enums/status.enum';
+import { RoleEnum } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class UserService {
@@ -24,6 +25,16 @@ export class UserService {
   ) {}
 
   async create(dto: CreateUserDto): Promise<User> {
+    const existingUser = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
+
+    if (existingUser) {
+      throw new BadRequestException(
+        'Já existe um usuário cadastrado com este e-mail',
+      );
+    }
+
     const role = await this.roleRepository.findOne({
       where: { name: dto.role.toUpperCase() },
     });
@@ -41,6 +52,18 @@ export class UserService {
     });
 
     return this.userRepository.save(user);
+  }
+
+  async register(dto: CreateUserDto): Promise<User> {
+    const allowedRoles = [RoleEnum.FARMACEUTICO, RoleEnum.OPERADOR];
+
+    if (!allowedRoles.includes(dto.role)) {
+      throw new BadRequestException(
+        'O campo função deve ser FARMACEUTICO ou OPERADOR',
+      );
+    }
+
+    return this.create(dto);
   }
 
   async findAll(): Promise<User[]> {
@@ -74,6 +97,22 @@ export class UserService {
     const user = await this.findOne(id);
 
     let isChanged = false;
+
+    // Verifica se e-mail já existe para outro usuário
+    if (dto.email && dto.email !== user.email) {
+      const emailExists = await this.userRepository.findOne({
+        where: { email: dto.email },
+      });
+
+      if (emailExists) {
+        throw new BadRequestException(
+          'Já existe um usuário cadastrado com este e-mail',
+        );
+      }
+
+      user.email = dto.email;
+      isChanged = true;
+    }
 
     // Verifica e trata role
     if (dto.role) {

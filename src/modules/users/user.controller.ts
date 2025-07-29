@@ -20,9 +20,16 @@ import { RolesGuard } from '../auth/roles.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN)
   @Post()
   create(@Body() dto: CreateUserDto) {
     return this.userService.create(dto);
+  }
+
+  @Post('register')
+  register(@Body() dto: CreateUserDto) {
+    return this.userService.register(dto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
