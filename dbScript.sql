@@ -471,3 +471,10 @@ JOIN batch b ON b.id = idi.batch_id
 JOIN patient p ON p.id = idd.patient_id
 JOIN prescriptor pr ON pr.id = idd.prescriptor_id;
 
+
+ALTER TABLE item
+ADD COLUMN user_id INT NOT NULL;
+
+ALTER TABLE item
+ADD FOREIGN KEY (user_id) REFERENCES "user"(id);
+
