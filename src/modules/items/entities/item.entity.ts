@@ -33,9 +33,12 @@ export class Item {
 
   @ManyToOne(() => Subtype, { eager: true })
   @JoinColumn({ name: 'subtype_id' })
-  subtype: Subtype;
+  subtype: Subtype | null;
 
   @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @Column({ name: 'user_id' })
+  user_id: number;
 }

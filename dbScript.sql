@@ -281,7 +281,7 @@ INSERT INTO presentation (name) VALUES
 ('Unidade'), ('Lata'), ('Ampola'), ('Caneta');
 
 INSERT INTO dosage (format) VALUES 
-('x mg'), ('x mcg'), ('x mg/ml'), ('x mg/g'), ('x ui/ml'), ('x g');
+('mg'), ('mcg'), ('mg/ml'), ('mg/g'), ('ui/ml'), ('g');
 
 INSERT INTO company_type (name) VALUES 
 ('Fornecedor'), ('Fabricante');
