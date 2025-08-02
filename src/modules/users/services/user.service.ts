@@ -4,30 +4,30 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
-import { Role } from '../roles/entities/role.entity';
-import { CreateUserDto } from './DTOs/create.user.dto';
+import { Role } from '../../roles/entities/role.entity';
+import { CreateUserDto } from '../DTOs/create.user.dto';
 
 import * as bcrypt from 'bcrypt';
-import { UpdateUserDto } from './DTOs/update.user.dto';
+import { UpdateUserDto } from '../DTOs/update.user.dto';
 import { StatusEnum } from 'src/common/enums/status.enum';
 import { RoleEnum } from 'src/common/enums/role.enum';
+import { UserRepository } from '../repositories/user.repository';
+import { RoleRepository } from 'src/modules/roles/repositories/role.repository';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly userRepository: UserRepository,
 
-    @InjectRepository(Role)
-    private readonly roleRepository: Repository<Role>,
+    private readonly roleRepository: RoleRepository,
   ) {}
 
   async create(dto: CreateUserDto): Promise<User> {
-    const existingUser = await this.userRepository.findOne({
-      where: { email: dto.email },
-    });
+    const existingUser = await this.userRepository.findByEmailWithoutRelations(
+      dto.email,
+    );
 
     if (existingUser) {
       throw new BadRequestException(
@@ -35,9 +35,7 @@ export class UserService {
       );
     }
 
-    const role = await this.roleRepository.findOne({
-      where: { name: dto.role.toUpperCase() },
-    });
+    const role = await this.roleRepository.findByName(dto.role.toUpperCase());
 
     if (!role) {
       throw new BadRequestException('Função inválida');
@@ -45,7 +43,7 @@ export class UserService {
 
     const hashedPasword = await bcrypt.hash(dto.password, 10);
 
-    const user = this.userRepository.create({
+    const user = this.userRepository.createUser({
       ...dto,
       password: hashedPasword,
       role,
@@ -67,11 +65,11 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+    return this.userRepository.findAll();
   }
 
   async findOne(id: number): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findById(id);
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
@@ -80,15 +78,8 @@ export class UserService {
     return user;
   }
 
-  async findByEmail(email: string): Promise<User | undefined> {
-    const user = await this.userRepository.findOne({
-      where: { email },
-      relations: ['role'],
-    });
-
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
+  async findByEmail(email: string): Promise<User | null> {
+    const user = await this.userRepository.findByEmail(email);
 
     return user;
   }
@@ -100,9 +91,7 @@ export class UserService {
 
     // Verifica se e-mail já existe para outro usuário
     if (dto.email && dto.email !== user.email) {
-      const emailExists = await this.userRepository.findOne({
-        where: { email: dto.email },
-      });
+      const emailExists = await this.userRepository.findByEmail(dto.email);
 
       if (emailExists) {
         throw new BadRequestException(
@@ -116,9 +105,7 @@ export class UserService {
 
     // Verifica e trata role
     if (dto.role) {
-      const role = await this.roleRepository.findOne({
-        where: { name: dto.role.toUpperCase() },
-      });
+      const role = await this.roleRepository.findByName(dto.role.toUpperCase());
 
       if (!role) {
         throw new BadRequestException('Função inválida');

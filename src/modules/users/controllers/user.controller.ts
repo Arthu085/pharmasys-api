@@ -8,13 +8,13 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './DTOs/create.user.dto';
-import { UpdateUserDto } from './DTOs/update.user.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UserService } from '../services/user.service';
+import { CreateUserDto } from '../DTOs/create.user.dto';
+import { UpdateUserDto } from '../DTOs/update.user.dto';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { Roles } from 'src/common/decorators/role.decorator';
 import { RoleEnum } from 'src/common/enums/role.enum';
-import { RolesGuard } from '../auth/roles.guard';
+import { RolesGuard } from '../../auth/roles.guard';
 
 @Controller('user')
 export class UserController {
