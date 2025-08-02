@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
-import { Role } from '../../roles/entities/role.entity';
+import { Role } from '../entities/role.entity';
 import { CreateUserDto } from '../DTOs/create.user.dto';
 
 import * as bcrypt from 'bcrypt';
@@ -14,7 +14,7 @@ import { UpdateUserDto } from '../DTOs/update.user.dto';
 import { StatusEnum } from 'src/common/enums/status.enum';
 import { RoleEnum } from 'src/common/enums/role.enum';
 import { UserRepository } from '../repositories/user.repository';
-import { RoleRepository } from 'src/modules/roles/repositories/role.repository';
+import { RoleRepository } from '../repositories/role.repository';
 
 @Injectable()
 export class UserService {
