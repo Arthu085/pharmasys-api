@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ItemRepository } from '../repositories/item.repository';
 import { CreateItemDto } from '../DTOs/create.item.dto';
 import { PresentationRepository } from '../repositories/presentation.repository';
@@ -9,6 +13,7 @@ import { TypeEnum } from 'src/common/enums/type.enum';
 import { PresentationEnum } from 'src/common/enums/presentation.enum';
 import { DosageEnum } from 'src/common/enums/dosage.enum';
 import { SubtypeEnum } from 'src/common/enums/subtype.enum';
+import { UpdateItemDto } from '../DTOs/update.item.dto';
 
 @Injectable()
 export class ItemService {
@@ -21,7 +26,13 @@ export class ItemService {
   ) {}
 
   async findAllItems() {
-    return this.itemRepository.findAll();
+    const items = await this.itemRepository.findAll();
+
+    if (items.length === 0) {
+      throw new NotFoundException('Nenhum item encontrado');
+    }
+
+    return items;
   }
 
   async findItemById(id: number) {
@@ -35,6 +46,14 @@ export class ItemService {
   }
 
   async createItem(createItemDto: CreateItemDto, userId: number) {
+    const existingItem = await this.itemRepository.findByName(
+      createItemDto.name.toLowerCase(),
+    );
+
+    if (existingItem) {
+      throw new ConflictException('Item já existe com esse nome');
+    }
+
     const type = await this.typeRepository.findByName(
       TypeEnum[createItemDto.type],
     );
@@ -66,5 +85,77 @@ export class ItemService {
     });
 
     return this.itemRepository.save(item);
+  }
+
+  async deleteItem(id: number) {
+    await this.itemRepository.delete(id);
+
+    return { message: `Item com ID ${id} deletado com sucesso` };
+  }
+
+  async updateItem(id: number, updateItemDto: UpdateItemDto) {
+    const item = await this.findItemById(id);
+
+    // Verificar se o novo nome já existe em outro item
+    if (
+      updateItemDto.name &&
+      updateItemDto.name.toLowerCase() !== item.name.toLowerCase()
+    ) {
+      const existingItem = await this.itemRepository.findByName(
+        updateItemDto.name,
+      );
+      if (existingItem) {
+        throw new ConflictException('Este nome já está em uso por outro item');
+      }
+    }
+
+    // Buscar entidades relacionadas se foram fornecidas
+    const type = updateItemDto.type
+      ? await this.typeRepository.findByName(TypeEnum[updateItemDto.type])
+      : item.type;
+
+    if (updateItemDto.type && !type) {
+      throw new NotFoundException('Tipo informado não foi encontrado');
+    }
+
+    const presentation = updateItemDto.presentation
+      ? await this.presentationRepository.findByName(
+          PresentationEnum[updateItemDto.presentation],
+        )
+      : item.presentation;
+
+    if (updateItemDto.presentation && !presentation) {
+      throw new NotFoundException('Apresentação informada não foi encontrada');
+    }
+
+    const dosage = updateItemDto.dosage
+      ? await this.dosageRepository.findByFormat(
+          DosageEnum[updateItemDto.dosage],
+        )
+      : item.dosage;
+
+    if (updateItemDto.dosage && !dosage) {
+      throw new NotFoundException('Dosagem informada não foi encontrada');
+    }
+
+    const subtype = updateItemDto.subtype
+      ? await this.subtypeRepository.findByName(
+          SubtypeEnum[updateItemDto.subtype],
+        )
+      : item.subtype;
+
+    if (updateItemDto.subtype && !subtype) {
+      throw new NotFoundException('Subtipo informado não foi encontrado');
+    }
+
+    // Atualizar e salvar
+    return this.itemRepository.save({
+      ...item,
+      ...updateItemDto,
+      type: type!,
+      presentation: presentation!,
+      dosage: dosage!,
+      subtype: subtype!,
+    });
   }
 }

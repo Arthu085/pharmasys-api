@@ -1,7 +1,6 @@
 import {
   IsIn,
   IsNotEmpty,
-  IsOptional,
   MaxLength,
   MinLength,
   ValidateIf,

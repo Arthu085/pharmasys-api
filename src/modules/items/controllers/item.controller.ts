@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ItemService } from '../services/item.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/modules/auth/roles.guard';
@@ -6,7 +15,8 @@ import { Roles } from 'src/common/decorators/role.decorator';
 import { RoleEnum } from 'src/common/enums/role.enum';
 import { CreateItemDto } from '../DTOs/create.item.dto';
 import { User } from 'src/common/decorators/user.decorator';
-
+import { IsOwnerGuard } from 'src/common/decorators/isownerguard.item.decorator';
+import { UpdateItemDto } from '../DTOs/update.item.dto';
 @Controller('item')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
@@ -30,5 +40,19 @@ export class ItemController {
   @Post()
   createItem(@Body() createItemDto: CreateItemDto, @User('id') userId: number) {
     return this.itemService.createItem(createItemDto, userId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard, IsOwnerGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
+  @Delete(':id')
+  deleteItem(@Param('id') id: number) {
+    return this.itemService.deleteItem(id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard, IsOwnerGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
+  @Patch(':id')
+  updateItem(@Param('id') id: number, @Body() UpdateItemDto: UpdateItemDto) {
+    return this.itemService.updateItem(id, UpdateItemDto);
   }
 }
