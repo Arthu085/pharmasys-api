@@ -3,10 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
-import { Repository } from 'typeorm';
-import { Role } from '../entities/role.entity';
 import { CreateUserDto } from '../DTOs/create.user.dto';
 
 import * as bcrypt from 'bcrypt';
@@ -132,7 +129,7 @@ export class UserService {
 
     // Verifica e trata status
     if (dto.status) {
-      const novoStatus = StatusEnum[dto.status as keyof typeof StatusEnum];
+      const novoStatus = StatusEnum[dto.status as StatusEnum];
       if (user.status !== novoStatus) {
         user.status = novoStatus;
         isChanged = true;

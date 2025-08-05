@@ -20,19 +20,19 @@ export class CreateItemDto {
   @IsIn(Object.keys(TypeEnum), {
     message: `O tipo deve ser um dos seguintes valores: ${Object.keys(TypeEnum).join(', ')}.`,
   })
-  type: keyof typeof TypeEnum;
+  type: TypeEnum;
 
   @IsNotEmpty({ message: 'A apresentação é obrigatória' })
   @IsIn(Object.keys(PresentationEnum), {
     message: `A apresentação deve ser um dos seguintes valores: ${Object.keys(PresentationEnum).join(', ')}.`,
   })
-  presentation: keyof typeof PresentationEnum;
+  presentation: PresentationEnum;
 
   @IsNotEmpty({ message: 'A dosagem é obrigatória' })
   @IsIn(Object.keys(DosageEnum), {
     message: `A dosagem deve ser um dos seguintes valores: ${Object.keys(DosageEnum).join(', ')}.`,
   })
-  dosage: keyof typeof DosageEnum;
+  dosage: DosageEnum;
 
   @ValidateIf((o) => o.type === 'M')
   @IsNotEmpty({
@@ -41,5 +41,5 @@ export class CreateItemDto {
   @IsIn(Object.keys(SubtypeEnum), {
     message: `O subtipo deve ser um dos seguintes valores: ${Object.keys(SubtypeEnum).join(', ')}.`,
   })
-  subtype?: keyof typeof SubtypeEnum;
+  subtype?: SubtypeEnum;
 }
