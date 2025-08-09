@@ -1,0 +1,63 @@
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { CompanyRepository } from '../repositories/company.repository';
+import { CompanyTypeRepository } from '../repositories/company_type.repository';
+import { CompanyTypeRelRepository } from '../repositories/company_type_rel.repository';
+import { CreateCompanyDto } from '../DTOs/create.company.dto';
+import { CompanyTypeEnum } from 'src/common/enums/company_type.enum';
+import { CreateCompanyTypeRelDto } from '../DTOs/create.company_type_rel.dto';
+
+@Injectable()
+export class CompanyService {
+  constructor(
+    private readonly companyRepository: CompanyRepository,
+    private readonly companyTypeRepository: CompanyTypeRepository,
+    private readonly companyTypeRelRepository: CompanyTypeRelRepository,
+  ) {}
+
+  async createCompany(
+    createCompanyDto: CreateCompanyDto,
+    createTypeRelDto: CreateCompanyTypeRelDto,
+    userId: number,
+  ) {
+    const existingCnpj = await this.companyRepository.findByCnpj(
+      createCompanyDto.cnpj,
+    );
+
+    if (existingCnpj) {
+      throw new ConflictException('CNPJ já cadastrado');
+    }
+
+    const company = this.companyRepository.create({
+      name: createCompanyDto.name,
+      cnpj: createCompanyDto.cnpj,
+      user_id: userId,
+    });
+    const savedCompany = await this.companyRepository.save(company);
+
+    if (!savedCompany) {
+      throw new InternalServerErrorException('Erro ao salvar empresa');
+    }
+
+    const companyType = await this.companyTypeRepository.findByName(
+      CompanyTypeEnum[createTypeRelDto.companyType],
+    );
+
+    if (!companyType) {
+      throw new ConflictException('Tipo de empresa não encontrado');
+    }
+
+    const companyTypeRel = this.companyTypeRelRepository.create({
+      company: savedCompany,
+      companyId: savedCompany.id,
+      companyType: companyType,
+      companyTypeId: companyType.id,
+    });
+    await this.companyTypeRelRepository.save(companyTypeRel);
+
+    return savedCompany;
+  }
+}
