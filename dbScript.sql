@@ -478,3 +478,5 @@ ADD COLUMN user_id INT NOT NULL;
 ALTER TABLE item
 ADD FOREIGN KEY (user_id) REFERENCES "user"(id);
 
+ALTER TABLE company
+DROP COLUMN company_type_id
