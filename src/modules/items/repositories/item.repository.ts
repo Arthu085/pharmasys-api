@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Item } from '../entities/item.entity';
 import { Repository } from 'typeorm';
+import { ResponseItemDto } from '../DTOs/response.item.dto';
+import { toResponseItemDto } from '../mappers/item.mapper';
 
 @Injectable()
 export class ItemRepository {
@@ -10,8 +12,10 @@ export class ItemRepository {
     private readonly repo: Repository<Item>,
   ) {}
 
-  findAll(): Promise<Item[]> {
-    return this.repo.find();
+  async findAll(): Promise<ResponseItemDto[]> {
+    const result = await this.repo.find();
+
+    return result.map(toResponseItemDto);
   }
 
   findById(id: number): Promise<Item | null> {

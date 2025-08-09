@@ -14,6 +14,8 @@ import { PresentationEnum } from 'src/common/enums/presentation.enum';
 import { DosageEnum } from 'src/common/enums/dosage.enum';
 import { SubtypeEnum } from 'src/common/enums/subtype.enum';
 import { UpdateItemDto } from '../DTOs/update.item.dto';
+import { ResponseItemDto } from '../DTOs/response.item.dto';
+import { toResponseItemDto } from '../mappers/item.mapper';
 
 @Injectable()
 export class ItemService {
@@ -35,7 +37,17 @@ export class ItemService {
     return items;
   }
 
-  async findItemById(id: number) {
+  async findItemById(id: number): Promise<ResponseItemDto> {
+    const item = await this.itemRepository.findById(id);
+
+    if (!item) {
+      throw new NotFoundException('Item não encontrado');
+    }
+
+    return toResponseItemDto(item);
+  }
+
+  async findItemByIdForUpdate(id: number) {
     const item = await this.itemRepository.findById(id);
 
     if (!item) {
@@ -104,7 +116,7 @@ export class ItemService {
   }
 
   async updateItem(id: number, updateItemDto: UpdateItemDto) {
-    const item = await this.findItemById(id);
+    const item = await this.findItemByIdForUpdate(id);
 
     // Verificar se o novo nome já existe em outro item
     if (
@@ -169,7 +181,7 @@ export class ItemService {
     }
 
     // Atualizar e salvar
-    return this.itemRepository.save({
+    const updateItem = await this.itemRepository.save({
       ...item,
       ...updateItemDto,
       type: type!,
@@ -177,5 +189,7 @@ export class ItemService {
       dosage: dosage!,
       subtype,
     });
+
+    return toResponseItemDto(updateItem);
   }
 }
