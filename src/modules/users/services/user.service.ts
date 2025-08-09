@@ -14,6 +14,7 @@ import { UserRepository } from '../repositories/user.repository';
 import { RoleRepository } from '../repositories/role.repository';
 import { ResponseUserDto } from '../DTOs/response.user.dto';
 import { toResponseUserDto } from '../mappers/user.mapper';
+import { Role } from '../entities/role.entity';
 
 @Injectable()
 export class UserService {
@@ -168,5 +169,9 @@ export class UserService {
     const updatedUser = await this.userRepository.save(user);
 
     return toResponseUserDto(updatedUser);
+  }
+
+  async findAllRoles(): Promise<Role[]> {
+    return this.roleRepository.findAll();
   }
 }
