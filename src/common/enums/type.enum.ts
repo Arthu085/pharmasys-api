@@ -1,5 +1,5 @@
 export enum TypeEnum {
   M = 'Medicamento',
-  F = 'Fórmulas/Leitas',
+  F = 'Fórmulas/Leites',
   MM = 'Material Médico',
 }

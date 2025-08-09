@@ -63,11 +63,21 @@ export class ItemService {
     const dosage = await this.dosageRepository.findByFormat(
       DosageEnum[createItemDto.dosage],
     );
-    const subtype = createItemDto.subtype
+    let subtype = createItemDto.subtype
       ? await this.subtypeRepository.findByName(
           SubtypeEnum[createItemDto.subtype],
         )
       : null;
+
+    if (type?.name !== TypeEnum.M && createItemDto.subtype) {
+      throw new ConflictException(
+        'Subtipo só pode ser definido para Medicamentos',
+      );
+    }
+
+    if (type?.name !== TypeEnum.M) {
+      subtype = null;
+    }
 
     if (!type || !presentation || !dosage) {
       throw new NotFoundException(
@@ -138,7 +148,7 @@ export class ItemService {
       throw new NotFoundException('Dosagem informada não foi encontrada');
     }
 
-    const subtype = updateItemDto.subtype
+    let subtype = updateItemDto.subtype
       ? await this.subtypeRepository.findByName(
           SubtypeEnum[updateItemDto.subtype],
         )
@@ -148,6 +158,16 @@ export class ItemService {
       throw new NotFoundException('Subtipo informado não foi encontrado');
     }
 
+    if (type?.name !== TypeEnum.M && updateItemDto.subtype) {
+      throw new ConflictException(
+        'Subtipo só pode ser definido para Medicamentos',
+      );
+    }
+
+    if (type?.name !== TypeEnum.M) {
+      subtype = null;
+    }
+
     // Atualizar e salvar
     return this.itemRepository.save({
       ...item,
@@ -155,7 +175,7 @@ export class ItemService {
       type: type!,
       presentation: presentation!,
       dosage: dosage!,
-      subtype: subtype!,
+      subtype,
     });
   }
 }
