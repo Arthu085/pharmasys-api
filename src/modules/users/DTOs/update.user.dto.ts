@@ -8,5 +8,5 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsIn(Object.keys(StatusEnum), {
     message: `O campo "status" deve ser um dos seguintes valores: ${Object.keys(StatusEnum).join(', ')}.`,
   })
-  status?: keyof typeof StatusEnum;
+  status?: StatusEnum;
 }

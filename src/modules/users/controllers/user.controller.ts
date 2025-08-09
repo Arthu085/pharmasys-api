@@ -39,6 +39,11 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('roles')
+  findAllRoles() {
+    return this.userService.findAllRoles();
+  }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.ADMIN)
   @Get(':id')

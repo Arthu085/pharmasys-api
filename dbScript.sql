@@ -281,7 +281,7 @@ INSERT INTO presentation (name) VALUES
 ('Unidade'), ('Lata'), ('Ampola'), ('Caneta');
 
 INSERT INTO dosage (format) VALUES 
-('x mg'), ('x mcg'), ('x mg/ml'), ('x mg/g'), ('x ui/ml'), ('x g');
+('mg'), ('mcg'), ('mg/ml'), ('mg/g'), ('ui/ml'), ('g');
 
 INSERT INTO company_type (name) VALUES 
 ('Fornecedor'), ('Fabricante');
@@ -470,4 +470,11 @@ JOIN item i ON i.id = idi.item_id
 JOIN batch b ON b.id = idi.batch_id
 JOIN patient p ON p.id = idd.patient_id
 JOIN prescriptor pr ON pr.id = idd.prescriptor_id;
+
+
+ALTER TABLE item
+ADD COLUMN user_id INT NOT NULL;
+
+ALTER TABLE item
+ADD FOREIGN KEY (user_id) REFERENCES "user"(id);
 

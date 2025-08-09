@@ -3,10 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
-import { Repository } from 'typeorm';
-import { Role } from '../../roles/entities/role.entity';
 import { CreateUserDto } from '../DTOs/create.user.dto';
 
 import * as bcrypt from 'bcrypt';
@@ -14,7 +11,10 @@ import { UpdateUserDto } from '../DTOs/update.user.dto';
 import { StatusEnum } from 'src/common/enums/status.enum';
 import { RoleEnum } from 'src/common/enums/role.enum';
 import { UserRepository } from '../repositories/user.repository';
-import { RoleRepository } from 'src/modules/roles/repositories/role.repository';
+import { RoleRepository } from '../repositories/role.repository';
+import { ResponseUserDto } from '../DTOs/response.user.dto';
+import { toResponseUserDto } from '../mappers/user.mapper';
+import { Role } from '../entities/role.entity';
 
 @Injectable()
 export class UserService {
@@ -24,7 +24,7 @@ export class UserService {
     private readonly roleRepository: RoleRepository,
   ) {}
 
-  async create(dto: CreateUserDto): Promise<User> {
+  async create(dto: CreateUserDto): Promise<ResponseUserDto> {
     const existingUser = await this.userRepository.findByEmailWithoutRelations(
       dto.email,
     );
@@ -49,10 +49,12 @@ export class UserService {
       role,
     });
 
-    return this.userRepository.save(user);
+    const createdUser = await this.userRepository.save(user);
+
+    return toResponseUserDto(createdUser);
   }
 
-  async register(dto: CreateUserDto): Promise<User> {
+  async register(dto: CreateUserDto): Promise<ResponseUserDto> {
     const allowedRoles = [RoleEnum.FARMACEUTICO, RoleEnum.OPERADOR];
 
     if (!allowedRoles.includes(dto.role)) {
@@ -64,11 +66,22 @@ export class UserService {
     return this.create(dto);
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.findAll();
+  async findAll(): Promise<ResponseUserDto[]> {
+    const users = await this.userRepository.findAll();
+    return users.map(toResponseUserDto);
   }
 
-  async findOne(id: number): Promise<User> {
+  async findOne(id: number): Promise<ResponseUserDto> {
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return toResponseUserDto(user);
+  }
+
+  async findOneForUpdate(id: number): Promise<User> {
     const user = await this.userRepository.findById(id);
 
     if (!user) {
@@ -84,8 +97,8 @@ export class UserService {
     return user;
   }
 
-  async update(id: number, dto: UpdateUserDto): Promise<User> {
-    const user = await this.findOne(id);
+  async update(id: number, dto: UpdateUserDto): Promise<ResponseUserDto> {
+    const user = await this.findOneForUpdate(id);
 
     let isChanged = false;
 
@@ -132,7 +145,7 @@ export class UserService {
 
     // Verifica e trata status
     if (dto.status) {
-      const novoStatus = StatusEnum[dto.status as keyof typeof StatusEnum];
+      const novoStatus = StatusEnum[dto.status as StatusEnum];
       if (user.status !== novoStatus) {
         user.status = novoStatus;
         isChanged = true;
@@ -153,6 +166,12 @@ export class UserService {
       throw new BadRequestException('Nenhuma alteração foi realizada');
     }
 
-    return this.userRepository.save(user);
+    const updatedUser = await this.userRepository.save(user);
+
+    return toResponseUserDto(updatedUser);
+  }
+
+  async findAllRoles(): Promise<Role[]> {
+    return this.roleRepository.findAll();
   }
 }
