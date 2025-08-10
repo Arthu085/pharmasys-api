@@ -42,21 +42,23 @@ export class CompanyService {
       throw new InternalServerErrorException('Erro ao salvar empresa');
     }
 
-    const companyType = await this.companyTypeRepository.findByName(
-      CompanyTypeEnum[createTypeRelDto.companyType],
-    );
+    for (const type of createTypeRelDto.companyTypes) {
+      const companyType = await this.companyTypeRepository.findByName(
+        CompanyTypeEnum[type],
+      );
+      if (!companyType) {
+        throw new ConflictException(`Tipo de empresa ${type} não encontrado`);
+      }
 
-    if (!companyType) {
-      throw new ConflictException('Tipo de empresa não encontrado');
+      const companyTypeRel = this.companyTypeRelRepository.create({
+        company: savedCompany,
+        companyId: savedCompany.id,
+        companyType,
+        companyTypeId: companyType.id,
+      });
+
+      await this.companyTypeRelRepository.save(companyTypeRel);
     }
-
-    const companyTypeRel = this.companyTypeRelRepository.create({
-      company: savedCompany,
-      companyId: savedCompany.id,
-      companyType: companyType,
-      companyTypeId: companyType.id,
-    });
-    await this.companyTypeRelRepository.save(companyTypeRel);
 
     return savedCompany;
   }
