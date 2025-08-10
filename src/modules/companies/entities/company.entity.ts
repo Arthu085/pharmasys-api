@@ -20,7 +20,9 @@ export class Company {
   @Column({ length: 180 })
   cnpj: string;
 
-  @OneToMany(() => CompanyTypeRel, (rel) => rel.company, { cascade: true })
+  @OneToMany(() => CompanyTypeRel, (rel) => rel.company, {
+    cascade: true,
+  })
   companyTypeRels: CompanyTypeRel[];
 
   @ManyToOne(() => User, { eager: true })

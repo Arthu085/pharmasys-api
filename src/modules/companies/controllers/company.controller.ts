@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   UseGuards,
@@ -38,5 +39,12 @@ export class CompanyController {
   @Delete(':id')
   deleteCompany(@Param('id') id: number) {
     return this.companyService.deleteCompany(id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
+  @Get()
+  findAllCompanies() {
+    return this.companyService.findAllCompanies();
   }
 }

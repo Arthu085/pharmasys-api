@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { CompanyRepository } from '../repositories/company.repository';
 import { CompanyTypeRepository } from '../repositories/company_type.repository';
@@ -67,5 +68,15 @@ export class CompanyService {
     await this.companyRepository.delete(id);
 
     return { message: `Empresa com ID ${id} deletado com sucesso` };
+  }
+
+  async findAllCompanies() {
+    const companies = await this.companyRepository.findAll();
+
+    if (companies.length === 0) {
+      throw new NotFoundException('Nenhum item encontrado');
+    }
+
+    return companies;
   }
 }

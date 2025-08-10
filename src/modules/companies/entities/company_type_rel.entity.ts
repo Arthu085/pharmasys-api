@@ -10,9 +10,7 @@ export class CompanyTypeRel {
   @PrimaryColumn({ name: 'company_type_id' })
   companyTypeId: number;
 
-  @ManyToOne(() => Company, (company) => company.companyTypeRels, {
-    eager: true,
-  })
+  @ManyToOne(() => Company, (company) => company.companyTypeRels)
   @JoinColumn({ name: 'company_id' })
   company: Company;
 
