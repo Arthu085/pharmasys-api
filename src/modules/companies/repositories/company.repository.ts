@@ -21,4 +21,12 @@ export class CompanyRepository {
   findByCnpj(cnpj: string): Promise<Company | null> {
     return this.repo.findOne({ where: { cnpj } });
   }
+
+  delete(id: number): Promise<void> {
+    return this.repo.delete(id).then(() => {});
+  }
+
+  findById(id: number): Promise<Company | null> {
+    return this.repo.findOne({ where: { id } });
+  }
 }

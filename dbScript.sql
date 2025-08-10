@@ -486,3 +486,11 @@ ADD COLUMN user_id INT NOT NULL;
 
 ALTER TABLE company
 ADD FOREIGN KEY (user_id) REFERENCES "user"(id);
+
+ALTER TABLE company_type_rel
+DROP CONSTRAINT company_type_rel_company_id_fkey;
+
+ALTER TABLE company_type_rel
+ADD CONSTRAINT company_type_rel_company_id_fkey
+FOREIGN KEY (company_id) REFERENCES company(id) ON DELETE CASCADE;
+

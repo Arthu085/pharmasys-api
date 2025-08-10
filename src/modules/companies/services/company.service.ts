@@ -62,4 +62,10 @@ export class CompanyService {
 
     return savedCompany;
   }
+
+  async deleteCompany(id: number) {
+    await this.companyRepository.delete(id);
+
+    return { message: `Empresa com ID ${id} deletado com sucesso` };
+  }
 }

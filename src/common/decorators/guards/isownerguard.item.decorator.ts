@@ -1,4 +1,3 @@
-// guards/is-owner.guard.ts
 import {
   CanActivate,
   ExecutionContext,
@@ -10,7 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { ItemRepository } from 'src/modules/items/repositories/item.repository';
 
 @Injectable()
-export class IsOwnerGuard implements CanActivate {
+export class IsOwnerGuardItem implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly itemRepositor: ItemRepository,
