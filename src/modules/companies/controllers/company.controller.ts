@@ -47,4 +47,11 @@ export class CompanyController {
   findAllCompanies() {
     return this.companyService.findAllCompanies();
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
+  @Get(':id')
+  findCompanyById(@Param('id') id: number) {
+    return this.companyService.findCompanyById(id);
+  }
 }

@@ -12,8 +12,15 @@ export class CompanyRepository {
     private readonly repo: Repository<Company>,
   ) {}
 
-  findById(id: number): Promise<Company | null> {
-    return this.repo.findOne({ where: { id } });
+  async findById(id: number): Promise<ResponseCompanyDto | null> {
+    const result = await this.repo.findOne({
+      where: { id },
+      relations: ['companyTypeRels', 'user'],
+    });
+
+    if (!result) return null;
+
+    return toResponseCompanyDto(result);
   }
 
   findByCnpj(cnpj: string): Promise<Company | null> {

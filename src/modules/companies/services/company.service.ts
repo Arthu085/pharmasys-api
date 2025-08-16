@@ -74,9 +74,19 @@ export class CompanyService {
     const companies = await this.companyRepository.findAll();
 
     if (companies.length === 0) {
-      throw new NotFoundException('Nenhum item encontrado');
+      throw new NotFoundException('Nenhuma empresa encontrada');
     }
 
     return companies;
+  }
+
+  async findCompanyById(id: number) {
+    const company = await this.companyRepository.findById(id);
+
+    if (!company) {
+      throw new NotFoundException(`Empresa com ID ${id} não encontrada`);
+    }
+
+    return company;
   }
 }
