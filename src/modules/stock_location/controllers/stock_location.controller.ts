@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { StockLocationService } from '../services/stock_location.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/modules/auth/roles.guard';
@@ -6,6 +15,7 @@ import { Roles } from 'src/common/decorators/role.decorator';
 import { RoleEnum } from 'src/common/enums/role.enum';
 import { CreateStockLocationDto } from '../DTOs/create.stock_location.dto';
 import { User } from 'src/common/decorators/user.decorator';
+import { UpdateStockLocationDto } from '../DTOs/update.stock_location.dto';
 
 @Controller('stock/location')
 export class StockLocationController {
@@ -33,5 +43,22 @@ export class StockLocationController {
     @User('id') userId: number,
   ) {
     return this.stockLocationService.createStockLocation(dto, userId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
+  @Delete(':id')
+  deleteStockLocation(@Param('id') id: number) {
+    return this.stockLocationService.deleteStockLocation(id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
+  @Patch(':id')
+  updateStockLocation(
+    @Param('id') id: number,
+    @Body() dto: UpdateStockLocationDto,
+  ) {
+    return this.stockLocationService.updateStockLocation(id, dto);
   }
 }
