@@ -494,3 +494,8 @@ ALTER TABLE company_type_rel
 ADD CONSTRAINT company_type_rel_company_id_fkey
 FOREIGN KEY (company_id) REFERENCES company(id) ON DELETE CASCADE;
 
+ALTER TABLE stock_location 
+ADD COLUMN user_id INT;
+
+ALTER TABLE stock_location 
+ADD FOREIGN KEY (user_id) REFERENCES "user"(id);
