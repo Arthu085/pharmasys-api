@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
@@ -17,13 +18,14 @@ import { RolesGuard } from '../../auth/roles.guard';
 import { RoleEnum } from 'src/shared/role.enum';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { ChangeStatusDto } from 'src/shared/change.status.dto';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A)
+  @Roles(RoleEnum.ADMIN)
   @Get()
   @ResponseMessage('Usuários encontrados com sucesso')
   findAllUsers() {
@@ -31,7 +33,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A)
+  @Roles(RoleEnum.ADMIN)
   @Get(':id')
   @ResponseMessage('Usuário encontrado com sucesso')
   findByIdUser(@Param('id', ParseIntPipe) id: number) {
@@ -45,7 +47,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A)
+  @Roles(RoleEnum.ADMIN)
   @Post()
   @ResponseMessage('Usuário cadastrado com sucesso')
   createUser(@Body() dto: CreateUserDto) {
@@ -59,24 +61,26 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A)
+  @Roles(RoleEnum.ADMIN)
   @Patch(':id')
   @ResponseMessage('Usuário atualizado com sucesso')
   updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateUserDto,
+    @User('id') userId: number,
   ) {
-    return this.userService.updateUser(id, dto);
+    return this.userService.updateUser(id, dto, userId);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A)
-  @Patch(':id')
+  @Roles(RoleEnum.ADMIN)
+  @Put(':id')
   @ResponseMessage('Status do usuário atualizado com sucesso')
   changeStatusUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: ChangeStatusDto,
+    @User('id') userId: number,
   ) {
-    return this.userService.changeStatusUser(id, dto);
+    return this.userService.changeStatusUser(id, dto, userId);
   }
 }

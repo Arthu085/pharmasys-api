@@ -1,4 +1,5 @@
-import { StatusEnum } from 'src/shared/status.enum';
+import { StatusEnum } from '../../../shared/status.enum';
+import { Role } from './role.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -8,7 +9,6 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Role } from './role.entity';
 
 @Entity('user')
 export class User {
@@ -28,19 +28,28 @@ export class User {
   @JoinColumn({ name: 'role_id' })
   role: Role;
 
-  @Column({ length: 1, default: StatusEnum.A, name: 'user_status' })
+  @Column({
+    type: 'enum',
+    enum: StatusEnum,
+    default: StatusEnum.A,
+    name: 'user_status',
+  })
   userStatus: StatusEnum;
 
   @CreateDateColumn({
-    type: 'timestamp',
+    type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
     name: 'created_at',
   })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    name: 'updated_at',
+    nullable: true,
+  })
   updatedAt: Date | null;
 
-  @Column({ default: null, name: 'user_updated_id' })
+  @Column({ type: 'integer', nullable: true, name: 'user_updated_id' })
   userUpdated: number | null;
 }

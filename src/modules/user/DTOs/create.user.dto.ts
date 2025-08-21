@@ -24,7 +24,7 @@ export class CreateUserDto {
   password: string;
 
   @IsEnum(RoleEnum, {
-    message: `O campo de função deve ser um dos seguintes valores: farmacêutico ou operador.`,
+    message: `O campo de função deve ser um dos seguintes valores: farmacêutico ou operador`,
   })
   role: RoleEnum;
 }

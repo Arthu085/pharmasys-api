@@ -11,10 +11,11 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly logger = new Logger(AuthService.name),
   ) {}
 
   async validateUser(email: string, password: string) {

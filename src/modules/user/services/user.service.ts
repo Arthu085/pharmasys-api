@@ -12,18 +12,19 @@ import { UserRepository } from '../repositories/user.repository';
 import { RoleRepository } from '../repositories/role.repository';
 import { Role } from '../entities/role.entity';
 import { RoleEnum } from 'src/shared/role.enum';
-import * as bcrypt from 'bcrypt';
 import { ResponseUserDto } from '../DTOs/response.user.dto';
 import { toResponseUserDto } from '../mappers/user.mapper';
 import { User } from '../entities/user.entity';
 import { ChangeStatusDto } from 'src/shared/change.status.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
+
   constructor(
     private readonly userRepository: UserRepository,
     private readonly roleRepository: RoleRepository,
-    private readonly logger = new Logger(UserService.name),
   ) {}
 
   async findAllUsers(): Promise<ResponseUserDto[]> {
@@ -101,7 +102,7 @@ export class UserService {
   }
 
   async registerUser(dto: CreateUserDto) {
-    const allowedRoles = [RoleEnum.F, RoleEnum.O];
+    const allowedRoles = [RoleEnum.FARMACEUTICO, RoleEnum.OPERADOR];
 
     if (!allowedRoles.includes(dto.role)) {
       throw new BadRequestException(
@@ -112,7 +113,11 @@ export class UserService {
     return this.createUser(dto);
   }
 
-  async updateUser(id: number, dto: UpdateUserDto): Promise<ResponseUserDto> {
+  async updateUser(
+    id: number,
+    dto: UpdateUserDto,
+    userId: number,
+  ): Promise<ResponseUserDto> {
     const user = await this.userRepository.findByIdForUpdate(id);
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
@@ -144,6 +149,8 @@ export class UserService {
       user.password = await bcrypt.hash(dto.password, 10);
     }
 
+    user.userUpdated = userId;
+
     try {
       const updatedUser = await this.userRepository.save(user);
 
@@ -162,6 +169,7 @@ export class UserService {
   async changeStatusUser(
     id: number,
     dto: ChangeStatusDto,
+    userId: number,
   ): Promise<ResponseUserDto> {
     const user = await this.userRepository.findByIdForUpdate(id);
     if (!user) {
@@ -173,6 +181,7 @@ export class UserService {
     }
 
     user.userStatus = dto.status;
+    user.userUpdated = userId;
 
     try {
       const result = await this.userRepository.save(user);
