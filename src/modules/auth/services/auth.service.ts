@@ -1,6 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from '../../users/services/user.service';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { UserService } from '../../user/services/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { StatusEnum } from 'src/shared/status.enum';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -8,22 +14,37 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly logger = new Logger(AuthService.name),
   ) {}
 
   async validateUser(email: string, password: string) {
-    const user = await this.userService.findByEmail(email);
-    if (!user) throw new UnauthorizedException('Credenciais inválidas');
+    try {
+      const user = await this.userService.findByEmailUser(email);
+      if (!user) {
+        throw new UnauthorizedException('Credenciais inválidas');
+      }
 
-    if (user.userStatus === 'I')
-      throw new UnauthorizedException(
-        'Usuário inativo, solicite a reativação com o administrador',
+      if (user.userStatus === StatusEnum.I) {
+        throw new UnauthorizedException(
+          'Usuário inativo, solicite a reativação com o administrador',
+        );
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Credenciais inválidas');
+      }
+
+      return user;
+    } catch (error) {
+      this.logger.error(
+        `Falha ao validar usuário. Error: ${error.message}`,
+        error.stack,
       );
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid)
-      throw new UnauthorizedException('Credenciais inválidas');
-
-    return user;
+      throw new InternalServerErrorException(
+        'Ocorreu um erro interno ao validar o usuário.',
+      );
+    }
   }
 
   async login(email: string, password: string) {

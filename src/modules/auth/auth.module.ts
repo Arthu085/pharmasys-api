@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from '../users/user.module';
+import { UserModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './services/auth.service';
