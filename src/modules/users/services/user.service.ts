@@ -8,8 +8,8 @@ import { CreateUserDto } from '../DTOs/create.user.dto';
 
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from '../DTOs/update.user.dto';
-import { StatusEnum } from 'src/common/enums/status.enum';
-import { RoleEnum } from 'src/common/enums/role.enum';
+import { GlobalStatusEnum } from 'src/common/enums/global.status.enum';
+import { RoleEnum } from 'src/common/enums/role/role.enum';
 import { UserRepository } from '../repositories/user.repository';
 import { RoleRepository } from '../repositories/role.repository';
 import { ResponseUserDto } from '../DTOs/response.user.dto';
@@ -23,48 +23,6 @@ export class UserService {
 
     private readonly roleRepository: RoleRepository,
   ) {}
-
-  async create(dto: CreateUserDto): Promise<ResponseUserDto> {
-    const existingUser = await this.userRepository.findByEmailWithoutRelations(
-      dto.email,
-    );
-
-    if (existingUser) {
-      throw new BadRequestException(
-        'Já existe um usuário cadastrado com este e-mail',
-      );
-    }
-
-    const role = await this.roleRepository.findByName(dto.role.toUpperCase());
-
-    if (!role) {
-      throw new BadRequestException('Função inválida');
-    }
-
-    const hashedPasword = await bcrypt.hash(dto.password, 10);
-
-    const user = this.userRepository.createUser({
-      ...dto,
-      password: hashedPasword,
-      role,
-    });
-
-    const createdUser = await this.userRepository.save(user);
-
-    return toResponseUserDto(createdUser);
-  }
-
-  async register(dto: CreateUserDto): Promise<ResponseUserDto> {
-    const allowedRoles = [RoleEnum.FARMACEUTICO, RoleEnum.OPERADOR];
-
-    if (!allowedRoles.includes(dto.role)) {
-      throw new BadRequestException(
-        'O campo função deve ser FARMACEUTICO ou OPERADOR',
-      );
-    }
-
-    return this.create(dto);
-  }
 
   async findAll(): Promise<ResponseUserDto[]> {
     const users = await this.userRepository.findAll();
@@ -95,6 +53,52 @@ export class UserService {
     const user = await this.userRepository.findByEmail(email);
 
     return user;
+  }
+
+  async findAllRoles(): Promise<Role[]> {
+    return this.roleRepository.findAll();
+  }
+
+  async createUser(dto: CreateUserDto): Promise<ResponseUserDto> {
+    const existingUser = await this.userRepository.findByEmailWithoutRelations(
+      dto.email,
+    );
+
+    if (existingUser) {
+      throw new BadRequestException(
+        'Já existe um usuário cadastrado com este e-mail',
+      );
+    }
+
+    const role = await this.roleRepository.findByName(dto.role.toUpperCase());
+
+    if (!role) {
+      throw new BadRequestException('Função inválida');
+    }
+
+    const hashedPasword = await bcrypt.hash(dto.password, 10);
+
+    const user = this.userRepository.create({
+      ...dto,
+      password: hashedPasword,
+      role,
+    });
+
+    const createdUser = await this.userRepository.save(user);
+
+    return toResponseUserDto(createdUser);
+  }
+
+  async registerUser(dto: CreateUserDto): Promise<ResponseUserDto> {
+    const allowedRoles = [RoleEnum.FARMACEUTICO, RoleEnum.OPERADOR];
+
+    if (!allowedRoles.includes(dto.role)) {
+      throw new BadRequestException(
+        'O campo função deve ser FARMACEUTICO ou OPERADOR',
+      );
+    }
+
+    return this.createUser(dto);
   }
 
   async update(id: number, dto: UpdateUserDto): Promise<ResponseUserDto> {
@@ -145,9 +149,9 @@ export class UserService {
 
     // Verifica e trata status
     if (dto.status) {
-      const novoStatus = StatusEnum[dto.status as StatusEnum];
-      if (user.status !== novoStatus) {
-        user.status = novoStatus;
+      const novoStatus = GlobalStatusEnum[dto.status as GlobalStatusEnum];
+      if (user.userStatus !== novoStatus) {
+        user.userStatus = novoStatus;
         isChanged = true;
       }
       delete dto.status;
@@ -169,9 +173,5 @@ export class UserService {
     const updatedUser = await this.userRepository.save(user);
 
     return toResponseUserDto(updatedUser);
-  }
-
-  async findAllRoles(): Promise<Role[]> {
-    return this.roleRepository.findAll();
   }
 }

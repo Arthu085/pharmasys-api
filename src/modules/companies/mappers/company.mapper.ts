@@ -7,9 +7,12 @@ export function toResponseCompanyDto(company: Company): ResponseCompanyDto {
     id: company.id,
     name: company.name,
     cnpj: company.cnpj,
+    companyStatus: company.companyStatus,
+    createdAt: company.createdAt,
+    updatedAt: company.updatedAt,
     company_type_rel: company.companyTypeRels,
     company_type: company.companyTypeRels.map((rel) => rel.companyType),
-    user: toResponseUserDto(company.user),
-    user_id: company.user_id,
+    userCreated: toResponseUserDto(company.userCreated),
+    userUpdated: toResponseUserDto(company.userUpdated),
   };
 }

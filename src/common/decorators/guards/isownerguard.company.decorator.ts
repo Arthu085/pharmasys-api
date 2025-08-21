@@ -30,7 +30,7 @@ export class IsOwnerGuardCompany implements CanActivate {
       throw new NotFoundException('Empresa não encontrada');
     }
 
-    if (company.user_id !== userId) {
+    if (company.userCreated !== userId) {
       throw new ForbiddenException('Você não tem permissão para essa ação');
     }
 

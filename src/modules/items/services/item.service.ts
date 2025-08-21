@@ -9,10 +9,10 @@ import { PresentationRepository } from '../repositories/presentation.repository'
 import { TypeRepository } from '../repositories/type.repository';
 import { DosageRepository } from '../repositories/dosage.repository';
 import { SubtypeRepository } from '../repositories/subtype.repository';
-import { TypeEnum } from 'src/common/enums/type.enum';
-import { PresentationEnum } from 'src/common/enums/presentation.enum';
-import { DosageEnum } from 'src/common/enums/dosage.enum';
-import { SubtypeEnum } from 'src/common/enums/subtype.enum';
+import { TypeEnum } from 'src/common/enums/items/type.enum';
+import { PresentationEnum } from 'src/common/enums/items/presentation.enum';
+import { DosageEnum } from 'src/common/enums/items/dosage.enum';
+import { SubtypeEnum } from 'src/common/enums/items/subtype.enum';
 import { UpdateItemDto } from '../DTOs/update.item.dto';
 import { ResponseItemDto } from '../DTOs/response.item.dto';
 import { toResponseItemDto } from '../mappers/item.mapper';

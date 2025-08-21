@@ -5,7 +5,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { RoleEnum } from 'src/common/enums/role.enum';
+import { RoleEnum } from 'src/common/enums/role/role.enum';
 
 export class CreateUserDto {
   @IsNotEmpty({ message: 'O nome é obrigatório' })

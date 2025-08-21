@@ -10,7 +10,12 @@ export function toResponseItemDto(item: Item): ResponseItemDto {
     presentation: item.presentation,
     dosage: item.dosage,
     subtype: item.subtype,
-    user: toResponseUserDto(item.user),
-    user_id: item.user_id,
+    itemStatus: item.itemStatus,
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt ? item.updatedAt : undefined,
+    userCreated: toResponseUserDto(item.userCreated),
+    userUpdated: item.userUpdated
+      ? toResponseUserDto(item.userUpdated)
+      : undefined,
   };
 }

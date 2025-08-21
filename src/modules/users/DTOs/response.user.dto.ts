@@ -1,3 +1,4 @@
+import { GlobalStatusEnum } from 'src/common/enums/global.status.enum';
 import { Role } from '../entities/role.entity';
 
 export class ResponseUserDto {
@@ -5,7 +6,8 @@ export class ResponseUserDto {
   name: string;
   email: string;
   role: Role;
-  status: string;
-  created_at: Date;
-  updated_at: Date;
+  userStatus: GlobalStatusEnum;
+  createdAt: Date;
+  updatedAt: Date;
+  userUpdated: number;
 }

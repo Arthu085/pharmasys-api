@@ -37,6 +37,7 @@ export class ItemRepository {
     return this.repo.save(item);
   }
 
+  // TODO alterar para um PUT de status
   delete(id: number): Promise<void> {
     return this.repo.delete(id).then(() => {});
   }

@@ -12,7 +12,7 @@ import { User } from 'src/common/decorators/user.decorator';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/modules/auth/roles.guard';
 import { Roles } from 'src/common/decorators/role.decorator';
-import { RoleEnum } from 'src/common/enums/role.enum';
+import { RoleEnum } from 'src/common/enums/role/role.enum';
 import { CreateCompanyRequestDto } from '../DTOs/create.company.request.dto';
 import { IsOwnerGuardCompany } from 'src/common/decorators/guards/isownerguard.company.decorator';
 

@@ -26,7 +26,7 @@ export class UserRepository {
     return this.repo.findOne({ where: { email } });
   }
 
-  createUser(user: Partial<User>): User {
+  create(user: Partial<User>): User {
     return this.repo.create(user);
   }
 

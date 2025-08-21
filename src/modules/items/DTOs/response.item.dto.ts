@@ -11,6 +11,9 @@ export class ResponseItemDto {
   presentation: Presentation;
   dosage: Dosage;
   subtype: Subtype | null;
-  user: ResponseUserDto;
-  user_id: number;
+  itemStatus: string;
+  createdAt: Date;
+  updatedAt?: Date;
+  userCreated: ResponseUserDto;
+  userUpdated?: ResponseUserDto;
 }

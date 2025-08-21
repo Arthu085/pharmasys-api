@@ -15,7 +15,7 @@ export class CompanyRepository {
   async findById(id: number): Promise<ResponseCompanyDto | null> {
     const result = await this.repo.findOne({
       where: { id },
-      relations: ['companyTypeRels', 'user'],
+      relations: ['companyTypeRels', 'userCreated'],
     });
 
     if (!result) return null;
@@ -29,7 +29,7 @@ export class CompanyRepository {
 
   async findAll(): Promise<ResponseCompanyDto[]> {
     const result = await this.repo.find({
-      relations: ['companyTypeRels', 'user'],
+      relations: ['companyTypeRels', 'userCreated'],
     });
 
     return result.map(toResponseCompanyDto);
@@ -41,9 +41,5 @@ export class CompanyRepository {
 
   save(company: Partial<Company>): Promise<Company> {
     return this.repo.save(company);
-  }
-
-  delete(id: number): Promise<void> {
-    return this.repo.delete(id).then(() => {});
   }
 }

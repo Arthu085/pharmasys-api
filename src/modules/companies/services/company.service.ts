@@ -8,8 +8,9 @@ import { CompanyRepository } from '../repositories/company.repository';
 import { CompanyTypeRepository } from '../repositories/company_type.repository';
 import { CompanyTypeRelRepository } from '../repositories/company_type_rel.repository';
 import { CreateCompanyDto } from '../DTOs/create.company.dto';
-import { CompanyTypeEnum } from 'src/common/enums/company_type.enum';
+import { CompanyTypeEnum } from 'src/common/enums/companies/company_type.enum';
 import { CreateCompanyTypeRelDto } from '../DTOs/create.company_type_rel.dto';
+import { GlobalStatusEnum } from 'src/common/enums/global.status.enum';
 
 @Injectable()
 export class CompanyService {
@@ -18,6 +19,26 @@ export class CompanyService {
     private readonly companyTypeRepository: CompanyTypeRepository,
     private readonly companyTypeRelRepository: CompanyTypeRelRepository,
   ) {}
+
+  async findAllCompanies() {
+    const companies = await this.companyRepository.findAll();
+
+    if (companies.length === 0) {
+      throw new NotFoundException('Nenhuma empresa encontrada');
+    }
+
+    return companies;
+  }
+
+  async findCompanyById(id: number) {
+    const company = await this.companyRepository.findById(id);
+
+    if (!company) {
+      throw new NotFoundException(`Empresa com ID ${id} não encontrada`);
+    }
+
+    return company;
+  }
 
   async createCompany(
     createCompanyDto: CreateCompanyDto,
@@ -35,7 +56,7 @@ export class CompanyService {
     const company = this.companyRepository.create({
       name: createCompanyDto.name,
       cnpj: createCompanyDto.cnpj,
-      user_id: userId,
+      user_created_id: userId,
     });
     const savedCompany = await this.companyRepository.save(company);
 
@@ -64,29 +85,19 @@ export class CompanyService {
     return savedCompany;
   }
 
-  async deleteCompany(id: number) {
-    await this.companyRepository.delete(id);
+  // TODO - Transformar em um update de status
+  async changeStatusCompany(
+    id: number,
+    status: GlobalStatusEnum,
+    userId: number,
+  ) {
+    const company = await this.findCompanyById(id);
 
-    return { message: `Empresa com ID ${id} deletado com sucesso` };
-  }
+    company.companyStatus = status;
+    company.userUpdated = { userId };
 
-  async findAllCompanies() {
-    const companies = await this.companyRepository.findAll();
+    await this.companyRepository.save(company);
 
-    if (companies.length === 0) {
-      throw new NotFoundException('Nenhuma empresa encontrada');
-    }
-
-    return companies;
-  }
-
-  async findCompanyById(id: number) {
-    const company = await this.companyRepository.findById(id);
-
-    if (!company) {
-      throw new NotFoundException(`Empresa com ID ${id} não encontrada`);
-    }
-
-    return company;
+    return { message: `Empresa com ID ${id} alterada com sucesso` };
   }
 }

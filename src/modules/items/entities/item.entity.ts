@@ -10,6 +10,7 @@ import { Presentation } from './presentation.entity';
 import { Dosage } from './dosage.entity';
 import { Subtype } from './subtype.entity';
 import { User } from 'src/modules/users/entities/user.entity';
+import { GlobalStatusEnum } from 'src/common/enums/global.status.enum';
 
 @Entity('item')
 export class Item {
@@ -35,10 +36,28 @@ export class Item {
   @JoinColumn({ name: 'subtype_id' })
   subtype: Subtype | null;
 
-  @ManyToOne(() => User, { eager: true })
-  @JoinColumn({ name: 'user_id' })
-  user: User;
+  @Column({ length: 1, default: GlobalStatusEnum.A, name: 'item_status' })
+  itemStatus: GlobalStatusEnum;
 
-  @Column({ name: 'user_id' })
-  user_id: number;
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    name: 'created_at',
+  })
+  createdAt: Date;
+
+  @Column({
+    type: 'timestamp',
+    default: null,
+    name: 'updated_at',
+  })
+  updatedAt?: Date;
+
+  @ManyToOne(() => User, { eager: true })
+  @JoinColumn({ name: 'user_created_id' })
+  userCreated: User;
+
+  @ManyToOne(() => User, { eager: true })
+  @JoinColumn({ name: 'user_updated_id' })
+  userUpdated?: User;
 }

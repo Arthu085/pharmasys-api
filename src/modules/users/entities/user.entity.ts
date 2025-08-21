@@ -1,3 +1,4 @@
+import { GlobalStatusEnum } from 'src/common/enums/global.status.enum';
 import { Role } from 'src/modules/users/entities/role.entity';
 import {
   Entity,
@@ -17,7 +18,7 @@ export class User {
   @Column({ length: 100 })
   name: string;
 
-  @Column({ unique: true, length: 150 })
+  @Column({ unique: true, length: 200 })
   email: string;
 
   @Column({ length: 255 })
@@ -27,12 +28,19 @@ export class User {
   @JoinColumn({ name: 'role_id' })
   role: Role;
 
-  @Column({ default: 'ativo', length: 10 })
-  status: string;
+  @Column({ length: 1, default: GlobalStatusEnum.A, name: 'user_status' })
+  userStatus: GlobalStatusEnum;
 
-  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-  created_at: Date;
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    name: 'created_at',
+  })
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
-  updated_at: Date;
+  @UpdateDateColumn({ type: 'timestamp', default: null, name: 'updated_at' })
+  updatedAt: Date;
+
+  @Column()
+  userUpdated: number;
 }

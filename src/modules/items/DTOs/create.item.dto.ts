@@ -5,10 +5,10 @@ import {
   MinLength,
   ValidateIf,
 } from 'class-validator';
-import { DosageEnum } from 'src/common/enums/dosage.enum';
-import { PresentationEnum } from 'src/common/enums/presentation.enum';
-import { SubtypeEnum } from 'src/common/enums/subtype.enum';
-import { TypeEnum } from 'src/common/enums/type.enum';
+import { DosageEnum } from 'src/common/enums/items/dosage.enum';
+import { PresentationEnum } from 'src/common/enums/items/presentation.enum';
+import { SubtypeEnum } from 'src/common/enums/items/subtype.enum';
+import { TypeEnum } from 'src/common/enums/items/type.enum';
 
 export class CreateItemDto {
   @IsNotEmpty({ message: 'O nome é obrigatório' })

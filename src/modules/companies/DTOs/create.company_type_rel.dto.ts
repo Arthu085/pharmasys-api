@@ -5,7 +5,7 @@ import {
   IsIn,
   IsNotEmpty,
 } from 'class-validator';
-import { CompanyTypeEnum } from 'src/common/enums/company_type.enum';
+import { CompanyTypeEnum } from 'src/common/enums/companies/company_type.enum';
 
 export class CreateCompanyTypeRelDto {
   @IsNotEmpty({ message: 'O tipo de fornecedor ou fabricante é obrigatório' })

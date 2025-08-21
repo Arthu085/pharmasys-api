@@ -14,7 +14,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
     if (!user) throw new UnauthorizedException('Credenciais inválidas');
 
-    if (user.status === 'inativo')
+    if (user.userStatus === 'I')
       throw new UnauthorizedException(
         'Usuário inativo, solicite a reativação com o administrador',
       );
