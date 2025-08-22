@@ -1,6 +1,8 @@
+import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsEnum,
+  IsIn,
   IsNotEmpty,
   MaxLength,
   MinLength,
@@ -23,8 +25,8 @@ export class CreateUserDto {
   @MaxLength(40, { message: 'A senha deve ter no máximo 40 caracteres' })
   password: string;
 
-  @IsEnum(RoleEnum, {
-    message: `O campo de função deve ser um dos seguintes valores: farmacêutico ou operador`,
+  @IsIn(Object.keys(RoleEnum), {
+    message: 'Função inválida',
   })
   role: RoleEnum;
 }

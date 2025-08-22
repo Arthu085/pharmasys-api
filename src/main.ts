@@ -11,7 +11,12 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   app.useGlobalInterceptors(new TransformResponseInterceptor(new Reflector()));
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    }),
+  );
 
   await app.listen(process.env.PORT ?? 3000);
 }

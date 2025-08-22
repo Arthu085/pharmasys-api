@@ -72,10 +72,10 @@ export class UserService {
       );
     }
 
-    const role = await this.roleRepository.findByName(dto.role.toUpperCase());
+    const role = await this.roleRepository.findByName(RoleEnum[dto.role]);
 
     if (!role) {
-      throw new BadRequestException('Função inválida');
+      throw new BadRequestException('Função é obrigatório');
     }
 
     try {
@@ -102,7 +102,7 @@ export class UserService {
   }
 
   async registerUser(dto: CreateUserDto) {
-    const allowedRoles = [RoleEnum.FARMACEUTICO, RoleEnum.OPERADOR];
+    const allowedRoles = ['F', 'O'];
 
     if (!allowedRoles.includes(dto.role)) {
       throw new BadRequestException(
@@ -123,7 +123,6 @@ export class UserService {
       throw new NotFoundException('Usuário não encontrado');
     }
 
-    // 2. Validações de negócio
     if (dto.email && dto.email !== user.email) {
       const emailExists = await this.userRepository.findByEmail(dto.email);
       if (emailExists && emailExists.id !== id) {
@@ -139,9 +138,10 @@ export class UserService {
 
     if (roleEnum) {
       const roleEntity = await this.roleRepository.findByName(
-        roleEnum.toUpperCase(),
+        RoleEnum[roleEnum],
       );
-      if (!roleEntity) throw new BadRequestException('Função inválida');
+
+      if (!roleEntity) throw new BadRequestException('Função é obrigatório');
       user.role = roleEntity;
     }
 
