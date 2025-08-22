@@ -1,7 +1,5 @@
-import { Transform } from 'class-transformer';
 import {
   IsEmail,
-  IsEnum,
   IsIn,
   IsNotEmpty,
   MaxLength,

@@ -17,7 +17,7 @@ import { Roles } from 'src/common/decorators/role.decorator';
 import { RolesGuard } from '../../auth/roles.guard';
 import { RoleEnum } from 'src/shared/role.enum';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { ChangeStatusDto } from 'src/shared/change.status.dto';
+import { ChangeStatusDto } from 'src/shared/change-status.dto';
 import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('user')

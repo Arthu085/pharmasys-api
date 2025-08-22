@@ -15,7 +15,7 @@ import { RoleEnum } from 'src/shared/role.enum';
 import { ResponseUserDto } from '../DTOs/response.user.dto';
 import { toResponseUserDto } from '../mappers/user.mapper';
 import { User } from '../entities/user.entity';
-import { ChangeStatusDto } from 'src/shared/change.status.dto';
+import { ChangeStatusDto } from 'src/shared/change-status.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -96,7 +96,7 @@ export class UserService {
         error.stack,
       );
       throw new InternalServerErrorException(
-        'Ocorreu um erro interno ao cadastrar o usuário.',
+        'Ocorreu um erro interno ao cadastrar o usuário',
       );
     }
   }
@@ -161,7 +161,7 @@ export class UserService {
         error.stack,
       );
       throw new InternalServerErrorException(
-        'Ocorreu um erro interno ao atualizar o usuário.',
+        'Ocorreu um erro interno ao atualizar o usuário',
       );
     }
   }
