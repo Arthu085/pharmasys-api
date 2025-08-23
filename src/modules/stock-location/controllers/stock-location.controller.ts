@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { StockLocationService } from '../services/stock-location.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/modules/auth/roles.guard';
@@ -7,6 +16,8 @@ import { RoleEnum } from 'src/shared/role.enum';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { CreateStockLocationDto } from '../DTOs/create.stock-location.dto';
 import { User } from 'src/common/decorators/user.decorator';
+import { UpdateStockLocationDto } from '../DTOs/update.stock-location.dto';
+import { ChangeStatusDto } from 'src/shared/change-status.dto';
 
 @Controller('stock/location')
 export class StockLocationController {
@@ -24,7 +35,7 @@ export class StockLocationController {
   @Roles(RoleEnum.A, RoleEnum.F)
   @Get(':id')
   @ResponseMessage('Local de estoque encontrado com sucesso')
-  findByIdStockLocation(id: number) {
+  findByIdStockLocation(@Param('id') id: number) {
     return this.stockLocationService.findByIdStockLocation(id);
   }
 
@@ -34,8 +45,32 @@ export class StockLocationController {
   @ResponseMessage('Local de estoque cadastrado com sucesso')
   createStockLocation(
     @Body() dto: CreateStockLocationDto,
-    @User('id') id: number,
+    @User('id') userId: number,
   ) {
-    return this.stockLocationService.createStockLocation(dto, id);
+    return this.stockLocationService.createStockLocation(dto, userId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.A, RoleEnum.F)
+  @Patch(':id')
+  @ResponseMessage('Local de estoque atualizado com sucesso')
+  updateStockLocation(
+    @Param('id') id: number,
+    @Body() dto: UpdateStockLocationDto,
+    @User('id') userId: number,
+  ) {
+    return this.stockLocationService.updateStockLocation(id, dto, userId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.A, RoleEnum.F)
+  @Put(':id')
+  @ResponseMessage('Status do local de estoque atualizado com sucesso')
+  changeStatusStockLocation(
+    @Param('id') id: number,
+    @Body() dto: ChangeStatusDto,
+    @User('id') userId: number,
+  ) {
+    return this.stockLocationService.changeStatusStockLocation(id, dto, userId);
   }
 }

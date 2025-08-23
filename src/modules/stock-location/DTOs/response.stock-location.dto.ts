@@ -9,6 +9,6 @@ export class ResponseStockLocationDto {
   stockLocationStatus: StatusEnum;
   createdAt: Date;
   updatedAt: Date | null;
-  userCreated: ResponseUserDto;
+  userCreated: ResponseUserDto | null;
   userUpdated: ResponseUserDto | null;
 }

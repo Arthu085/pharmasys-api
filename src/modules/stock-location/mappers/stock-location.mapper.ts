@@ -14,7 +14,9 @@ export function toResponseStockLocationDto(
   responseDto.stockLocationStatus = stockLocation.stockLocationStatus;
   responseDto.createdAt = stockLocation.createdAt;
   responseDto.updatedAt = stockLocation.updatedAt;
-  responseDto.userCreated = toResponseUserDto(stockLocation.userCreated);
+  responseDto.userCreated = stockLocation.userCreated
+    ? toResponseUserDto(stockLocation.userCreated)
+    : null;
   responseDto.userUpdated = stockLocation.userUpdated
     ? toResponseUserDto(stockLocation.userUpdated)
     : null;
