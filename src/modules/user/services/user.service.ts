@@ -40,11 +40,15 @@ export class UserService {
       throw new NotFoundException('Usuário não encontrado');
     }
 
+    if (user.userStatus === 'I') {
+      throw new ConflictException('Usuário está inativo');
+    }
+
     return toResponseUserDto(user);
   }
 
   async findByIdForUpdateUser(id: number) {
-    const user = await this.userRepository.findByIdForUpdate(id);
+    const user = await this.userRepository.findById(id);
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
@@ -59,6 +63,20 @@ export class UserService {
 
   async findAllRoles(): Promise<Role[]> {
     return this.roleRepository.findAll();
+  }
+
+  async findByIdShared(id: number) {
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    if (user.userStatus === 'I') {
+      throw new ConflictException('Usuário está inativo');
+    }
+
+    return user;
   }
 
   async createUser(dto: CreateUserDto): Promise<ResponseUserDto> {
@@ -118,10 +136,7 @@ export class UserService {
     dto: UpdateUserDto,
     userId: number,
   ): Promise<ResponseUserDto> {
-    const user = await this.userRepository.findByIdForUpdate(id);
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
+    const user = await this.findByIdForUpdateUser(id);
 
     if (dto.email && dto.email !== user.email) {
       const emailExists = await this.userRepository.findByEmail(dto.email);
@@ -171,10 +186,7 @@ export class UserService {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<ResponseUserDto> {
-    const user = await this.userRepository.findByIdForUpdate(id);
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
+    const user = await this.findByIdForUpdateUser(id);
 
     if (user.userStatus === dto.status) {
       throw new ConflictException('Não é possível alterar para o mesmo status');

@@ -1,10 +1,12 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ItemService } from '../services/item.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/modules/auth/roles.guard';
 import { Roles } from 'src/common/decorators/role.decorator';
 import { RoleEnum } from 'src/shared/role.enum';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { CreateItemDto } from '../DTOs/create.item.dto';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('item')
 export class ItemController {
@@ -24,5 +26,13 @@ export class ItemController {
   @ResponseMessage('Item encontrado com sucesso')
   findByIdItem(@Param('id') id: number) {
     return this.itemService.findByIdItem(id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.A, RoleEnum.F)
+  @Post()
+  @ResponseMessage('Item cadastrado com sucesso')
+  createItem(@Body() dto: CreateItemDto, @User('id') userId: number) {
+    return this.itemService.createItem(dto, userId);
   }
 }

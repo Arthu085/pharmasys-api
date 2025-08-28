@@ -10,9 +10,9 @@ import { StockLocationRepository } from '../repositories/stock-location.reposito
 import { ResponseStockLocationDto } from '../DTOs/response.stock-location.dto';
 import { toResponseStockLocationDto } from '../mappers/stock-location.mapper';
 import { CreateStockLocationDto } from '../DTOs/create.stock-location.dto';
-import { UserRepository } from 'src/modules/user/repositories/user.repository';
 import { UpdateStockLocationDto } from '../DTOs/update.stock-location.dto';
 import { ChangeStatusDto } from 'src/shared/change-status.dto';
+import { UserService } from 'src/modules/user/services/user.service';
 
 @Injectable()
 export class StockLocationService {
@@ -20,7 +20,7 @@ export class StockLocationService {
 
   constructor(
     private readonly stockLocationRepository: StockLocationRepository,
-    private readonly userRepository: UserRepository,
+    private readonly userService: UserService,
   ) {}
 
   async findAllStockLocations(): Promise<ResponseStockLocationDto[]> {
@@ -45,11 +45,7 @@ export class StockLocationService {
     dto: CreateStockLocationDto,
     userId: number,
   ): Promise<ResponseStockLocationDto> {
-    const user = await this.userRepository.findById(userId);
-
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
+    const user = await this.userService.findByIdShared(userId);
 
     const existingStockLocationCode =
       await this.stockLocationRepository.findByCode(dto.code);
@@ -87,11 +83,7 @@ export class StockLocationService {
     dto: UpdateStockLocationDto,
     userId: number,
   ): Promise<ResponseStockLocationDto> {
-    const user = await this.userRepository.findById(userId);
-
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
+    const user = await this.userService.findByIdShared(userId);
 
     const stockLocation = await this.stockLocationRepository.findById(id);
 
@@ -135,11 +127,7 @@ export class StockLocationService {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<ResponseStockLocationDto> {
-    const user = await this.userRepository.findById(userId);
-
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
+    const user = await this.userService.findByIdShared(userId);
 
     const stockLocation = await this.stockLocationRepository.findById(id);
 

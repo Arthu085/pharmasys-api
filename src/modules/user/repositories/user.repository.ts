@@ -19,10 +19,6 @@ export class UserRepository {
     return this.repo.findOne({ where: { id } });
   }
 
-  findByIdForUpdate(id: number): Promise<User | null> {
-    return this.repo.findOne({ where: { id } });
-  }
-
   findByEmail(email: string): Promise<User | null> {
     return this.repo.findOne({ where: { email }, relations: ['role'] });
   }

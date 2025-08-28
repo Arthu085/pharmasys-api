@@ -14,7 +14,7 @@ export function toResponseItemDto(item: Item): ResponseItemDto {
   responseDto.itemStatus = item.itemStatus;
   responseDto.createdAt = item.createdAt;
   responseDto.updatedAt = item.updatedAt;
-  responseDto.userCreated = item.userCreated;
+  responseDto.userCreated = toResponseUserDto(item.userCreated);
   responseDto.userUpdated = item.userUpdated
     ? toResponseUserDto(item.userUpdated)
     : null;

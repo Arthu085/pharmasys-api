@@ -8,26 +8,39 @@ import { Subtype } from './entities/subtype.entity';
 import { Presentation } from './entities/presentation.entity';
 import { ItemController } from './controllers/item.controller';
 import { ItemRepository } from './repositories/item.repository';
-import { UserRepository } from '../user/repositories/user.repository';
 import { DosageRepository } from './repositories/dosage.repository';
 import { TypeRepository } from './repositories/type.repository';
 import { SubtypeRepository } from './repositories/subtype.repository';
 import { PresentationRepository } from './repositories/presentation.repository';
 import { ItemService } from './services/item.service';
+import { UserService } from '../user/services/user.service';
+import { UserRepository } from '../user/repositories/user.repository';
+import { RoleRepository } from '../user/repositories/role.repository';
+import { Role } from '../user/entities/role.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Item, User, Dosage, Type, Subtype, Presentation]),
+    TypeOrmModule.forFeature([
+      Item,
+      User,
+      Dosage,
+      Type,
+      Subtype,
+      Presentation,
+      Role,
+    ]),
   ],
   controllers: [ItemController],
   providers: [
     ItemRepository,
-    UserRepository,
     DosageRepository,
     TypeRepository,
     SubtypeRepository,
     PresentationRepository,
+    UserRepository,
+    RoleRepository,
     ItemService,
+    UserService,
   ],
   exports: [ItemService],
 })

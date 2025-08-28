@@ -18,6 +18,10 @@ export class ItemRepository {
     return this.repo.findOne({ where: { id } });
   }
 
+  findByName(name: string): Promise<Item | null> {
+    return this.repo.findOne({ where: { name } });
+  }
+
   create(item: Partial<Item>): Item {
     return this.repo.create(item);
   }
