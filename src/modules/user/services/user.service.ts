@@ -17,6 +17,7 @@ import { toResponseUserDto } from '../mappers/user.mapper';
 import { User } from '../entities/user.entity';
 import { ChangeStatusDto } from 'src/shared/change-status.dto';
 import * as bcrypt from 'bcrypt';
+import { StatusEnum } from 'src/shared/status.enum';
 
 @Injectable()
 export class UserService {
@@ -72,7 +73,7 @@ export class UserService {
       throw new NotFoundException('Usuário não encontrado');
     }
 
-    if (user.userStatus === 'I') {
+    if (user.userStatus === StatusEnum.I) {
       throw new ConflictException('Usuário está inativo');
     }
 
@@ -137,6 +138,12 @@ export class UserService {
     userId: number,
   ): Promise<ResponseUserDto> {
     const user = await this.findByIdForUpdateUser(id);
+
+    if (user.userStatus === StatusEnum.I) {
+      throw new BadRequestException(
+        'Não é possível alterar um usuário inativo',
+      );
+    }
 
     if (dto.email && dto.email !== user.email) {
       const emailExists = await this.userRepository.findByEmail(dto.email);

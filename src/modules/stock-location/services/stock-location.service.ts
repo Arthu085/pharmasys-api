@@ -13,6 +13,7 @@ import { CreateStockLocationDto } from '../DTOs/create.stock-location.dto';
 import { UpdateStockLocationDto } from '../DTOs/update.stock-location.dto';
 import { ChangeStatusDto } from 'src/shared/change-status.dto';
 import { UserService } from 'src/modules/user/services/user.service';
+import { StatusEnum } from 'src/shared/status.enum';
 
 @Injectable()
 export class StockLocationService {
@@ -46,7 +47,6 @@ export class StockLocationService {
     userId: number,
   ): Promise<ResponseStockLocationDto> {
     const user = await this.userService.findByIdShared(userId);
-
     const existingStockLocationCode =
       await this.stockLocationRepository.findByCode(dto.code);
     const existingStockLocationName =
@@ -84,22 +84,46 @@ export class StockLocationService {
     userId: number,
   ): Promise<ResponseStockLocationDto> {
     const user = await this.userService.findByIdShared(userId);
-
     const stockLocation = await this.stockLocationRepository.findById(id);
 
     if (!stockLocation) {
       throw new NotFoundException('Localização de estoque não encontrada');
     }
+
+    if (stockLocation.stockLocationStatus === StatusEnum.I) {
+      throw new BadRequestException(
+        'Não é possível alterar uma localização de estoque inativa',
+      );
+    }
+
     if (stockLocation.isCentralStock === true) {
       throw new BadRequestException(
         'Não é possível atualizar o local de estoque central',
       );
     }
 
-    if (dto.name === stockLocation?.name || dto.code === stockLocation?.code) {
-      throw new ConflictException(
-        'Já existe uma localização de estoque com este código ou nome',
+    if (dto.name) {
+      const conflictingName = await this.stockLocationRepository.findByName(
+        dto.name,
       );
+
+      if (conflictingName && conflictingName.id !== id) {
+        throw new ConflictException(
+          'Já existe uma localização de estoque com este nome',
+        );
+      }
+    }
+
+    if (dto.code) {
+      const conflictingCode = await this.stockLocationRepository.findByCode(
+        dto.code,
+      );
+
+      if (conflictingCode && conflictingCode.id !== id) {
+        throw new ConflictException(
+          'Já existe uma localização de estoque com este código',
+        );
+      }
     }
 
     const updatedEntity = this.stockLocationRepository.merge(stockLocation, {
@@ -128,17 +152,18 @@ export class StockLocationService {
     userId: number,
   ): Promise<ResponseStockLocationDto> {
     const user = await this.userService.findByIdShared(userId);
-
     const stockLocation = await this.stockLocationRepository.findById(id);
 
     if (!stockLocation) {
       throw new NotFoundException('Localização de estoque não encontrada');
     }
+
     if (stockLocation.isCentralStock === true) {
       throw new BadRequestException(
         'Não é possível atualizar o local de estoque central',
       );
     }
+
     if (stockLocation.stockLocationStatus === dto.status) {
       throw new ConflictException(
         'O status da localização de estoque já está definido como o status fornecido',
