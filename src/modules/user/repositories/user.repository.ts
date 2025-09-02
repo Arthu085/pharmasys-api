@@ -4,7 +4,6 @@ import { DeepPartial, FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { FilterUserDto } from '../DTOs/filter.user.dto';
 import { RoleEnum } from 'src/shared/enums/role.enum';
-import { FilterDto } from 'src/shared/DTOs/filter.dto';
 
 @Injectable()
 export class UserRepository {
@@ -14,7 +13,7 @@ export class UserRepository {
   ) {}
 
   findAll(
-    filters: FilterUserDto & FilterDto,
+    filters: FilterUserDto,
     take: number,
     skip: number,
   ): Promise<[User[], number]> {

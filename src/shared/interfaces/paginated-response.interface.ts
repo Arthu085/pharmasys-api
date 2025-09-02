@@ -1,9 +1,10 @@
 export interface IPaginatedResponse<T> {
   data: T[];
-  meta: {
+  meta?: {
     total: number;
     page: number;
     limit: number;
     lastPage: number;
   };
+  message?: string;
 }

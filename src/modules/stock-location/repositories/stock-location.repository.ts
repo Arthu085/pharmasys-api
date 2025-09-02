@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StockLocation } from '../entities/stock-location.entity';
-import { DeepPartial, Repository } from 'typeorm';
+import { DeepPartial, FindOptionsWhere, ILike, Repository } from 'typeorm';
+import { FilterStockLocationDto } from '../DTOs/filter.stock-location.dto';
+import { FilterDto } from 'src/shared/DTOs/filter.dto';
 
 @Injectable()
 export class StockLocationRepository {
@@ -10,8 +12,26 @@ export class StockLocationRepository {
     private readonly repo: Repository<StockLocation>,
   ) {}
 
-  findAll(): Promise<StockLocation[]> {
-    return this.repo.find();
+  findAll(
+    filters: FilterStockLocationDto,
+    take: number,
+    skip: number,
+  ): Promise<[StockLocation[], number]> {
+    const where: FindOptionsWhere<StockLocation> = {};
+
+    if (filters.name) {
+      where.name = ILike(`%${filters.name}%`);
+    }
+
+    if (filters.code) {
+      where.code = ILike(`%${filters.code}%`);
+    }
+
+    if (filters.status) {
+      where.stockLocationStatus = filters.status;
+    }
+
+    return this.repo.findAndCount({ where, take, skip });
   }
 
   findById(id: number): Promise<StockLocation | null> {

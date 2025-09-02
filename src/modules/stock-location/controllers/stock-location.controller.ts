@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { StockLocationService } from '../services/stock-location.service';
@@ -18,6 +19,8 @@ import { CreateStockLocationDto } from '../DTOs/create.stock-location.dto';
 import { User } from 'src/common/decorators/user.decorator';
 import { UpdateStockLocationDto } from '../DTOs/update.stock-location.dto';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
+import { FilterStockLocationDto } from '../DTOs/filter.stock-location.dto';
+import { FilterDto } from 'src/shared/DTOs/filter.dto';
 
 @Controller('stock/location')
 export class StockLocationController {
@@ -27,8 +30,8 @@ export class StockLocationController {
   @Roles(RoleEnum.A, RoleEnum.F)
   @Get()
   @ResponseMessage('Locais de estoque encontrados com sucesso')
-  findAllStockLocations() {
-    return this.stockLocationService.findAllStockLocations();
+  findAllStockLocations(@Query() filters: FilterStockLocationDto) {
+    return this.stockLocationService.findAllStockLocations(filters);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

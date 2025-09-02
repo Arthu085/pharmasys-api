@@ -7,6 +7,7 @@ export function toResponseCompanyDto(company: Company): ResponseCompanyDto {
 
   responseDto.id = company.id;
   responseDto.name = company.name;
+  responseDto.cnpj = company.cnpj;
   responseDto.companyStatus = company.companyStatus;
   responseDto.createdAt = company.createdAt;
   responseDto.updatedAt = company.updatedAt;

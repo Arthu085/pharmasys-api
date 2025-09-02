@@ -22,6 +22,8 @@ import { UserService } from 'src/modules/user/services/user.service';
 import { UpdateItemDto } from '../DTOs/update.item.dto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
+import { FilterItemDto } from '../DTOs/filter.item.dto';
+import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
 
 @Injectable()
 export class ItemService {
@@ -36,10 +38,37 @@ export class ItemService {
     private readonly userService: UserService,
   ) {}
 
-  async findAllItems(): Promise<ResponseItemDto[]> {
-    const items = await this.itemRepository.findAll();
+  async findAllItems(
+    filters: FilterItemDto,
+  ): Promise<IPaginatedResponse<ResponseItemDto>> {
+    const page = filters.page || 1;
+    const limit = filters.limit || 10;
+    const skip = (page - 1) * limit;
+    const [items, total] = await this.itemRepository.findAll(
+      filters,
+      limit,
+      skip,
+    );
+    const data = items.map((user) => toResponseItemDto(user));
+    const lastPage = Math.ceil(total / limit);
 
-    return items.map((item) => toResponseItemDto(item));
+    // TODO - Refatorar para retornar apenas essa mensagem quando o array estar vazio
+    // if (!data.length) {
+    //   return {
+    //     data,
+    //     message: 'Nenhum item cadastrado',
+    //   };
+    // }
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        lastPage,
+      },
+    };
   }
 
   async findByIdItem(id: number): Promise<ResponseItemDto | null> {

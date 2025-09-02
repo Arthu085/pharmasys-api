@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { DeepPartial, Repository } from 'typeorm';
+import { DeepPartial, FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { Company } from '../entities/company.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FilterCompanyDto } from '../DTOs/filter.company.dto';
+import { FilterDto } from 'src/shared/DTOs/filter.dto';
+import { CompanyTypeEnum } from '../enums/company-type.enum';
 
 @Injectable()
 export class CompanyRepository {
@@ -10,8 +13,34 @@ export class CompanyRepository {
     private readonly repo: Repository<Company>,
   ) {}
 
-  findAll(): Promise<Company[]> {
-    return this.repo.find();
+  findAll(
+    filters: FilterCompanyDto,
+    take: number,
+    skip: number,
+  ): Promise<[Company[], number]> {
+    const where: FindOptionsWhere<Company> = {};
+
+    if (filters.name) {
+      where.name = ILike(`%${filters.name}%`);
+    }
+
+    if (filters.cnpj) {
+      where.cnpj = ILike(`%${filters.cnpj}%`);
+    }
+
+    if (filters.status) {
+      where.companyStatus = filters.status;
+    }
+
+    if (filters.companyType) {
+      const companyName = CompanyTypeEnum[filters.companyType];
+
+      where.companyTypes = {
+        name: companyName,
+      };
+    }
+
+    return this.repo.findAndCount({ where, take, skip });
   }
 
   findById(id: number): Promise<Company | null> {

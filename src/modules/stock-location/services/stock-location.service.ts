@@ -14,6 +14,9 @@ import { UpdateStockLocationDto } from '../DTOs/update.stock-location.dto';
 import { UserService } from 'src/modules/user/services/user.service';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
+import { FilterStockLocationDto } from '../DTOs/filter.stock-location.dto';
+import { FilterDto } from 'src/shared/DTOs/filter.dto';
+import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
 
 @Injectable()
 export class StockLocationService {
@@ -24,10 +27,29 @@ export class StockLocationService {
     private readonly userService: UserService,
   ) {}
 
-  async findAllStockLocations(): Promise<ResponseStockLocationDto[]> {
-    const stockLocations = await this.stockLocationRepository.findAll();
+  async findAllStockLocations(
+    filters: FilterStockLocationDto,
+  ): Promise<IPaginatedResponse<ResponseStockLocationDto>> {
+    const page = filters.page || 1;
+    const limit = filters.limit || 10;
+    const skip = (page - 1) * limit;
+    const [stocks, total] = await this.stockLocationRepository.findAll(
+      filters,
+      limit,
+      skip,
+    );
+    const data = stocks.map((user) => toResponseStockLocationDto(user));
+    const lastPage = Math.ceil(total / limit);
 
-    return stockLocations.map((stock) => toResponseStockLocationDto(stock));
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        lastPage,
+      },
+    };
   }
 
   async findByIdStockLocation(

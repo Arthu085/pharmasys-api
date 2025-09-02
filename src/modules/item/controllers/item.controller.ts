@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ItemService } from '../services/item.service';
@@ -18,6 +19,7 @@ import { CreateItemDto } from '../DTOs/create.item.dto';
 import { User } from 'src/common/decorators/user.decorator';
 import { UpdateItemDto } from '../DTOs/update.item.dto';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
+import { FilterItemDto } from '../DTOs/filter.item.dto';
 
 @Controller('item')
 export class ItemController {
@@ -27,8 +29,8 @@ export class ItemController {
   @Roles(RoleEnum.A, RoleEnum.F)
   @Get()
   @ResponseMessage('Itens encontrados com sucesso')
-  findAllItems() {
-    return this.itemService.findAllItems();
+  findAllItems(@Query() filters: FilterItemDto) {
+    return this.itemService.findAllItems(filters);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

@@ -32,7 +32,7 @@ export class UserService {
   ) {}
 
   async findAllUsers(
-    filters: FilterUserDto & FilterDto,
+    filters: FilterUserDto,
   ): Promise<IPaginatedResponse<ResponseUserDto>> {
     const page = filters.page || 1;
     const limit = filters.limit || 10;

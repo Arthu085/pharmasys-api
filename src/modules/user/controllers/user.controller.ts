@@ -31,7 +31,7 @@ export class UserController {
   @Roles(RoleEnum.A)
   @Get()
   @ResponseMessage('Usuários encontrados com sucesso')
-  findAllUsers(@Query() filters: FilterUserDto & FilterDto) {
+  findAllUsers(@Query() filters: FilterUserDto) {
     return this.userService.findAllUsers(filters);
   }
 

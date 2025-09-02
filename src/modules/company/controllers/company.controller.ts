@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CompanyService } from '../services/company.service';
@@ -18,6 +19,8 @@ import { CreateCompanyDto } from '../DTOs/create.company.dto';
 import { User } from 'src/common/decorators/user.decorator';
 import { UpdateCompanyDto } from '../DTOs/update.company.dto';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
+import { FilterCompanyDto } from '../DTOs/filter.company.dto';
+import { FilterDto } from 'src/shared/DTOs/filter.dto';
 
 @Controller('company')
 export class CompanyController {
@@ -27,8 +30,8 @@ export class CompanyController {
   @Roles(RoleEnum.A, RoleEnum.F)
   @Get()
   @ResponseMessage('Empresas encontradas com sucesso')
-  findAllCompanies() {
-    return this.companyService.findAllCompanies();
+  findAllCompanies(@Query() filters: FilterCompanyDto) {
+    return this.companyService.findAllCompanies(filters);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

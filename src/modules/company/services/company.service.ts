@@ -16,6 +16,9 @@ import { CompanyTypeEnum } from '../enums/company-type.enum';
 import { UpdateCompanyDto } from '../DTOs/update.company.dto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
+import { FilterCompanyDto } from '../DTOs/filter.company.dto';
+import { FilterDto } from 'src/shared/DTOs/filter.dto';
+import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
 
 @Injectable()
 export class CompanyService {
@@ -27,10 +30,29 @@ export class CompanyService {
     private readonly userService: UserService,
   ) {}
 
-  async findAllCompanies(): Promise<ResponseCompanyDto[]> {
-    const companies = await this.companyRepository.findAll();
+  async findAllCompanies(
+    filters: FilterCompanyDto,
+  ): Promise<IPaginatedResponse<ResponseCompanyDto>> {
+    const page = filters.page || 1;
+    const limit = filters.limit || 10;
+    const skip = (page - 1) * limit;
+    const [companies, total] = await this.companyRepository.findAll(
+      filters,
+      limit,
+      skip,
+    );
+    const data = companies.map((user) => toResponseCompanyDto(user));
+    const lastPage = Math.ceil(total / limit);
 
-    return companies.map((company) => toResponseCompanyDto(company));
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        lastPage,
+      },
+    };
   }
 
   async findByIdCompany(id: number): Promise<ResponseCompanyDto | null> {
