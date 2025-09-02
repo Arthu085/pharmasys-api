@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../../user/services/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { StatusEnum } from 'src/shared/status.enum';
+import { StatusEnum } from 'src/shared/enums/status.enum';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()

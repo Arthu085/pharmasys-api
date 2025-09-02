@@ -1,5 +1,5 @@
 import { ResponseUserDto } from 'src/modules/user/DTOs/response.user.dto';
-import { StatusEnum } from 'src/shared/status.enum';
+import { StatusEnum } from 'src/shared/enums/status.enum';
 import { Type } from '../entities/type.entity';
 import { Presentation } from '../entities/presentation.entity';
 import { Dosage } from '../entities/dosage.entity';

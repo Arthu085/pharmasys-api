@@ -20,8 +20,8 @@ import { DosageEnum } from '../enums/dosage.enum';
 import { SubtypeEnum } from '../enums/subtype.enum';
 import { UserService } from 'src/modules/user/services/user.service';
 import { UpdateItemDto } from '../DTOs/update.item.dto';
-import { StatusEnum } from 'src/shared/status.enum';
-import { ChangeStatusDto } from 'src/shared/change-status.dto';
+import { StatusEnum } from 'src/shared/enums/status.enum';
+import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 
 @Injectable()
 export class ItemService {

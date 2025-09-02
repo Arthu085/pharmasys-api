@@ -1,4 +1,4 @@
-import { StatusEnum } from '../../../shared/status.enum';
+import { StatusEnum } from '../../../shared/enums/status.enum';
 import { Role } from './role.entity';
 import {
   Entity,
@@ -24,7 +24,7 @@ export class User {
   @Column({ length: 255 })
   password: string;
 
-  @ManyToOne(() => Role, { eager: true })
+  @ManyToOne(() => Role)
   @JoinColumn({ name: 'role_id' })
   role: Role;
 

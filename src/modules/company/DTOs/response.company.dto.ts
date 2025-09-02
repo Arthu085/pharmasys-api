@@ -1,5 +1,5 @@
 import { ResponseUserDto } from 'src/modules/user/DTOs/response.user.dto';
-import { StatusEnum } from 'src/shared/status.enum';
+import { StatusEnum } from 'src/shared/enums/status.enum';
 import { ResponseCompanyTypeDto } from './response.company-type.dto';
 
 export class ResponseCompanyDto {

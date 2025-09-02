@@ -1,5 +1,5 @@
 import { IsIn, IsNotEmpty } from 'class-validator';
-import { StatusEnum } from './status.enum';
+import { StatusEnum } from '../enums/status.enum';
 
 export class ChangeStatusDto {
   @IsNotEmpty({ message: 'O campo status não pode ser vazio' })

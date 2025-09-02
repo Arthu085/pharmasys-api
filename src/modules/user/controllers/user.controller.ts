@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
@@ -15,10 +16,12 @@ import { UpdateUserDto } from '../DTOs/update.user.dto';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { Roles } from 'src/common/decorators/role.decorator';
 import { RolesGuard } from '../../auth/roles.guard';
-import { RoleEnum } from 'src/shared/role.enum';
+import { RoleEnum } from 'src/shared/enums/role.enum';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { ChangeStatusDto } from 'src/shared/change-status.dto';
 import { User } from 'src/common/decorators/user.decorator';
+import { FilterUserDto } from '../DTOs/filter.user.dto';
+import { FilterDto } from 'src/shared/DTOs/filter.dto';
+import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 
 @Controller('user')
 export class UserController {
@@ -28,8 +31,8 @@ export class UserController {
   @Roles(RoleEnum.A)
   @Get()
   @ResponseMessage('Usuários encontrados com sucesso')
-  findAllUsers() {
-    return this.userService.findAllUsers();
+  findAllUsers(@Query() filters: FilterUserDto & FilterDto) {
+    return this.userService.findAllUsers(filters);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

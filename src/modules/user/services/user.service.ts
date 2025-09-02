@@ -11,13 +11,16 @@ import { UpdateUserDto } from '../DTOs/update.user.dto';
 import { UserRepository } from '../repositories/user.repository';
 import { RoleRepository } from '../repositories/role.repository';
 import { Role } from '../entities/role.entity';
-import { RoleEnum } from 'src/shared/role.enum';
+import { RoleEnum } from 'src/shared/enums/role.enum';
 import { ResponseUserDto } from '../DTOs/response.user.dto';
 import { toResponseUserDto } from '../mappers/user.mapper';
 import { User } from '../entities/user.entity';
-import { ChangeStatusDto } from 'src/shared/change-status.dto';
 import * as bcrypt from 'bcrypt';
-import { StatusEnum } from 'src/shared/status.enum';
+import { StatusEnum } from 'src/shared/enums/status.enum';
+import { FilterUserDto } from '../DTOs/filter.user.dto';
+import { FilterDto } from 'src/shared/DTOs/filter.dto';
+import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
+import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 
 @Injectable()
 export class UserService {
@@ -28,10 +31,29 @@ export class UserService {
     private readonly roleRepository: RoleRepository,
   ) {}
 
-  async findAllUsers(): Promise<ResponseUserDto[]> {
-    const users = await this.userRepository.findAll();
+  async findAllUsers(
+    filters: FilterUserDto & FilterDto,
+  ): Promise<IPaginatedResponse<ResponseUserDto>> {
+    const page = filters.page || 1;
+    const limit = filters.limit || 10;
+    const skip = (page - 1) * limit;
+    const [users, total] = await this.userRepository.findAll(
+      filters,
+      limit,
+      skip,
+    );
+    const data = users.map((user) => toResponseUserDto(user));
+    const lastPage = Math.ceil(total / limit);
 
-    return users.map((user) => toResponseUserDto(user));
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        lastPage,
+      },
+    };
   }
 
   async findByIdUser(id: number): Promise<ResponseUserDto> {

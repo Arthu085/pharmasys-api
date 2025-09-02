@@ -1,4 +1,4 @@
-import { StatusEnum } from 'src/shared/status.enum';
+import { StatusEnum } from 'src/shared/enums/status.enum';
 import { Role } from '../entities/role.entity';
 
 export class ResponseUserDto {

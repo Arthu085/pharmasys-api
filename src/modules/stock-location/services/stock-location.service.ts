@@ -11,9 +11,9 @@ import { ResponseStockLocationDto } from '../DTOs/response.stock-location.dto';
 import { toResponseStockLocationDto } from '../mappers/stock-location.mapper';
 import { CreateStockLocationDto } from '../DTOs/create.stock-location.dto';
 import { UpdateStockLocationDto } from '../DTOs/update.stock-location.dto';
-import { ChangeStatusDto } from 'src/shared/change-status.dto';
 import { UserService } from 'src/modules/user/services/user.service';
-import { StatusEnum } from 'src/shared/status.enum';
+import { StatusEnum } from 'src/shared/enums/status.enum';
+import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 
 @Injectable()
 export class StockLocationService {

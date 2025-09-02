@@ -1,5 +1,5 @@
 import { User } from 'src/modules/user/entities/user.entity';
-import { StatusEnum } from 'src/shared/status.enum';
+import { StatusEnum } from 'src/shared/enums/status.enum';
 import {
   Column,
   CreateDateColumn,

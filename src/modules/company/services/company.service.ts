@@ -14,8 +14,8 @@ import { CreateCompanyDto } from '../DTOs/create.company.dto';
 import { UserService } from 'src/modules/user/services/user.service';
 import { CompanyTypeEnum } from '../enums/company-type.enum';
 import { UpdateCompanyDto } from '../DTOs/update.company.dto';
-import { StatusEnum } from 'src/shared/status.enum';
-import { ChangeStatusDto } from 'src/shared/change-status.dto';
+import { StatusEnum } from 'src/shared/enums/status.enum';
+import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 
 @Injectable()
 export class CompanyService {

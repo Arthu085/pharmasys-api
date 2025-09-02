@@ -12,12 +12,12 @@ import { CompanyService } from '../services/company.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/modules/auth/roles.guard';
 import { Roles } from 'src/common/decorators/role.decorator';
-import { RoleEnum } from 'src/shared/role.enum';
+import { RoleEnum } from 'src/shared/enums/role.enum';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { CreateCompanyDto } from '../DTOs/create.company.dto';
 import { User } from 'src/common/decorators/user.decorator';
 import { UpdateCompanyDto } from '../DTOs/update.company.dto';
-import { ChangeStatusDto } from 'src/shared/change-status.dto';
+import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 
 @Controller('company')
 export class CompanyController {
