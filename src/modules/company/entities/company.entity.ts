@@ -54,7 +54,7 @@ export class Company {
   @JoinColumn({ name: 'user_updated_id' })
   userUpdated: User | null;
 
-  @ManyToMany(() => CompanyType, (type) => type.companies)
+  @ManyToMany(() => CompanyType, (type) => type.companies, { eager: true })
   @JoinTable({
     name: 'company_type_rel',
     joinColumn: {

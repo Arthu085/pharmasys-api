@@ -152,6 +152,7 @@ export class ItemService {
 
     if (typeDto) {
       const type = await this.typeRepository.findByName(TypeEnum[typeDto]);
+
       if (!type) {
         throw new NotFoundException('Tipo informado não foi encontrado');
       }
@@ -162,6 +163,7 @@ export class ItemService {
       const presentation = await this.presentationRepository.findByName(
         PresentationEnum[presentationDto],
       );
+
       if (!presentation) {
         throw new NotFoundException(
           'Apresentação informada não foi encontrada',
@@ -174,6 +176,7 @@ export class ItemService {
       const dosage = await this.dosageRepository.findByFormat(
         DosageEnum[dosageDto],
       );
+
       if (!dosage) {
         throw new NotFoundException('Dosagem informada não foi encontrada');
       }
@@ -186,9 +189,11 @@ export class ItemService {
           'Subtipo só pode ser definido para Medicamentos',
         );
       }
+
       const subtype = await this.subtypeRepository.findByName(
         SubtypeEnum[subtypeDto],
       );
+
       if (!subtype) {
         throw new NotFoundException('Subtipo informado não foi encontrado');
       }

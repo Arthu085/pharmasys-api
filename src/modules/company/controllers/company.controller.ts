@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { CompanyService } from '../services/company.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/modules/auth/roles.guard';
@@ -7,6 +16,8 @@ import { RoleEnum } from 'src/shared/role.enum';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { CreateCompanyDto } from '../DTOs/create.company.dto';
 import { User } from 'src/common/decorators/user.decorator';
+import { UpdateCompanyDto } from '../DTOs/update.company.dto';
+import { ChangeStatusDto } from 'src/shared/change-status.dto';
 
 @Controller('company')
 export class CompanyController {
@@ -34,5 +45,29 @@ export class CompanyController {
   @ResponseMessage('Empresa cadastrada com sucesso')
   createCompany(@Body() dto: CreateCompanyDto, @User('id') userId: number) {
     return this.companyService.createCompany(dto, userId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.A, RoleEnum.F)
+  @Patch(':id')
+  @ResponseMessage('Empresa atualizada com sucesso')
+  updateCompany(
+    @Param('id') id: number,
+    @Body() dto: UpdateCompanyDto,
+    @User('id') userId: number,
+  ) {
+    return this.companyService.updateCompany(id, dto, userId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.A, RoleEnum.F)
+  @Put(':id')
+  @ResponseMessage('Status da empresa atualizado com sucesso')
+  changeStatusCompany(
+    @Param('id') id: number,
+    @Body() dto: ChangeStatusDto,
+    @User('id') userId: number,
+  ) {
+    return this.companyService.changeStatusCompany(id, dto, userId);
   }
 }

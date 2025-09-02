@@ -13,6 +13,9 @@ import { toResponseCompanyDto } from '../mappers/company.mapper';
 import { CreateCompanyDto } from '../DTOs/create.company.dto';
 import { UserService } from 'src/modules/user/services/user.service';
 import { CompanyTypeEnum } from '../enums/company-type.enum';
+import { UpdateCompanyDto } from '../DTOs/update.company.dto';
+import { StatusEnum } from 'src/shared/status.enum';
+import { ChangeStatusDto } from 'src/shared/change-status.dto';
 
 @Injectable()
 export class CompanyService {
@@ -79,6 +82,115 @@ export class CompanyService {
       );
       throw new InternalServerErrorException(
         'Ocorreu um erro interno ao cadastrar a empresa',
+      );
+    }
+  }
+
+  async updateCompany(
+    id: number,
+    dto: UpdateCompanyDto,
+    userId: number,
+  ): Promise<ResponseCompanyDto> {
+    const user = await this.userService.findByIdShared(userId);
+    const company = await this.companyRepository.findById(id);
+
+    if (!company) {
+      throw new NotFoundException('Empresa não encontrada');
+    }
+
+    if (company.companyStatus === StatusEnum.I) {
+      throw new BadRequestException(
+        'Não é possível alterar uma empresa inativa',
+      );
+    }
+
+    const { cnpj: cnpjDto, companyTypes: companyTypesDto, ...restOfDto } = dto;
+
+    Object.assign(company, restOfDto);
+
+    if (cnpjDto) {
+      const existingCompany = await this.companyRepository.findByCnpj(cnpjDto);
+
+      if (existingCompany && existingCompany.id !== id) {
+        throw new ConflictException('Existe uma empresa com esse CNPJ');
+      }
+      company.cnpj = cnpjDto;
+    }
+
+    if (companyTypesDto) {
+      const newTypeNames = companyTypesDto.map((key) => CompanyTypeEnum[key]);
+
+      const existingTypeNames = company.companyTypes.map((type) => type.name);
+
+      const areTypesTheSame =
+        newTypeNames.length === existingTypeNames.length &&
+        newTypeNames.every((typeName) => existingTypeNames.includes(typeName));
+
+      if (areTypesTheSame) {
+        throw new BadRequestException(
+          'Não é possível alterar os tipos de empresa para os mesmos tipos já existentes',
+        );
+      }
+
+      const companyTypes =
+        await this.companyTypeRepository.findByNames(newTypeNames);
+
+      if (companyTypes.length === 0) {
+        throw new BadRequestException('Tipo de empresa não encontrado');
+      }
+
+      company.companyTypes = companyTypes;
+    }
+
+    company.userUpdated = user;
+
+    try {
+      const result = await this.companyRepository.save(company);
+
+      return toResponseCompanyDto(result);
+    } catch (error) {
+      this.logger.error(
+        `Falha ao atualizar empresa. Error: ${error.message}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException(
+        'Ocorreu um erro interno ao atualizar a empresa',
+      );
+    }
+  }
+
+  async changeStatusCompany(
+    id: number,
+    dto: ChangeStatusDto,
+    userId: number,
+  ): Promise<ResponseCompanyDto> {
+    const user = await this.userService.findByIdShared(userId);
+    const company = await this.companyRepository.findById(id);
+
+    if (!company) {
+      throw new NotFoundException('Empresa não encontrada');
+    }
+
+    if (company.companyStatus === dto.status) {
+      throw new ConflictException(
+        'O status da empresa já está definido como o status fornecido',
+      );
+    }
+
+    company.companyStatus = dto.status;
+    company.userUpdated = user;
+
+    try {
+      const result = await this.companyRepository.save(company);
+
+      return toResponseCompanyDto(result);
+    } catch (error) {
+      this.logger.error(
+        `Falha ao alterar o status da empresa ${id}. Error: ${error.message}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException(
+        'Ocorreu um erro interno ao alterar o status da empresa',
       );
     }
   }
