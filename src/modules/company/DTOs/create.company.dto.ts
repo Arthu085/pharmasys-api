@@ -22,7 +22,7 @@ export class CreateCompanyDto {
   @IsNotEmpty({ message: 'O tipo de empresa é obrigatório' })
   @IsIn(Object.keys(CompanyTypeEnum), {
     each: true,
-    message: `O tipo de empresa deve ser um dos seguintes valores: ${Object.keys(CompanyTypeEnum).join(', ')}.`,
+    message: `O tipo de empresa deve ser um dos seguintes valores: ${Object.values(CompanyTypeEnum).join(', ')}`,
   })
   companyTypes: CompanyTypeEnum[];
 }

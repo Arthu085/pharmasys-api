@@ -18,19 +18,19 @@ export class CreateItemDto {
 
   @IsNotEmpty({ message: 'O tipo é obrigatório' })
   @IsIn(Object.keys(TypeEnum), {
-    message: `O tipo deve ser um dos seguintes valores: ${Object.keys(TypeEnum).join(', ')}.`,
+    message: `O tipo deve ser um dos seguintes valores: ${Object.values(TypeEnum).join(', ')}`,
   })
   type: TypeEnum;
 
   @IsNotEmpty({ message: 'A apresentação é obrigatória' })
   @IsIn(Object.keys(PresentationEnum), {
-    message: `A apresentação deve ser um dos seguintes valores: ${Object.keys(PresentationEnum).join(', ')}.`,
+    message: `A apresentação deve ser um dos seguintes valores: ${Object.values(PresentationEnum).join(', ')}`,
   })
   presentation: PresentationEnum;
 
   @IsNotEmpty({ message: 'A dosagem é obrigatória' })
   @IsIn(Object.keys(DosageEnum), {
-    message: `A dosagem deve ser um dos seguintes valores: ${Object.keys(DosageEnum).join(', ')}.`,
+    message: `A dosagem deve ser um dos seguintes valores: ${Object.values(DosageEnum).join(', ')}`,
   })
   dosage: DosageEnum;
 
@@ -39,7 +39,7 @@ export class CreateItemDto {
     message: 'O subtipo é obrigatório quando o tipo for medicamento',
   })
   @IsIn(Object.keys(SubtypeEnum), {
-    message: `O subtipo deve ser um dos seguintes valores: ${Object.keys(SubtypeEnum).join(', ')}.`,
+    message: `O subtipo deve ser um dos seguintes valores: ${Object.values(SubtypeEnum).join(', ')}`,
   })
   subtype?: SubtypeEnum;
 }
