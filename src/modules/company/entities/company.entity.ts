@@ -12,12 +12,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { CompanyType } from './company-type.entity';
+import { BaseEntity } from 'src/common/entites/base.entity';
 
 @Entity('company')
-export class Company {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Company extends BaseEntity {
   @Column({ length: 255 })
   name: string;
 
@@ -31,20 +29,6 @@ export class Company {
     name: 'company_status',
   })
   companyStatus: StatusEnum;
-
-  @CreateDateColumn({
-    type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP',
-    name: 'created_at',
-  })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamptz',
-    name: 'updated_at',
-    nullable: true,
-  })
-  updatedAt: Date | null;
 
   @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'user_created_id' })

@@ -6,12 +6,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Type } from './type.entity';
+import { BaseEntity } from 'src/common/entites/base.entity';
 
 @Entity('subtype')
-export class Subtype {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Subtype extends BaseEntity {
   @Column({ length: 100, unique: true })
   name: string;
 

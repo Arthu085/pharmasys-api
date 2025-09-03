@@ -13,12 +13,10 @@ import { Type } from './type.entity';
 import { Presentation } from './presentation.entity';
 import { Dosage } from './dosage.entity';
 import { Subtype } from './subtype.entity';
+import { BaseEntity } from 'src/common/entites/base.entity';
 
 @Entity('item')
-export class Item {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Item extends BaseEntity {
   @Column({ length: 255 })
   name: string;
 
@@ -45,20 +43,6 @@ export class Item {
     name: 'item_status',
   })
   itemStatus: StatusEnum;
-
-  @CreateDateColumn({
-    type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP',
-    name: 'created_at',
-  })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamptz',
-    name: 'updated_at',
-    nullable: true,
-  })
-  updatedAt: Date | null;
 
   @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'user_created_id' })

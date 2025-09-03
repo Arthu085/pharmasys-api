@@ -1,3 +1,4 @@
+import { BaseEntity } from 'src/common/entites/base.entity';
 import { StatusEnum } from '../../../shared/enums/status.enum';
 import { Role } from './role.entity';
 import {
@@ -11,10 +12,7 @@ import {
 } from 'typeorm';
 
 @Entity('user')
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class User extends BaseEntity {
   @Column({ length: 100 })
   name: string;
 
@@ -35,20 +33,6 @@ export class User {
     name: 'user_status',
   })
   userStatus: StatusEnum;
-
-  @CreateDateColumn({
-    type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP',
-    name: 'created_at',
-  })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamptz',
-    name: 'updated_at',
-    nullable: true,
-  })
-  updatedAt: Date | null;
 
   @Column({ type: 'integer', nullable: true, name: 'user_updated_id' })
   userUpdated: number | null;
