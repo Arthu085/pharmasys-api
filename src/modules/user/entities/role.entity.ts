@@ -1,8 +1,8 @@
 import { BaseEntity } from 'src/common/entites/base.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('role')
+@Entity('role', { comment: 'Tabela para cadastro de funções' })
 export class Role extends BaseEntity {
-  @Column({ length: 50, unique: true })
+  @Column({ length: 50, unique: true, comment: 'Nome da função' })
   name: string;
 }

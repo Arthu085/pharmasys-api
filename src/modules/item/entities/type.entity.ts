@@ -1,8 +1,8 @@
 import { BaseEntity } from 'src/common/entites/base.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
-@Entity('type')
+@Entity('type', { comment: 'Tabela para cadastro de tipos' })
 export class Type extends BaseEntity {
-  @Column({ length: 100, unique: true })
+  @Column({ length: 100, unique: true, comment: 'Nome do tipo' })
   name: string;
 }

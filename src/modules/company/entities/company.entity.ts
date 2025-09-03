@@ -2,24 +2,24 @@ import { User } from 'src/modules/user/entities/user.entity';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import {
   Column,
-  CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { CompanyType } from './company-type.entity';
 import { BaseEntity } from 'src/common/entites/base.entity';
 
-@Entity('company')
+@Entity('company', { comment: 'Tabela para cadastro de empresa' })
+@Index(['name', 'cnpj'])
 export class Company extends BaseEntity {
-  @Column({ length: 255 })
+  @Column({ length: 255, comment: 'Nome da empresa' })
+  @Index()
   name: string;
 
-  @Column({ length: 18, unique: true })
+  @Column({ length: 18, unique: true, comment: 'CNPJ da empresa' })
   cnpj: string;
 
   @Column({
@@ -27,7 +27,9 @@ export class Company extends BaseEntity {
     enum: StatusEnum,
     default: StatusEnum.A,
     name: 'company_status',
+    comment: 'Status da empresa',
   })
+  @Index()
   companyStatus: StatusEnum;
 
   @ManyToOne(() => User, { eager: true })

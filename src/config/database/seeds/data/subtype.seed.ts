@@ -1,5 +1,15 @@
+import { Type } from 'src/modules/item/entities/type.entity';
+
+export function getSubtypesSeed(medicamentoType: Type) {
+  return [
+    { name: 'Básico', type: medicamentoType },
+    { name: 'Antimicrobiano', type: medicamentoType },
+    { name: 'Psicotrópico', type: medicamentoType },
+  ];
+}
+
 export const SUBTYPES_SEED = [
-  { name: 'Básico', type_id: 1 },
-  { name: 'Antimicrobiano', type_id: 1 },
-  { name: 'Psicotrópico', type_id: 1 },
+  { name: 'Comprimido', type_id: null },
+  { name: 'Líquido', type_id: null },
+  { name: 'Ampola', type_id: null },
 ];

@@ -1,16 +1,10 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Type } from './type.entity';
 import { BaseEntity } from 'src/common/entites/base.entity';
 
-@Entity('subtype')
+@Entity('subtype', { comment: 'Tabela para cadastro de subtipos' })
 export class Subtype extends BaseEntity {
-  @Column({ length: 100, unique: true })
+  @Column({ length: 100, unique: true, comment: 'Nome do subtipo' })
   name: string;
 
   @ManyToOne(() => Type, { eager: true })

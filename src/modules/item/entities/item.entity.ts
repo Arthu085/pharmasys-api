@@ -1,23 +1,17 @@
 import { User } from 'src/modules/user/entities/user.entity';
 import { StatusEnum } from 'src/shared/enums/status.enum';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { Type } from './type.entity';
 import { Presentation } from './presentation.entity';
 import { Dosage } from './dosage.entity';
 import { Subtype } from './subtype.entity';
 import { BaseEntity } from 'src/common/entites/base.entity';
 
-@Entity('item')
+@Entity('item', { comment: 'Tabela para o cadastro de item' })
+@Index(['name', 'type', 'presentation', 'dosage', 'subtype'])
 export class Item extends BaseEntity {
-  @Column({ length: 255 })
+  @Column({ length: 255, comment: 'Nome do item' })
+  @Index()
   name: string;
 
   @ManyToOne(() => Type, { eager: true })
@@ -41,7 +35,9 @@ export class Item extends BaseEntity {
     enum: StatusEnum,
     default: StatusEnum.A,
     name: 'item_status',
+    comment: 'Status do item',
   })
+  @Index()
   itemStatus: StatusEnum;
 
   @ManyToOne(() => User, { eager: true })

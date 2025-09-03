@@ -1,8 +1,8 @@
 import { BaseEntity } from 'src/common/entites/base.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
-@Entity('dosage')
+@Entity('dosage', { comment: 'Tabela para cadastro de dosagem' })
 export class Dosage extends BaseEntity {
-  @Column({ length: 100, unique: true })
+  @Column({ length: 100, unique: true, comment: 'Formato da dosagem' })
   format: string;
 }

@@ -15,7 +15,6 @@ import { UserService } from 'src/modules/user/services/user.service';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 import { FilterStockLocationDto } from '../DTOs/filter.stock-location.dto';
-import { FilterDto } from 'src/shared/DTOs/filter.dto';
 import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
 
 @Injectable()
@@ -71,12 +70,10 @@ export class StockLocationService {
     const user = await this.userService.findByIdShared(userId);
     const existingStockLocationCode =
       await this.stockLocationRepository.findByCode(dto.code);
-    const existingStockLocationName =
-      await this.stockLocationRepository.findByName(dto.name);
 
-    if (existingStockLocationCode || existingStockLocationName) {
+    if (existingStockLocationCode) {
       throw new ConflictException(
-        'Já existe uma localização de estoque com este código ou nome',
+        'Já existe uma localização de estoque com este código',
       );
     }
 
