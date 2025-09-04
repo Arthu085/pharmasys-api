@@ -7,9 +7,3 @@ export function getSubtypesSeed(medicamentoType: Type) {
     { name: 'Psicotrópico', type: medicamentoType },
   ];
 }
-
-export const SUBTYPES_SEED = [
-  { name: 'Comprimido', type_id: null },
-  { name: 'Líquido', type_id: null },
-  { name: 'Ampola', type_id: null },
-];

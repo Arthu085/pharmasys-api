@@ -1,11 +1,11 @@
 export const ADVICES_SEED = [
-  { acronym: 'CRM', full_name: 'Conselho Regional de Medicina' },
-  { acronym: 'CRO', full_name: 'Conselho Regional de Odontologia' },
+  { acronym: 'CRM', fullName: 'Conselho Regional de Medicina' },
+  { acronym: 'CRO', fullName: 'Conselho Regional de Odontologia' },
   {
     acronym: 'COREM',
-    full_name: 'Conselho Regional de Técnicos em Radiologia',
+    fullName: 'Conselho Regional de Técnicos em Radiologia',
   },
-  { acronym: 'CRMV', full_name: 'Conselho Regional de Medicina Veterinária' },
-  { acronym: 'CRF', full_name: 'Conselho Regional de Farmácia' },
-  { acronym: 'CRN', full_name: 'Conselho Regional de Nutrição' },
+  { acronym: 'CRMV', fullName: 'Conselho Regional de Medicina Veterinária' },
+  { acronym: 'CRF', fullName: 'Conselho Regional de Farmácia' },
+  { acronym: 'CRN', fullName: 'Conselho Regional de Nutrição' },
 ];

@@ -1,4 +1,5 @@
 import { BaseEntity } from 'src/common/entites/base.entity';
+import { User } from 'src/modules/user/entities/user.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('stock_location', {
@@ -6,6 +7,14 @@ import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 })
 @Index(['name', 'code'])
 export class StockLocation extends BaseEntity {
+  @ManyToOne(() => User, { eager: true, nullable: true })
+  @JoinColumn({ name: 'user_created_id' })
+  userCreated?: User | null;
+
+  @ManyToOne(() => User, { eager: true, nullable: true })
+  @JoinColumn({ name: 'user_updated_id' })
+  userUpdated?: User | null;
+
   @Column({ length: 100, comment: 'Nome do local de estoque' })
   @Index()
   name: string;

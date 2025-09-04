@@ -1,4 +1,3 @@
-import { User } from 'src/modules/user/entities/user.entity';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import {
   PrimaryGeneratedColumn,
@@ -6,8 +5,6 @@ import {
   UpdateDateColumn,
   Column,
   Index,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 
 export abstract class BaseEntity {
@@ -29,12 +26,4 @@ export abstract class BaseEntity {
   })
   @Index()
   status: StatusEnum;
-
-  @ManyToOne(() => User, { eager: true, nullable: true })
-  @JoinColumn({ name: 'user_created_id' })
-  userCreated?: User | null;
-
-  @ManyToOne(() => User, { eager: true, nullable: true })
-  @JoinColumn({ name: 'user_updated_id' })
-  userUpdated?: User | null;
 }

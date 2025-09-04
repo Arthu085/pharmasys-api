@@ -1,10 +1,27 @@
-import { Column, Entity, Index, JoinTable, ManyToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+} from 'typeorm';
 import { CompanyType } from './company-type.entity';
 import { BaseEntity } from 'src/common/entites/base.entity';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Entity('company', { comment: 'Tabela para cadastro de empresa' })
 @Index(['name', 'cnpj'])
 export class Company extends BaseEntity {
+  @ManyToOne(() => User, { eager: true })
+  @JoinColumn({ name: 'user_created_id' })
+  userCreated: User;
+
+  @ManyToOne(() => User, { eager: true, nullable: true })
+  @JoinColumn({ name: 'user_updated_id' })
+  userUpdated?: User | null;
+
   @Column({ length: 255, comment: 'Nome da empresa' })
   @Index()
   name: string;

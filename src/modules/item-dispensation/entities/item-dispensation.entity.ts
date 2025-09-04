@@ -1,12 +1,21 @@
 import { BaseEntity } from 'src/common/entites/base.entity';
 import { Patient } from 'src/modules/patient/entities/patient.entity';
 import { Prescriptor } from 'src/modules/prescriptor/entities/prescriptor.entity';
+import { User } from 'src/modules/user/entities/user.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('item_dispensation', {
   comment: 'Tabela para cadastro dispensação de itens',
 })
 export class ItemDispensation extends BaseEntity {
+  @ManyToOne(() => User, { eager: true })
+  @JoinColumn({ name: 'user_created_id' })
+  userCreated: User;
+
+  @ManyToOne(() => User, { eager: true, nullable: true })
+  @JoinColumn({ name: 'user_updated_id' })
+  userUpdated?: User | null;
+
   @ManyToOne(() => Patient, { eager: true })
   @JoinColumn({ name: 'patient_id' })
   @Index()

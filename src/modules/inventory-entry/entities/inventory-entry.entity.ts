@@ -3,13 +3,23 @@ import { Company } from 'src/modules/company/entities/company.entity';
 import { StockLocation } from 'src/modules/stock-location/entities/stock-location.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { EntryItemType } from './entry-item-type.entity';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Entity('inventory_entry', {
   comment: 'Tabela para cadastro de dados de entrada de item',
 })
-@Index(['invoiceNumber', 'entryData'])
+@Index(['invoiceNumber', 'entryDate'])
 export class InventoryEntry extends BaseEntity {
+  @ManyToOne(() => User, { eager: true })
+  @JoinColumn({ name: 'user_created_id' })
+  userCreated: User;
+
+  @ManyToOne(() => User, { eager: true, nullable: true })
+  @JoinColumn({ name: 'user_updated_id' })
+  userUpdated?: User | null;
+
   @Column({
+    type: 'varchar',
     name: 'invoice_number',
     length: 70,
     nullable: true,

@@ -1,12 +1,21 @@
 import { BaseEntity } from 'src/common/entites/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { ExitItemType } from './exit-item-type.entity';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Entity('inventory_exit', {
   comment: 'Tabela para cadastro de dados de saída de item',
 })
 @Index(['exitDate', 'exitType'])
 export class InventoryExit extends BaseEntity {
+  @ManyToOne(() => User, { eager: true })
+  @JoinColumn({ name: 'user_created_id' })
+  userCreated: User;
+
+  @ManyToOne(() => User, { eager: true, nullable: true })
+  @JoinColumn({ name: 'user_updated_id' })
+  userUpdated?: User | null;
+
   @Column({
     type: 'timestamptz',
     name: 'exit_date',
