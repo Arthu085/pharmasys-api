@@ -20,7 +20,6 @@ import { RoleEnum } from 'src/shared/enums/role.enum';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { User } from 'src/common/decorators/user.decorator';
 import { FilterUserDto } from '../DTOs/filter.user.dto';
-import { FilterDto } from 'src/shared/DTOs/filter.dto';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 
 @Controller('user')

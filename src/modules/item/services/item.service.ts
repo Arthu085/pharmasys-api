@@ -155,7 +155,7 @@ export class ItemService {
       throw new NotFoundException('Item não encontrado');
     }
 
-    if (item.itemStatus === StatusEnum.I) {
+    if (item.status === StatusEnum.I) {
       throw new BadRequestException('Não é possível alterar um item inativo');
     }
 
@@ -262,13 +262,13 @@ export class ItemService {
       throw new NotFoundException('Item não encontrado');
     }
 
-    if (item.itemStatus === dto.status) {
+    if (item.status === dto.status) {
       throw new ConflictException(
         'O status do item já está definido como o status fornecido',
       );
     }
 
-    item.itemStatus = dto.status;
+    item.status = dto.status;
     item.userUpdated = user;
 
     try {

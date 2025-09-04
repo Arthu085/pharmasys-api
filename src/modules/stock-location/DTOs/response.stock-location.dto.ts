@@ -6,7 +6,7 @@ export class ResponseStockLocationDto {
   name: string;
   code: string;
   isCentralStock: boolean;
-  stockLocationStatus: StatusEnum;
+  status: StatusEnum;
   createdAt: Date;
   updatedAt: Date | null;
   userCreated: ResponseUserDto | null;

@@ -10,11 +10,13 @@ export function toResponseItemDto(item: Item): ResponseItemDto {
   responseDto.type = item.type;
   responseDto.presentation = item.presentation;
   responseDto.dosage = item.dosage;
-  responseDto.subtype = item.subtype;
-  responseDto.itemStatus = item.itemStatus;
+  responseDto.subtype = item.subtype ? item.subtype : null;
+  responseDto.status = item.status;
   responseDto.createdAt = item.createdAt;
   responseDto.updatedAt = item.updatedAt;
-  responseDto.userCreated = toResponseUserDto(item.userCreated);
+  responseDto.userCreated = item.userCreated
+    ? toResponseUserDto(item.userCreated)
+    : null;
   responseDto.userUpdated = item.userUpdated
     ? toResponseUserDto(item.userUpdated)
     : null;

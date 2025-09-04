@@ -12,9 +12,9 @@ export class ResponseItemDto {
   presentation: Presentation;
   dosage: Dosage;
   subtype: Subtype | null;
-  itemStatus: StatusEnum;
+  status: StatusEnum;
   createdAt: Date;
   updatedAt: Date | null;
-  userCreated: ResponseUserDto;
+  userCreated: ResponseUserDto | null;
   userUpdated: ResponseUserDto | null;
 }

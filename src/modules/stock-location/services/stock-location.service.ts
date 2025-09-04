@@ -109,7 +109,7 @@ export class StockLocationService {
       throw new NotFoundException('Localização de estoque não encontrada');
     }
 
-    if (stockLocation.stockLocationStatus === StatusEnum.I) {
+    if (stockLocation.status === StatusEnum.I) {
       throw new BadRequestException(
         'Não é possível alterar uma localização de estoque inativa',
       );
@@ -183,13 +183,13 @@ export class StockLocationService {
       );
     }
 
-    if (stockLocation.stockLocationStatus === dto.status) {
+    if (stockLocation.status === dto.status) {
       throw new ConflictException(
         'O status da localização de estoque já está definido como o status fornecido',
       );
     }
 
-    stockLocation.stockLocationStatus = dto.status;
+    stockLocation.status = dto.status;
     stockLocation.userUpdated = user;
 
     try {

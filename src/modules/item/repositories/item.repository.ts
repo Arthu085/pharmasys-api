@@ -51,7 +51,7 @@ export class ItemRepository {
     }
 
     if (filters.status) {
-      where.itemStatus = filters.status;
+      where.status = filters.status;
     }
 
     return this.repo.findAndCount({ where, take, skip });

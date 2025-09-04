@@ -3,7 +3,6 @@ import { DeepPartial, FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { Company } from '../entities/company.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilterCompanyDto } from '../DTOs/filter.company.dto';
-import { FilterDto } from 'src/shared/DTOs/filter.dto';
 import { CompanyTypeEnum } from '../enums/company-type.enum';
 
 @Injectable()
@@ -29,7 +28,7 @@ export class CompanyRepository {
     }
 
     if (filters.status) {
-      where.companyStatus = filters.status;
+      where.status = filters.status;
     }
 
     if (filters.companyType) {

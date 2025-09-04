@@ -6,7 +6,7 @@ export class ResponseUserDto {
   name: string;
   email: string;
   role: Role;
-  userStatus: StatusEnum;
+  status: StatusEnum;
   createdAt: Date;
   updatedAt: Date | null;
   userUpdated: number | null;

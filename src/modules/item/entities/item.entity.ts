@@ -1,5 +1,3 @@
-import { User } from 'src/modules/user/entities/user.entity';
-import { StatusEnum } from 'src/shared/enums/status.enum';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { Type } from './type.entity';
 import { Presentation } from './presentation.entity';
@@ -16,35 +14,21 @@ export class Item extends BaseEntity {
 
   @ManyToOne(() => Type, { eager: true })
   @JoinColumn({ name: 'type_id' })
+  @Index()
   type: Type;
 
   @ManyToOne(() => Presentation, { eager: true })
   @JoinColumn({ name: 'presentation_id' })
+  @Index()
   presentation: Presentation;
 
   @ManyToOne(() => Dosage, { eager: true })
   @JoinColumn({ name: 'dosage_id' })
+  @Index()
   dosage: Dosage;
 
   @ManyToOne(() => Subtype, { eager: true })
   @JoinColumn({ name: 'subtype_id' })
-  subtype: Subtype | null;
-
-  @Column({
-    type: 'enum',
-    enum: StatusEnum,
-    default: StatusEnum.A,
-    name: 'item_status',
-    comment: 'Status do item',
-  })
   @Index()
-  itemStatus: StatusEnum;
-
-  @ManyToOne(() => User, { eager: true })
-  @JoinColumn({ name: 'user_created_id' })
-  userCreated: User;
-
-  @ManyToOne(() => User, { eager: true, nullable: true })
-  @JoinColumn({ name: 'user_updated_id' })
-  userUpdated: User | null;
+  subtype?: Subtype | null;
 }

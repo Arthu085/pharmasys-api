@@ -8,7 +8,7 @@ export function toResponseUserDto(user: User): ResponseUserDto {
   responseDto.name = user.name;
   responseDto.email = user.email;
   responseDto.role = user.role;
-  responseDto.userStatus = user.userStatus;
+  responseDto.status = user.status;
   responseDto.createdAt = user.createdAt;
   responseDto.updatedAt = user.updatedAt;
   responseDto.userUpdated = user.userUpdated;

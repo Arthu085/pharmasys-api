@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { StockLocation } from '../entities/stock-location.entity';
 import { DeepPartial, FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { FilterStockLocationDto } from '../DTOs/filter.stock-location.dto';
-import { FilterDto } from 'src/shared/DTOs/filter.dto';
 
 @Injectable()
 export class StockLocationRepository {
@@ -28,7 +27,7 @@ export class StockLocationRepository {
     }
 
     if (filters.status) {
-      where.stockLocationStatus = filters.status;
+      where.status = filters.status;
     }
 
     return this.repo.findAndCount({ where, take, skip });

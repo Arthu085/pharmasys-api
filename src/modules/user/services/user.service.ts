@@ -63,7 +63,7 @@ export class UserService {
       throw new NotFoundException('Usuário não encontrado');
     }
 
-    if (user.userStatus === 'I') {
+    if (user.status === 'I') {
       throw new ConflictException('Usuário está inativo');
     }
 
@@ -95,7 +95,7 @@ export class UserService {
       throw new NotFoundException('Usuário não encontrado');
     }
 
-    if (user.userStatus === StatusEnum.I) {
+    if (user.status === StatusEnum.I) {
       throw new ConflictException('Usuário está inativo');
     }
 
@@ -161,7 +161,7 @@ export class UserService {
   ): Promise<ResponseUserDto> {
     const user = await this.findByIdForUpdateUser(id);
 
-    if (user.userStatus === StatusEnum.I) {
+    if (user.status === StatusEnum.I) {
       throw new BadRequestException(
         'Não é possível alterar um usuário inativo',
       );
@@ -217,11 +217,11 @@ export class UserService {
   ): Promise<ResponseUserDto> {
     const user = await this.findByIdForUpdateUser(id);
 
-    if (user.userStatus === dto.status) {
+    if (user.status === dto.status) {
       throw new ConflictException('Não é possível alterar para o mesmo status');
     }
 
-    user.userStatus = dto.status;
+    user.status = dto.status;
     user.userUpdated = userId;
 
     try {

@@ -8,10 +8,12 @@ export function toResponseCompanyDto(company: Company): ResponseCompanyDto {
   responseDto.id = company.id;
   responseDto.name = company.name;
   responseDto.cnpj = company.cnpj;
-  responseDto.companyStatus = company.companyStatus;
+  responseDto.status = company.status;
   responseDto.createdAt = company.createdAt;
   responseDto.updatedAt = company.updatedAt;
-  responseDto.userCreated = toResponseUserDto(company.userCreated);
+  responseDto.userCreated = company.userCreated
+    ? toResponseUserDto(company.userCreated)
+    : null;
   responseDto.userUpdated = company.userUpdated
     ? toResponseUserDto(company.userUpdated)
     : null;

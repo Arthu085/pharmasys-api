@@ -6,10 +6,10 @@ export class ResponseCompanyDto {
   id: number;
   name: string;
   cnpj: string;
-  companyStatus: StatusEnum;
+  status: StatusEnum;
   createdAt: Date;
   updatedAt: Date | null;
-  userCreated: ResponseUserDto;
+  userCreated: ResponseUserDto | null;
   userUpdated: ResponseUserDto | null;
   companyTypes: ResponseCompanyTypeDto[];
 }

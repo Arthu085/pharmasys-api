@@ -24,7 +24,7 @@ export class UserRepository {
     }
 
     if (filters.status) {
-      where.userStatus = filters.status;
+      where.status = filters.status;
     }
 
     if (filters.role) {

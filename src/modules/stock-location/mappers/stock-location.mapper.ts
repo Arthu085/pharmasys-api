@@ -11,7 +11,7 @@ export function toResponseStockLocationDto(
   responseDto.name = stockLocation.name;
   responseDto.code = stockLocation.code;
   responseDto.isCentralStock = stockLocation.isCentralStock;
-  responseDto.stockLocationStatus = stockLocation.stockLocationStatus;
+  responseDto.status = stockLocation.status;
   responseDto.createdAt = stockLocation.createdAt;
   responseDto.updatedAt = stockLocation.updatedAt;
   responseDto.userCreated = stockLocation.userCreated

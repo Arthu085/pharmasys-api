@@ -25,7 +25,7 @@ export class AuthService {
         throw new UnauthorizedException('Credenciais inválidas');
       }
 
-      if (user.userStatus === StatusEnum.I) {
+      if (user.status === StatusEnum.I) {
         throw new UnauthorizedException(
           'Usuário inativo, solicite a reativação com o administrador',
         );

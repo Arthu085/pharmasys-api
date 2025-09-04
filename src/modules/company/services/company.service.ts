@@ -17,7 +17,6 @@ import { UpdateCompanyDto } from '../DTOs/update.company.dto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 import { FilterCompanyDto } from '../DTOs/filter.company.dto';
-import { FilterDto } from 'src/shared/DTOs/filter.dto';
 import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
 
 @Injectable()
@@ -120,7 +119,7 @@ export class CompanyService {
       throw new NotFoundException('Empresa não encontrada');
     }
 
-    if (company.companyStatus === StatusEnum.I) {
+    if (company.status === StatusEnum.I) {
       throw new BadRequestException(
         'Não é possível alterar uma empresa inativa',
       );
@@ -193,13 +192,13 @@ export class CompanyService {
       throw new NotFoundException('Empresa não encontrada');
     }
 
-    if (company.companyStatus === dto.status) {
+    if (company.status === dto.status) {
       throw new ConflictException(
         'O status da empresa já está definido como o status fornecido',
       );
     }
 
-    company.companyStatus = dto.status;
+    company.status = dto.status;
     company.userUpdated = user;
 
     try {
