@@ -26,7 +26,7 @@ export class User {
   @Column({
     type: 'enum',
     enum: StatusEnum,
-    default: StatusEnum.A,
+    default: StatusEnum.ATIVO,
     name: 'status',
     comment: 'Status do usuário',
   })

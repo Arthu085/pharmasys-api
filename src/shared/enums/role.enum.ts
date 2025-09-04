@@ -1,5 +1,5 @@
 export enum RoleEnum {
-  A = 'ADMIN',
-  O = 'OPERADOR',
-  F = 'FARMACEUTICO',
+  ADMIN = 'ADMIN',
+  OPERADOR = 'OPERADOR',
+  FARMACEUTICO = 'FARMACEUTICO',
 }

@@ -23,7 +23,7 @@ export abstract class BaseEntity {
   @Column({
     type: 'enum',
     enum: StatusEnum,
-    default: StatusEnum.A,
+    default: StatusEnum.ATIVO,
     name: 'status',
     comment: 'Status da entidade (A-Ativo, I-Inativo)',
   })

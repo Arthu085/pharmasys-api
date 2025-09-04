@@ -109,7 +109,7 @@ export class StockLocationService {
       throw new NotFoundException('Localização de estoque não encontrada');
     }
 
-    if (stockLocation.status === StatusEnum.I) {
+    if (stockLocation.status === StatusEnum.INATIVO) {
       throw new BadRequestException(
         'Não é possível alterar uma localização de estoque inativa',
       );

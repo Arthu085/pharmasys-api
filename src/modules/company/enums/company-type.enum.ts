@@ -1,4 +1,4 @@
 export enum CompanyTypeEnum {
-  FO = 'Fornecedor',
-  FA = 'Fabricante',
+  FORNECEDOR = 'Fornecedor',
+  FABRICANTE = 'Fabricante',
 }

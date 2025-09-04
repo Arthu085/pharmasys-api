@@ -15,12 +15,12 @@ import { RoleEnum } from 'src/shared/enums/role.enum';
 import { ResponseUserDto } from '../DTOs/response.user.dto';
 import { toResponseUserDto } from '../mappers/user.mapper';
 import { User } from '../entities/user.entity';
-import * as bcrypt from 'bcrypt';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { FilterUserDto } from '../DTOs/filter.user.dto';
-import { FilterDto } from 'src/shared/DTOs/filter.dto';
 import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
+
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -95,7 +95,7 @@ export class UserService {
       throw new NotFoundException('Usuário não encontrado');
     }
 
-    if (user.status === StatusEnum.I) {
+    if (user.status === StatusEnum.INATIVO) {
       throw new ConflictException('Usuário está inativo');
     }
 
@@ -161,7 +161,7 @@ export class UserService {
   ): Promise<ResponseUserDto> {
     const user = await this.findByIdForUpdateUser(id);
 
-    if (user.status === StatusEnum.I) {
+    if (user.status === StatusEnum.INATIVO) {
       throw new BadRequestException(
         'Não é possível alterar um usuário inativo',
       );

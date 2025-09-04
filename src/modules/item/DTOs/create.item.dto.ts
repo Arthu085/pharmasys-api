@@ -1,5 +1,5 @@
 import {
-  IsIn,
+  IsEnum,
   IsNotEmpty,
   MaxLength,
   MinLength,
@@ -17,29 +17,29 @@ export class CreateItemDto {
   name: string;
 
   @IsNotEmpty({ message: 'O tipo é obrigatório' })
-  @IsIn(Object.keys(TypeEnum), {
-    message: `O tipo deve ser um dos seguintes valores: ${Object.values(TypeEnum).join(', ')}`,
+  @IsEnum(TypeEnum, {
+    message: `O tipo deve ser um dos seguintes valores: ${Object.keys(TypeEnum).join(', ')}`,
   })
   type: TypeEnum;
 
   @IsNotEmpty({ message: 'A apresentação é obrigatória' })
-  @IsIn(Object.keys(PresentationEnum), {
-    message: `A apresentação deve ser um dos seguintes valores: ${Object.values(PresentationEnum).join(', ')}`,
+  @IsEnum(PresentationEnum, {
+    message: `A apresentação deve ser um dos seguintes valores: ${Object.keys(PresentationEnum).join(', ')}`,
   })
   presentation: PresentationEnum;
 
   @IsNotEmpty({ message: 'A dosagem é obrigatória' })
-  @IsIn(Object.keys(DosageEnum), {
-    message: `A dosagem deve ser um dos seguintes valores: ${Object.values(DosageEnum).join(', ')}`,
+  @IsEnum(DosageEnum, {
+    message: `A dosagem deve ser um dos seguintes valores: ${Object.keys(DosageEnum).join(', ')}`,
   })
   dosage: DosageEnum;
 
-  @ValidateIf((o) => o.type === 'M')
+  @ValidateIf((o) => o.type === 'MEDICAMENTO')
   @IsNotEmpty({
     message: 'O subtipo é obrigatório quando o tipo for medicamento',
   })
-  @IsIn(Object.keys(SubtypeEnum), {
-    message: `O subtipo deve ser um dos seguintes valores: ${Object.values(SubtypeEnum).join(', ')}`,
+  @IsEnum(SubtypeEnum, {
+    message: `O subtipo deve ser um dos seguintes valores: ${Object.keys(SubtypeEnum).join(', ')}`,
   })
   subtype?: SubtypeEnum;
 }

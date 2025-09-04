@@ -7,6 +7,7 @@ import {
 import { UserService } from '../../user/services/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { StatusEnum } from 'src/shared/enums/status.enum';
+
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -25,7 +26,7 @@ export class AuthService {
         throw new UnauthorizedException('Credenciais inválidas');
       }
 
-      if (user.status === StatusEnum.I) {
+      if (user.status === StatusEnum.INATIVO) {
         throw new UnauthorizedException(
           'Usuário inativo, solicite a reativação com o administrador',
         );

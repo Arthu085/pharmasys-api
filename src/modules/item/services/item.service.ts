@@ -103,13 +103,13 @@ export class ItemService {
       ? await this.subtypeRepository.findByName(SubtypeEnum[dto.subtype])
       : null;
 
-    if (type?.name !== TypeEnum.M && dto.subtype) {
+    if (type?.name !== TypeEnum.MEDICAMENTO && dto.subtype) {
       throw new ConflictException(
         'Subtipo só pode ser definido para Medicamentos',
       );
     }
 
-    if (type?.name !== TypeEnum.M) {
+    if (type?.name !== TypeEnum.MEDICAMENTO) {
       subtype = null;
     }
 
@@ -155,7 +155,7 @@ export class ItemService {
       throw new NotFoundException('Item não encontrado');
     }
 
-    if (item.status === StatusEnum.I) {
+    if (item.status === StatusEnum.INATIVO) {
       throw new BadRequestException('Não é possível alterar um item inativo');
     }
 
@@ -213,7 +213,7 @@ export class ItemService {
     }
 
     if (subtypeDto) {
-      if (item.type.name !== TypeEnum.M) {
+      if (item.type.name !== TypeEnum.MEDICAMENTO) {
         throw new ConflictException(
           'Subtipo só pode ser definido para Medicamentos',
         );
@@ -229,7 +229,7 @@ export class ItemService {
       item.subtype = subtype;
     }
 
-    if (item.type.name !== TypeEnum.M) {
+    if (item.type.name !== TypeEnum.MEDICAMENTO) {
       item.subtype = null;
     }
 

@@ -13,8 +13,9 @@ export class Prescriptor extends BaseEntity {
     length: 30,
     unique: true,
     comment: 'Número de registro do prescritor no conselho profissional',
+    name: 'registration_number',
   })
-  registration_number: string;
+  registrationNumber: string;
 
   @ManyToOne(() => Advice, { eager: true })
   @JoinColumn({ name: 'advice_id' })

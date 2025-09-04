@@ -1,4 +1,4 @@
-import { IsEnum, IsIn, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { FilterDto } from 'src/shared/DTOs/filter.dto';
 import { TypeEnum } from '../enums/type.enum';
 import { PresentationEnum } from '../enums/presentation.enum';
@@ -12,19 +12,19 @@ export class FilterItemDto extends FilterDto {
   name?: string;
 
   @IsOptional()
-  @IsIn(Object.keys(TypeEnum))
+  @IsEnum(TypeEnum)
   type?: TypeEnum;
 
   @IsOptional()
-  @IsIn(Object.keys(PresentationEnum))
+  @IsEnum(PresentationEnum)
   presentation?: PresentationEnum;
 
   @IsOptional()
-  @IsIn(Object.keys(DosageEnum))
+  @IsEnum(DosageEnum)
   dosage?: DosageEnum;
 
   @IsOptional()
-  @IsIn(Object.keys(SubtypeEnum))
+  @IsEnum(SubtypeEnum)
   subtype?: SubtypeEnum;
 
   @IsOptional()

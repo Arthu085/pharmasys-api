@@ -1,6 +1,6 @@
 import {
   IsEmail,
-  IsIn,
+  IsEnum,
   IsNotEmpty,
   MaxLength,
   MinLength,
@@ -23,7 +23,7 @@ export class CreateUserDto {
   @MaxLength(40, { message: 'A senha deve ter no máximo 40 caracteres' })
   password: string;
 
-  @IsIn(Object.keys(RoleEnum), {
+  @IsEnum(RoleEnum, {
     message: 'Função inválida',
   })
   role: RoleEnum;

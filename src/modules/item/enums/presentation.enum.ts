@@ -1,9 +1,9 @@
 export enum PresentationEnum {
-  CPA = 'Comprimido/Cápsula',
-  F = 'Frasco',
-  B = 'Bisnaga',
-  U = 'Unidade',
-  L = 'Lata',
-  A = 'Ampola',
-  CN = 'Caneta',
+  COMPRIMIDO_CAPSULA = 'Comprimido/Cápsula',
+  FRASCO = 'Frasco',
+  BISNAGA = 'Bisnaga',
+  UNIDADE = 'Unidade',
+  LATA = 'Lata',
+  AMPOLA = 'Ampola',
+  CANETA = 'Caneta',
 }

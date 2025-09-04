@@ -26,7 +26,7 @@ export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Get()
   @ResponseMessage('Empresas encontradas com sucesso')
   findAllCompanies(@Query() filters: FilterCompanyDto) {
@@ -34,7 +34,7 @@ export class CompanyController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Get(':id')
   @ResponseMessage('Empresa encontrada com sucesso')
   findByIdCompany(@Param('id') id: number) {
@@ -42,7 +42,7 @@ export class CompanyController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Post()
   @ResponseMessage('Empresa cadastrada com sucesso')
   createCompany(@Body() dto: CreateCompanyDto, @User('id') userId: number) {
@@ -50,7 +50,7 @@ export class CompanyController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Patch(':id')
   @ResponseMessage('Empresa atualizada com sucesso')
   updateCompany(
@@ -62,7 +62,7 @@ export class CompanyController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Put(':id')
   @ResponseMessage('Status da empresa atualizado com sucesso')
   changeStatusCompany(

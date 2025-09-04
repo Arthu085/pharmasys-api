@@ -26,7 +26,7 @@ export class StockLocationController {
   constructor(private readonly stockLocationService: StockLocationService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Get()
   @ResponseMessage('Locais de estoque encontrados com sucesso')
   findAllStockLocations(@Query() filters: FilterStockLocationDto) {
@@ -34,7 +34,7 @@ export class StockLocationController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Get(':id')
   @ResponseMessage('Local de estoque encontrado com sucesso')
   findByIdStockLocation(@Param('id') id: number) {
@@ -42,7 +42,7 @@ export class StockLocationController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Post()
   @ResponseMessage('Local de estoque cadastrado com sucesso')
   createStockLocation(
@@ -53,7 +53,7 @@ export class StockLocationController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Patch(':id')
   @ResponseMessage('Local de estoque atualizado com sucesso')
   updateStockLocation(
@@ -65,7 +65,7 @@ export class StockLocationController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Put(':id')
   @ResponseMessage('Status do local de estoque atualizado com sucesso')
   changeStatusStockLocation(

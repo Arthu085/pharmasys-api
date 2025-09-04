@@ -26,7 +26,7 @@ export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Get()
   @ResponseMessage('Itens encontrados com sucesso')
   findAllItems(@Query() filters: FilterItemDto) {
@@ -34,7 +34,7 @@ export class ItemController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Get(':id')
   @ResponseMessage('Item encontrado com sucesso')
   findByIdItem(@Param('id') id: number) {
@@ -42,7 +42,7 @@ export class ItemController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Post()
   @ResponseMessage('Item cadastrado com sucesso')
   createItem(@Body() dto: CreateItemDto, @User('id') userId: number) {
@@ -50,7 +50,7 @@ export class ItemController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Patch(':id')
   @ResponseMessage('Item atualizado com sucesso')
   updateItem(
@@ -62,7 +62,7 @@ export class ItemController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A, RoleEnum.F)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
   @Put(':id')
   @ResponseMessage('Status do item atualizado com sucesso')
   changeStatusItem(

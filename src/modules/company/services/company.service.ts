@@ -119,7 +119,7 @@ export class CompanyService {
       throw new NotFoundException('Empresa não encontrada');
     }
 
-    if (company.status === StatusEnum.I) {
+    if (company.status === StatusEnum.INATIVO) {
       throw new BadRequestException(
         'Não é possível alterar uma empresa inativa',
       );

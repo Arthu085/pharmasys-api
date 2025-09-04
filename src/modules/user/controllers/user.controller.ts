@@ -27,7 +27,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A)
+  @Roles(RoleEnum.ADMIN)
   @Get()
   @ResponseMessage('Usuários encontrados com sucesso')
   findAllUsers(@Query() filters: FilterUserDto) {
@@ -35,7 +35,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A)
+  @Roles(RoleEnum.ADMIN)
   @Get(':id')
   @ResponseMessage('Usuário encontrado com sucesso')
   findByIdUser(@Param('id', ParseIntPipe) id: number) {
@@ -49,7 +49,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A)
+  @Roles(RoleEnum.ADMIN)
   @Post()
   @ResponseMessage('Usuário cadastrado com sucesso')
   createUser(@Body() dto: CreateUserDto) {
@@ -63,7 +63,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A)
+  @Roles(RoleEnum.ADMIN)
   @Patch(':id')
   @ResponseMessage('Usuário atualizado com sucesso')
   updateUser(
@@ -75,7 +75,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleEnum.A)
+  @Roles(RoleEnum.ADMIN)
   @Put(':id')
   @ResponseMessage('Status do usuário atualizado com sucesso')
   changeStatusUser(

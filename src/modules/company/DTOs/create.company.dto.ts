@@ -1,6 +1,6 @@
 import {
   IsArray,
-  IsIn,
+  IsEnum,
   IsNotEmpty,
   MaxLength,
   MinLength,
@@ -20,9 +20,9 @@ export class CreateCompanyDto {
 
   @IsArray()
   @IsNotEmpty({ message: 'O tipo de empresa é obrigatório' })
-  @IsIn(Object.keys(CompanyTypeEnum), {
+  @IsEnum(CompanyTypeEnum, {
     each: true,
-    message: `O tipo de empresa deve ser um dos seguintes valores: ${Object.values(CompanyTypeEnum).join(', ')}`,
+    message: `O tipo de empresa deve ser um dos seguintes valores: ${Object.keys(CompanyTypeEnum).join(', ')}`,
   })
   companyTypes: CompanyTypeEnum[];
 }
