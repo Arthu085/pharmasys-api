@@ -52,14 +52,6 @@ export class ItemService {
     const data = items.map((user) => toResponseItemDto(user));
     const lastPage = Math.ceil(total / limit);
 
-    // TODO - Refatorar para retornar apenas essa mensagem quando o array estar vazio
-    // if (!data.length) {
-    //   return {
-    //     data,
-    //     message: 'Nenhum item cadastrado',
-    //   };
-    // }
-
     return {
       data,
       meta: {

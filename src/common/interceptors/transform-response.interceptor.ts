@@ -31,11 +31,20 @@ export class TransformResponseInterceptor<T>
       'Operação realizada com sucesso';
 
     return next.handle().pipe(
-      map((data) => ({
-        success: true,
-        message: responseMessage,
-        data: data,
-      })),
+      map((data: any) => {
+        if (data && data.meta && data.meta.total === 0) {
+          return {
+            success: true,
+            message: 'Nenhum dado encontrado com os filtros aplicados',
+            data: data,
+          };
+        }
+        return {
+          success: true,
+          message: responseMessage,
+          data: data,
+        };
+      }),
     );
   }
 }
