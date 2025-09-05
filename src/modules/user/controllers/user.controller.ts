@@ -42,12 +42,6 @@ export class UserController {
     return this.userService.findByIdUser(id);
   }
 
-  @Get('roles')
-  @ResponseMessage('Funções encontradas com sucesso')
-  findAllRoles() {
-    return this.userService.findAllRoles();
-  }
-
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.ADMIN)
   @Post()

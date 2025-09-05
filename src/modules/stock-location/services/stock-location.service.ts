@@ -183,13 +183,15 @@ export class StockLocationService {
       );
     }
 
-    if (stockLocation.status === dto.status) {
+    const newStatus = StatusEnum[dto.status];
+
+    if (stockLocation.status === newStatus) {
       throw new ConflictException(
         'O status da localização de estoque já está definido como o status fornecido',
       );
     }
 
-    stockLocation.status = dto.status;
+    stockLocation.status = newStatus;
     stockLocation.userUpdated = user;
 
     try {

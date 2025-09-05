@@ -262,13 +262,15 @@ export class ItemService {
       throw new NotFoundException('Item não encontrado');
     }
 
-    if (item.status === dto.status) {
+    const newStatusValue = StatusEnum[dto.status];
+
+    if (item.status === newStatusValue) {
       throw new ConflictException(
         'O status do item já está definido como o status fornecido',
       );
     }
 
-    item.status = dto.status;
+    item.status = newStatusValue;
     item.userUpdated = user;
 
     try {

@@ -4,6 +4,7 @@ import { Company } from '../entities/company.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilterCompanyDto } from '../DTOs/filter.company.dto';
 import { CompanyTypeEnum } from '../enums/company-type.enum';
+import { StatusEnum } from 'src/shared/enums/status.enum';
 
 @Injectable()
 export class CompanyRepository {
@@ -27,16 +28,16 @@ export class CompanyRepository {
       where.cnpj = ILike(`%${filters.cnpj}%`);
     }
 
-    if (filters.status) {
-      where.status = filters.status;
-    }
-
     if (filters.companyType) {
       const companyName = CompanyTypeEnum[filters.companyType];
-
       where.companyTypes = {
         name: companyName,
       };
+    }
+
+    if (filters.status) {
+      const status = StatusEnum[filters.status];
+      where.status = status;
     }
 
     return this.repo.findAndCount({ where, take, skip });

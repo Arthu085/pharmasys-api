@@ -1,6 +1,7 @@
 import {
   IsEnum,
   IsNotEmpty,
+  IsString,
   MaxLength,
   MinLength,
   ValidateIf,
@@ -11,26 +12,27 @@ import { DosageEnum } from '../enums/dosage.enum';
 import { SubtypeEnum } from '../enums/subtype.enum';
 
 export class CreateItemDto {
+  @IsString({ message: 'O nome deve ser uma string' })
   @IsNotEmpty({ message: 'O nome é obrigatório' })
   @MinLength(3, { message: 'O nome deve ter no mínimo 3 caracteres' })
   @MaxLength(255, { message: 'O nome deve ter no máximo 255 caracteres' })
   name: string;
 
   @IsNotEmpty({ message: 'O tipo é obrigatório' })
-  @IsEnum(TypeEnum, {
-    message: `O tipo deve ser um dos seguintes valores: ${Object.keys(TypeEnum).join(', ')}`,
+  @IsEnum(Object.keys(TypeEnum), {
+    message: 'O tipo deve ser um enum',
   })
   type: TypeEnum;
 
   @IsNotEmpty({ message: 'A apresentação é obrigatória' })
-  @IsEnum(PresentationEnum, {
-    message: `A apresentação deve ser um dos seguintes valores: ${Object.keys(PresentationEnum).join(', ')}`,
+  @IsEnum(Object.keys(PresentationEnum), {
+    message: 'A apresentação deve ser um enum',
   })
   presentation: PresentationEnum;
 
   @IsNotEmpty({ message: 'A dosagem é obrigatória' })
-  @IsEnum(DosageEnum, {
-    message: `A dosagem deve ser um dos seguintes valores: ${Object.keys(DosageEnum).join(', ')}`,
+  @IsEnum(Object.keys(DosageEnum), {
+    message: 'A dosagem deve ser um enum',
   })
   dosage: DosageEnum;
 
@@ -38,8 +40,8 @@ export class CreateItemDto {
   @IsNotEmpty({
     message: 'O subtipo é obrigatório quando o tipo for medicamento',
   })
-  @IsEnum(SubtypeEnum, {
-    message: `O subtipo deve ser um dos seguintes valores: ${Object.keys(SubtypeEnum).join(', ')}`,
+  @IsEnum(Object.keys(SubtypeEnum), {
+    message: 'O subtipo deve ser um enum',
   })
   subtype?: SubtypeEnum;
 }

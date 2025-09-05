@@ -4,6 +4,7 @@ import { DeepPartial, FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { FilterUserDto } from '../DTOs/filter.user.dto';
 import { RoleEnum } from 'src/shared/enums/role.enum';
+import { StatusEnum } from 'src/shared/enums/status.enum';
 
 @Injectable()
 export class UserRepository {
@@ -24,7 +25,8 @@ export class UserRepository {
     }
 
     if (filters.status) {
-      where.status = filters.status;
+      const status = StatusEnum[filters.status];
+      where.status = status;
     }
 
     if (filters.role) {

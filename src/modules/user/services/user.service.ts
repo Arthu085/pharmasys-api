@@ -84,10 +84,6 @@ export class UserService {
     return this.userRepository.findByEmail(email);
   }
 
-  async findAllRoles(): Promise<Role[]> {
-    return this.roleRepository.findAll();
-  }
-
   async findByIdShared(id: number) {
     const user = await this.userRepository.findById(id);
 
@@ -143,7 +139,7 @@ export class UserService {
   }
 
   async registerUser(dto: CreateUserDto) {
-    const allowedRoles = ['F', 'O'];
+    const allowedRoles = [RoleEnum.FARMACEUTICO, RoleEnum.OPERADOR];
 
     if (!allowedRoles.includes(dto.role)) {
       throw new BadRequestException(
@@ -217,11 +213,13 @@ export class UserService {
   ): Promise<ResponseUserDto> {
     const user = await this.findByIdForUpdateUser(id);
 
-    if (user.status === dto.status) {
+    const newStatus = StatusEnum[dto.status];
+
+    if (user.status === newStatus) {
       throw new ConflictException('Não é possível alterar para o mesmo status');
     }
 
-    user.status = dto.status;
+    user.status = newStatus;
     user.userUpdated = userId;
 
     try {

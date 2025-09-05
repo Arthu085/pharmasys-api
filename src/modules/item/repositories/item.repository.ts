@@ -7,6 +7,7 @@ import { TypeEnum } from '../enums/type.enum';
 import { PresentationEnum } from '../enums/presentation.enum';
 import { DosageEnum } from '../enums/dosage.enum';
 import { SubtypeEnum } from '../enums/subtype.enum';
+import { StatusEnum } from 'src/shared/enums/status.enum';
 
 @Injectable()
 export class ItemRepository {
@@ -28,30 +29,27 @@ export class ItemRepository {
 
     if (filters.type) {
       const typeName = TypeEnum[filters.type];
-
       where.type = { name: typeName };
     }
 
     if (filters.presentation) {
       const presentationName = PresentationEnum[filters.presentation];
-
       where.presentation = { name: presentationName };
     }
 
     if (filters.dosage) {
       const dosageName = DosageEnum[filters.dosage];
-
       where.dosage = { format: dosageName };
     }
 
     if (filters.subtype) {
       const subtypeName = SubtypeEnum[filters.subtype];
-
       where.subtype = { name: subtypeName };
     }
 
     if (filters.status) {
-      where.status = filters.status;
+      const status = StatusEnum[filters.status];
+      where.status = status;
     }
 
     return this.repo.findAndCount({ where, take, skip });

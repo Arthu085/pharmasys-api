@@ -3,8 +3,8 @@ import { StatusEnum } from '../enums/status.enum';
 
 export class ChangeStatusDto {
   @IsNotEmpty({ message: 'O campo status não pode ser vazio' })
-  @IsEnum(StatusEnum, {
-    message: `O status deve ser um dos seguintes valores: ${Object.keys(StatusEnum).join(', ')}`,
+  @IsEnum(Object.keys(StatusEnum), {
+    message: 'O status deve ser um enum',
   })
   status: StatusEnum;
 }

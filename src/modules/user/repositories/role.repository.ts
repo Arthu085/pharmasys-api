@@ -13,8 +13,4 @@ export class RoleRepository {
   findByName(name: string): Promise<Role | null> {
     return this.repo.findOne({ where: { name } });
   }
-
-  findAll(): Promise<Role[]> {
-    return this.repo.find();
-  }
 }

@@ -5,18 +5,20 @@ import { FilterDto } from 'src/shared/DTOs/filter.dto';
 
 export class FilterCompanyDto extends FilterDto {
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'O nome deve ser uma string' })
   name?: string;
 
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'O CNPJ deve ser uma string' })
   cnpj?: string;
 
   @IsOptional()
-  @IsEnum(StatusEnum)
+  @IsEnum(Object.keys(StatusEnum), { message: 'O status deve ser um enum' })
   status?: StatusEnum;
 
   @IsOptional()
-  @IsEnum(CompanyTypeEnum)
+  @IsEnum(Object.keys(CompanyTypeEnum), {
+    message: 'O tipo de empresa deve ser um enum',
+  })
   companyType?: CompanyTypeEnum;
 }

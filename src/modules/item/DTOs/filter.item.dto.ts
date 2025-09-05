@@ -8,26 +8,28 @@ import { StatusEnum } from 'src/shared/enums/status.enum';
 
 export class FilterItemDto extends FilterDto {
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'O nome deve ser uma string' })
   name?: string;
 
   @IsOptional()
-  @IsEnum(TypeEnum)
+  @IsEnum(Object.keys(TypeEnum), { message: 'O tipo deve ser um enum' })
   type?: TypeEnum;
 
   @IsOptional()
-  @IsEnum(PresentationEnum)
+  @IsEnum(Object.keys(PresentationEnum), {
+    message: 'A apresentação deve ser um enum',
+  })
   presentation?: PresentationEnum;
 
   @IsOptional()
-  @IsEnum(DosageEnum)
+  @IsEnum(Object.keys(DosageEnum), { message: 'A dosagem deve ser um enum' })
   dosage?: DosageEnum;
 
   @IsOptional()
-  @IsEnum(SubtypeEnum)
+  @IsEnum(Object.keys(SubtypeEnum), { message: 'O subtipo deve ser um enum' })
   subtype?: SubtypeEnum;
 
   @IsOptional()
-  @IsEnum(StatusEnum)
+  @IsEnum(Object.keys(StatusEnum), { message: 'O status deve ser um enum' })
   status?: StatusEnum;
 }

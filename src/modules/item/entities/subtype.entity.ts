@@ -7,7 +7,7 @@ export class Subtype extends BaseEntity {
   @Column({ length: 100, unique: true, comment: 'Nome do subtipo' })
   name: string;
 
-  @ManyToOne(() => Type, { eager: true })
+  @ManyToOne(() => Type)
   @JoinColumn({ name: 'type_id' })
   type: Type;
 }

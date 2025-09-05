@@ -192,13 +192,15 @@ export class CompanyService {
       throw new NotFoundException('Empresa não encontrada');
     }
 
-    if (company.status === dto.status) {
+    const newStatus = StatusEnum[dto.status];
+
+    if (company.status === newStatus) {
       throw new ConflictException(
         'O status da empresa já está definido como o status fornecido',
       );
     }
 
-    company.status = dto.status;
+    company.status = newStatus;
     company.userUpdated = user;
 
     try {
