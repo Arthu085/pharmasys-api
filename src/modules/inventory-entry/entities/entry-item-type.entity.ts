@@ -1,4 +1,4 @@
-import { InventoryTypes } from 'src/common/entites/inventory-type.entity';
+import { InventoryTypes } from 'src/common/entities/inventory-type.entity';
 import { Entity } from 'typeorm';
 
 @Entity('entry_item_type', {

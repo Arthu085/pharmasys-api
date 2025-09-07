@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/common/entites/base.entity';
+import { BaseEntity } from 'src/common/entities/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { Item } from 'src/modules/item/entities/item.entity';
 import { TransferRequest } from './transfer-request.entity';

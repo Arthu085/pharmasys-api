@@ -8,7 +8,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { CompanyType } from './company-type.entity';
-import { BaseEntity } from 'src/common/entites/base.entity';
+import { BaseEntity } from 'src/common/entities/base.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 
 @Entity('company', { comment: 'Tabela para cadastro de empresa' })
