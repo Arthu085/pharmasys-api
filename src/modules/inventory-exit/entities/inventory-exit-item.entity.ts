@@ -4,7 +4,7 @@ import { Item } from 'src/modules/item/entities/item.entity';
 import { Batch } from 'src/modules/batch/entities/batch.entity';
 import { InventoryExit } from './inventory-exit.entity';
 
-@Entity('inventory-entry-item', {
+@Entity('inventory-exit-item', {
   comment: 'Tabela para cadastro de dados do item na saída',
 })
 export class InventoryExitItem extends BaseEntity {
