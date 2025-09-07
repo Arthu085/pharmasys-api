@@ -1,15 +1,15 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import * as dotenv from 'dotenv';
-dotenv.config();
+import { env } from './env.config';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+  host: env.db.host,
+  port: env.db.port,
+  username: env.db.username,
+  password: env.db.password,
+  database: env.db.name,
+  schema: env.db.schema,
+  ssl: env.db.ssl ? { rejectUnauthorized: false } : false,
   autoLoadEntities: true,
   synchronize: false,
 };
