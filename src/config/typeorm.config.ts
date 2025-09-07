@@ -8,7 +8,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   username: env.db.username,
   password: env.db.password,
   database: env.db.name,
-  schema: 'pharmasys',
+  schema: env.db.schema,
   ssl: env.db.ssl ? { rejectUnauthorized: false } : false,
   autoLoadEntities: true,
   synchronize: false,

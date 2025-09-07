@@ -1,0 +1,5 @@
+import { InventoryTypes } from 'src/common/entites/inventory-type.entity';
+import { Entity } from 'typeorm';
+
+@Entity('exit_item_type')
+export class ExitItemType extends InventoryTypes {}

@@ -31,5 +31,6 @@ export const env = {
     password: envVars.DB_PASSWORD,
     name: envVars.DB_NAME,
     ssl: envVars.DB_SSL === 'true',
+    schema: envVars.DB_SCHEMA,
   },
 };
