@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Type } from './type.entity';
-import { BaseEntity } from 'src/common/entites/base.entity';
+import { BaseEntity } from 'src/common/entities/base.entity';
 
 @Entity('subtype', { comment: 'Tabela para cadastro de subtipos de item' })
 export class Subtype extends BaseEntity {

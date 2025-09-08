@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/common/entites/base.entity';
+import { BaseEntity } from 'src/common/entities/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { InventoryEntry } from './inventory-entry.entity';
 import { Item } from 'src/modules/item/entities/item.entity';
