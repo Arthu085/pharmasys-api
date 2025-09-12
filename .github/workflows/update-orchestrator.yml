@@ -23,8 +23,8 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-          # O comando mágico para puxar a última versão do submódulo
-          # Substitua 'caminho/para/seu/submodulo' pelo caminho real no orquestrador
+          # Atualiza o modulo para o último commit da branch main
+          git submodule update --init --recursive
           git submodule update --remote pharmasys-api
 
       - name: Commita e empurra a mudança
