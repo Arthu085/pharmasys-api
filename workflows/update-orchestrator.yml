@@ -1,0 +1,41 @@
+name: Update Orchestrator Repo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout a branch que vai commitar no orquestrador
+        uses: actions/checkout@v4
+
+      - name: Clone do repositório Orquestrador
+        run: |
+          git clone https://${{ secrets.ORCHESTRATOR_PAT }}@github.com/Arthu085/pharmasys-platform.git
+
+      - name: Atualiza a referência do submódulo
+        run: |
+          cd pharmasys-platform
+          # Configura o git com o usuário do bot
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          # O comando mágico para puxar a última versão do submódulo
+          # Substitua 'caminho/para/seu/submodulo' pelo caminho real no orquestrador
+          git submodule update --remote pharmasys-api
+
+      - name: Commita e empurra a mudança
+        run: |
+          cd pharmasys-platform
+          # Verifica se há mudanças para commitar
+          if [[ -z $(git status -s) ]]; then
+            echo "Nenhuma mudança no submódulo. Saindo."
+            exit 0
+          fi
+
+          git add .
+          git commit -m "chore(submodules): Atualiza backend para o último commit"
+          git push
