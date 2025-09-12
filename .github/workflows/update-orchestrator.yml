@@ -37,5 +37,5 @@ jobs:
           fi
 
           git add .
-          git commit -m "chore(submodules): Atualiza backend para o último commit"
+          git commit -m "chore(submodules): Atualiza backend (#${{ github.run_number }})"
           git push
