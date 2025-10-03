@@ -14,6 +14,7 @@ const envSchema = Joi.object({
   DB_PASSWORD: Joi.string().required(),
   DB_NAME: Joi.string().required(),
   DB_SSL: Joi.string().valid('true', 'false').default('false'),
+  DB_SCHEMA: Joi.string().required(),
 }).unknown();
 
 const { error, value: envVars } = envSchema.validate(process.env);
