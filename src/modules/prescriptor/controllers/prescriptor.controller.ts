@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { PrescriptorService } from '../services/prescriptor.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/modules/auth/roles.guard';
@@ -17,5 +17,13 @@ export class PrescriptorController {
   @ResponseMessage('Prescritores encontrados com sucesso')
   findAllPrescriptors(@Query() filters: FilterPrescriptorDto) {
     return this.prescriptorService.findAllPrescriptors(filters);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
+  @Get(':id')
+  @ResponseMessage('Prescritor encontrado com sucesso')
+  findByIdPrescriptor(@Param('id') id: number) {
+    return this.prescriptorService.findByIdPrescriptor(id);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrescriptorRepository } from '../repositories/prescriptor.repository';
 import { FilterPrescriptorDto } from '../DTOs/filter.prescriptor.dto';
 import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
@@ -34,5 +34,17 @@ export class PrescriptorService {
         lastPage,
       },
     };
+  }
+
+  async findByIdPrescriptor(
+    id: number,
+  ): Promise<ResponsePrescriptorDto | null> {
+    const prescriptor = await this.prescriptorRepository.findById(id);
+
+    if (!prescriptor) {
+      throw new NotFoundException('Prescritor não encontrado');
+    }
+
+    return toResponsePrescriptorDto(prescriptor);
   }
 }
