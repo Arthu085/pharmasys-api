@@ -76,10 +76,12 @@ export class PrescriptorService {
       throw new NotFoundException('Conselho não encontrado');
     }
 
+    console.log(advice, prescriptor);
+
     if (prescriptor) {
       if (
         prescriptor.registrationNumber === dto.registrationNumber &&
-        prescriptor.advice === advice
+        prescriptor.advice.acronym === advice.acronym
       ) {
         throw new ConflictException(
           'Já existe um prescritor com o mesmo número de registro e conselho',
