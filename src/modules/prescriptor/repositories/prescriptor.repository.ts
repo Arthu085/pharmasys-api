@@ -25,6 +25,14 @@ export class PrescriptorRepository {
     return this.repo.findOne({ where: { id } });
   }
 
+  findByRegistrationNumber(
+    registrationNumber: string,
+  ): Promise<Prescriptor | null> {
+    return this.repo.findOne({
+      where: { registrationNumber: registrationNumber },
+    });
+  }
+
   create(prescriptor: Partial<Prescriptor>): Prescriptor {
     return this.repo.create(prescriptor);
   }
