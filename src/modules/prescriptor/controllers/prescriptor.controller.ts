@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -14,8 +15,9 @@ import { Roles } from 'src/common/decorators/role.decorator';
 import { RoleEnum } from 'src/shared/enums/role.enum';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { FilterPrescriptorDto } from '../DTOs/filter.prescriptor.dto';
-import { createPrescriptorDto } from '../DTOs/create-prescriptor.dto';
 import { User } from 'src/common/decorators/user.decorator';
+import { CreatePrescriptorDto } from '../DTOs/create.prescriptor.dto';
+import { UpdatePrescriptorDto } from '../DTOs/update.prescriptor.dto';
 
 @Controller('prescriptor')
 export class PrescriptorController {
@@ -42,9 +44,21 @@ export class PrescriptorController {
   @Post()
   @ResponseMessage('Prescritor cadastrado com sucesso')
   createPrescriptor(
-    @Body() dto: createPrescriptorDto,
+    @Body() dto: CreatePrescriptorDto,
     @User('id') userId: number,
   ) {
     return this.prescriptorService.createPrescriptor(dto, userId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
+  @Patch(':id')
+  @ResponseMessage('Prescritor atualizado com sucesso')
+  updatePrescriptor(
+    @Body() dto: UpdatePrescriptorDto,
+    @User('id') userId: number,
+    @Param('id') id: number,
+  ) {
+    return this.prescriptorService.updatePrescriptor(id, dto, userId);
   }
 }

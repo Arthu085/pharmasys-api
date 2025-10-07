@@ -9,7 +9,7 @@ import {
 import { UfEnum } from '../enums/uf.enum';
 import { AdviceEnum } from '../enums/advice.enum';
 
-export class createPrescriptorDto {
+export class CreatePrescriptorDto {
   @IsString({ message: 'O nome deve ser uma string' })
   @IsNotEmpty({ message: 'O nome é obrigatório' })
   @MinLength(3, { message: 'O nome deve ter no mínimo 3 caracteres' })
