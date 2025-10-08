@@ -20,7 +20,6 @@ export class Prescriptor extends BaseEntity {
 
   @Column({
     length: 30,
-    unique: true,
     comment: 'Número de registro do prescritor no conselho profissional',
     name: 'registration_number',
   })
