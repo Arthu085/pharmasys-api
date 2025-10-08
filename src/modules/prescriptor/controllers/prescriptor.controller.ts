@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +19,7 @@ import { FilterPrescriptorDto } from '../DTOs/filter.prescriptor.dto';
 import { User } from 'src/common/decorators/user.decorator';
 import { CreatePrescriptorDto } from '../DTOs/create.prescriptor.dto';
 import { UpdatePrescriptorDto } from '../DTOs/update.prescriptor.dto';
+import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 
 @Controller('prescriptor')
 export class PrescriptorController {
@@ -60,5 +62,17 @@ export class PrescriptorController {
     @Param('id') id: number,
   ) {
     return this.prescriptorService.updatePrescriptor(id, dto, userId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.FARMACEUTICO)
+  @Put(':id')
+  @ResponseMessage('Status do prescritor atualizado com sucesso')
+  changeStatusPrescriptor(
+    @Param('id') id: number,
+    @Body() dto: ChangeStatusDto,
+    @User('id') userId: number,
+  ) {
+    return this.prescriptorService.changeStatusPrescriptor(id, dto, userId);
   }
 }

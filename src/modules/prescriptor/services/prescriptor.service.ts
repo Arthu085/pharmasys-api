@@ -16,6 +16,7 @@ import { AdviceRepository } from '../repositories/advice.repository';
 import { CreatePrescriptorDto } from '../DTOs/create.prescriptor.dto';
 import { UpdatePrescriptorDto } from '../DTOs/update.prescriptor.dto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
+import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 
 @Injectable()
 export class PrescriptorService {
@@ -174,6 +175,44 @@ export class PrescriptorService {
       );
       throw new InternalServerErrorException(
         'Ocorreu um erro interno ao atualizar o prescritor',
+      );
+    }
+  }
+
+  async changeStatusPrescriptor(
+    id: number,
+    dto: ChangeStatusDto,
+    userId: number,
+  ): Promise<ResponsePrescriptorDto> {
+    const user = await this.userService.findByIdShared(userId);
+    const prescriptor = await this.prescriptorRepository.findById(id);
+
+    if (!prescriptor) {
+      throw new NotFoundException('Prescritor não encontrado');
+    }
+
+    const newStatusValue = StatusEnum[dto.status];
+
+    if (prescriptor.status === newStatusValue) {
+      throw new ConflictException(
+        'O status do prescritor já está definido como o status fornecido',
+      );
+    }
+
+    prescriptor.status = newStatusValue;
+    prescriptor.userUpdated = user;
+
+    try {
+      const result = await this.prescriptorRepository.save(prescriptor);
+
+      return toResponsePrescriptorDto(result);
+    } catch (error) {
+      this.logger.error(
+        `Falha ao alterar o status do prescriptor ${id}. Error: ${error.message}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException(
+        'Ocorreu um erro interno ao alterar o status do prescriptor',
       );
     }
   }
