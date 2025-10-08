@@ -11,6 +11,7 @@ export class PrescriptorRepository {
     private readonly repo: Repository<Prescriptor>,
   ) {}
 
+  // TODO finalizar findAll
   findAll(
     filters: FilterPrescriptorDto,
     take: number,
