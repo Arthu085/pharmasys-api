@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/common/entities/base.entity';
+import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { StockLocation } from 'src/modules/stock-location/entities/stock-location.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { TransferReason } from './transfer-reason.entity';

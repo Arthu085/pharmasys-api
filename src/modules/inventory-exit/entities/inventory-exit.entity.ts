@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/common/entities/base.entity';
+import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { ExitItemType } from './exit-item-type.entity';
 import { User } from 'src/modules/user/entities/user.entity';

@@ -3,7 +3,8 @@ import { typeOrmConfig } from '../typeorm.config';
 
 /**
  * DataSource para entidades comuns/compartilhadas
- * Entidades: InventoryType, TransferReasonType
+ * Nota: As entidades de tipo específico agora estão em seus respectivos módulos
+ * (EntryItemType, ExitItemType, TransferReason)
  */
 const dataSourceOptions: DataSourceOptions = {
   ...(typeOrmConfig as DataSourceOptions),

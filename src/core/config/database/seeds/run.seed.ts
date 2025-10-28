@@ -1,5 +1,5 @@
 import { DataSource, ObjectLiteral, Repository } from 'typeorm';
-import AppDataSource from 'src/config/data.source';
+import AppDataSource from 'src/core/config/data.source';
 
 import { ROLES_SEED } from './data/role.seed';
 import { TYPES_SEED } from './data/type.seed';

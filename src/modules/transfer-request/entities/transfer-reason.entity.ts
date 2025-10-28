@@ -1,7 +1,16 @@
-import { TransferReasonType } from 'src/common/entities/transfer-reason-type.entity';
-import { Entity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('transfer_reason', {
   comment: 'Tabela para cadastro dos motivos de transferência',
 })
-export class TransferReason extends TransferReasonType {}
+export class TransferReason {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({
+    length: 150,
+    unique: true,
+    comment: 'Nome das razões de transferência',
+  })
+  name: string;
+}

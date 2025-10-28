@@ -1,8 +1,8 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { corsConfig } from './config/cors.config';
+import { corsConfig } from './core/config/cors.config';
 import { ValidationPipe } from '@nestjs/common';
-import { TransformResponseInterceptor } from './common/interceptors/transform-response.interceptor';
+import { TransformResponseInterceptor } from './core/interceptors/transform-response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

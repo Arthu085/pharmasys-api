@@ -14,11 +14,11 @@ import { UserService } from '../services/user.service';
 import { CreateUserDto } from '../DTOs/create.user.dto';
 import { UpdateUserDto } from '../DTOs/update.user.dto';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
-import { Roles } from 'src/common/decorators/role.decorator';
+import { Roles } from 'src/core/decorators/role.decorator';
 import { RolesGuard } from '../../auth/roles.guard';
 import { RoleEnum } from 'src/shared/enums/role.enum';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { User } from 'src/common/decorators/user.decorator';
+import { ResponseMessage } from 'src/core/decorators/response-message.decorator';
+import { User } from 'src/core/decorators/user.decorator';
 import { FilterUserDto } from '../DTOs/filter.user.dto';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 

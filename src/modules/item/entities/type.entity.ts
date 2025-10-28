@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/common/entities/base.entity';
+import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { Column, Entity } from 'typeorm';
 
 @Entity('type', { comment: 'Tabela para cadastro de tipos de item' })
