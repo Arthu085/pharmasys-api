@@ -5,11 +5,21 @@ import {
   UpdateDateColumn,
   Column,
   Index,
+  Generated,
 } from 'typeorm';
 
 export abstract class BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Generated('uuid')
+  @Column({
+    type: 'uuid',
+    name: 'uuid',
+    nullable: false,
+    comment: 'Identificador único universal',
+  })
+  uuid: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;

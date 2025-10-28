@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  Generated,
 } from 'typeorm';
 
 @Entity('user', { comment: 'Tabela para cadastro de usuários' })
@@ -16,6 +17,15 @@ import {
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Generated('uuid')
+  @Column({
+    type: 'uuid',
+    name: 'uuid',
+    nullable: false,
+    comment: 'Identificador único universal',
+  })
+  uuid: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;

@@ -22,6 +22,10 @@
     "migration:generate": "npm run typeorm -- migration:generate src/config/database/migrations/$npm_config_name",
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert",
+    "migration:generate:module": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource src/config/datasources/$npm_config_module.datasource.ts migration:generate src/config/database/migrations/$npm_config_module/$npm_config_name",
+    "migration:run:module": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource src/config/datasources/$npm_config_module.datasource.ts migration:run",
+    "migration:revert:module": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource src/config/datasources/$npm_config_module.datasource.ts migration:revert",
+    "generate:datasources": "ts-node -r tsconfig-paths/register src/config/scripts/generate-datasources.ts",
     "seed:run": "ts-node -r tsconfig-paths/register src/config/database/seeds/run.seed.ts"
   },
   "dependencies": {
