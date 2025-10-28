@@ -1,12 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity } from 'src/core/database/entities/base.entity';
+import { Column, Entity } from 'typeorm';
 
 @Entity('transfer_reason', {
   comment: 'Tabela para cadastro dos motivos de transferência',
 })
-export class TransferReason {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class TransferReason extends BaseEntity {
   @Column({
     length: 150,
     unique: true,

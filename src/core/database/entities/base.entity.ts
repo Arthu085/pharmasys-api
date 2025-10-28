@@ -17,8 +17,10 @@ export abstract class BaseEntity {
     type: 'uuid',
     name: 'uuid',
     nullable: false,
+    unique: true,
     comment: 'Identificador único universal',
   })
+  @Index()
   uuid: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
