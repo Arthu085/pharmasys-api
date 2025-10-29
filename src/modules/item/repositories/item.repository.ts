@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Item } from '../entities/item.entity';
+import { ItemEntity } from '../entities/item.entity';
 import { DeepPartial, FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { FilterItemDto } from '../DTOs/filter.item.dto';
 import { TypeEnum } from '../enums/type.enum';
@@ -12,16 +12,16 @@ import { StatusEnum } from 'src/shared/enums/status.enum';
 @Injectable()
 export class ItemRepository {
   constructor(
-    @InjectRepository(Item)
-    private readonly repo: Repository<Item>,
+    @InjectRepository(ItemEntity)
+    private readonly repo: Repository<ItemEntity>,
   ) {}
 
   findAll(
     filters: FilterItemDto,
     take: number,
     skip: number,
-  ): Promise<[Item[], number]> {
-    const where: FindOptionsWhere<Item> = {};
+  ): Promise<[ItemEntity[], number]> {
+    const where: FindOptionsWhere<ItemEntity> = {};
 
     if (filters.name) {
       where.name = ILike(`%${filters.name}%`);
@@ -55,23 +55,23 @@ export class ItemRepository {
     return this.repo.findAndCount({ where, take, skip });
   }
 
-  findById(id: number): Promise<Item | null> {
+  findById(id: number): Promise<ItemEntity | null> {
     return this.repo.findOne({ where: { id } });
   }
 
-  findByName(name: string): Promise<Item | null> {
+  findByName(name: string): Promise<ItemEntity | null> {
     return this.repo.findOne({ where: { name } });
   }
 
-  create(item: Partial<Item>): Item {
+  create(item: Partial<ItemEntity>): ItemEntity {
     return this.repo.create(item);
   }
 
-  merge(item: Item, dto: DeepPartial<Item>): Item {
+  merge(item: ItemEntity, dto: DeepPartial<ItemEntity>): ItemEntity {
     return this.repo.merge(item, dto);
   }
 
-  save(item: Item): Promise<Item> {
+  save(item: ItemEntity): Promise<ItemEntity> {
     return this.repo.save(item);
   }
 }

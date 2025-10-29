@@ -1,30 +1,30 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
-import { Patient } from 'src/modules/patient/entities/patient.entity';
-import { Prescriptor } from 'src/modules/prescriptor/entities/prescriptor.entity';
-import { User } from 'src/modules/user/entities/user.entity';
+import { PatientEntity } from 'src/modules/patient/entities/patient.entity';
+import { PrescriptorEntity } from 'src/modules/prescriptor/entities/prescriptor.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('item_dispensation', {
   comment: 'Tabela para cadastro dispensação de itens',
 })
-export class ItemDispensation extends BaseEntity {
-  @ManyToOne(() => User, { eager: true })
+export class ItemDispensationEntity extends BaseEntity {
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'user_created_id' })
-  userCreated: User;
+  userCreated: UserEntity;
 
-  @ManyToOne(() => User, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
-  userUpdated?: User | null;
+  userUpdated?: UserEntity | null;
 
-  @ManyToOne(() => Patient, { eager: true })
+  @ManyToOne(() => PatientEntity, { eager: true })
   @JoinColumn({ name: 'patient_id' })
   @Index()
-  patient: Patient;
+  patient: PatientEntity;
 
-  @ManyToOne(() => Prescriptor, { eager: true })
+  @ManyToOne(() => PrescriptorEntity, { eager: true })
   @JoinColumn({ name: 'prescriptor_id' })
   @Index()
-  prescriptor: Prescriptor;
+  prescriptor: PrescriptorEntity;
 
   @Column({
     type: 'timestamptz',

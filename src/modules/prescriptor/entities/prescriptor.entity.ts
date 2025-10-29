@@ -1,18 +1,18 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { Advice } from './advice.entity';
-import { User } from 'src/modules/user/entities/user.entity';
+import { AdviceEntity } from './advice.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 @Entity('prescriptor', { comment: 'Tabela para cadastro de prescritores' })
 @Index(['name', 'registrationNumber', 'advice'])
-export class Prescriptor extends BaseEntity {
-  @ManyToOne(() => User, { eager: true })
+export class PrescriptorEntity extends BaseEntity {
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'user_created_id' })
-  userCreated: User;
+  userCreated: UserEntity;
 
-  @ManyToOne(() => User, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
-  userUpdated?: User | null;
+  userUpdated?: UserEntity | null;
 
   @Column({ length: 150, comment: 'Nome do prescritor' })
   @Index()
@@ -26,10 +26,10 @@ export class Prescriptor extends BaseEntity {
   @Index()
   registrationNumber: string;
 
-  @ManyToOne(() => Advice, { eager: true })
+  @ManyToOne(() => AdviceEntity, { eager: true })
   @JoinColumn({ name: 'advice_id' })
   @Index()
-  advice: Advice;
+  advice: AdviceEntity;
 
   @Column({
     type: 'varchar',

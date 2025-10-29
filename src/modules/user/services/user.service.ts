@@ -10,11 +10,11 @@ import { CreateUserDto } from '../DTOs/create.user.dto';
 import { UpdateUserDto } from '../DTOs/update.user.dto';
 import { UserRepository } from '../repositories/user.repository';
 import { RoleRepository } from '../repositories/role.repository';
-import { Role } from '../entities/role.entity';
+import { RoleEntity } from '../entities/role.entity';
 import { RoleEnum } from 'src/shared/enums/role.enum';
 import { ResponseUserDto } from '../DTOs/response.user.dto';
 import { toResponseUserDto } from '../mappers/user.mapper';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { FilterUserDto } from '../DTOs/filter.user.dto';
 import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
@@ -80,7 +80,7 @@ export class UserService {
     return user;
   }
 
-  async findByEmailUser(email: string): Promise<User | null> {
+  async findByEmailUser(email: string): Promise<UserEntity | null> {
     return this.userRepository.findByEmail(email);
   }
 

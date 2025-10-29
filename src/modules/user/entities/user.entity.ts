@@ -1,5 +1,5 @@
 import { StatusEnum } from '../../../shared/enums/status.enum';
-import { Role } from './role.entity';
+import { RoleEntity } from './role.entity';
 import {
   Entity,
   Column,
@@ -14,7 +14,7 @@ import {
 
 @Entity('user', { comment: 'Tabela para cadastro de usuários' })
 @Index(['name', 'email', 'role'])
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -56,8 +56,8 @@ export class User {
   @Column({ length: 255, comment: 'Senha do usuário' })
   password: string;
 
-  @ManyToOne(() => Role)
+  @ManyToOne(() => RoleEntity)
   @JoinColumn({ name: 'role_id' })
   @Index()
-  role: Role;
+  role: RoleEntity;
 }

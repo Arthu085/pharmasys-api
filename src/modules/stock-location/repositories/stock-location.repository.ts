@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { StockLocation } from '../entities/stock-location.entity';
+import { StockLocationEntity } from '../entities/stock-location.entity';
 import { DeepPartial, FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { FilterStockLocationDto } from '../DTOs/filter.stock-location.dto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
@@ -8,16 +8,16 @@ import { StatusEnum } from 'src/shared/enums/status.enum';
 @Injectable()
 export class StockLocationRepository {
   constructor(
-    @InjectRepository(StockLocation)
-    private readonly repo: Repository<StockLocation>,
+    @InjectRepository(StockLocationEntity)
+    private readonly repo: Repository<StockLocationEntity>,
   ) {}
 
   findAll(
     filters: FilterStockLocationDto,
     take: number,
     skip: number,
-  ): Promise<[StockLocation[], number]> {
-    const where: FindOptionsWhere<StockLocation> = {};
+  ): Promise<[StockLocationEntity[], number]> {
+    const where: FindOptionsWhere<StockLocationEntity> = {};
 
     if (filters.name) {
       where.name = ILike(`%${filters.name}%`);
@@ -35,30 +35,30 @@ export class StockLocationRepository {
     return this.repo.findAndCount({ where, take, skip });
   }
 
-  findById(id: number): Promise<StockLocation | null> {
+  findById(id: number): Promise<StockLocationEntity | null> {
     return this.repo.findOne({ where: { id } });
   }
 
-  findByCode(code: string): Promise<StockLocation | null> {
+  findByCode(code: string): Promise<StockLocationEntity | null> {
     return this.repo.findOne({ where: { code } });
   }
 
-  findByName(name: string): Promise<StockLocation | null> {
+  findByName(name: string): Promise<StockLocationEntity | null> {
     return this.repo.findOne({ where: { name } });
   }
 
-  create(stockLocation: Partial<StockLocation>): StockLocation {
+  create(stockLocation: Partial<StockLocationEntity>): StockLocationEntity {
     return this.repo.create(stockLocation);
   }
 
   merge(
-    stockLocation: StockLocation,
-    dto: DeepPartial<StockLocation>,
-  ): StockLocation {
+    stockLocation: StockLocationEntity,
+    dto: DeepPartial<StockLocationEntity>,
+  ): StockLocationEntity {
     return this.repo.merge(stockLocation, dto);
   }
 
-  save(stockLocation: StockLocation): Promise<StockLocation> {
+  save(stockLocation: StockLocationEntity): Promise<StockLocationEntity> {
     return this.repo.save(stockLocation);
   }
 }

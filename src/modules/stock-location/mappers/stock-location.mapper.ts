@@ -1,9 +1,9 @@
-import { StockLocation } from '../entities/stock-location.entity';
+import { StockLocationEntity } from '../entities/stock-location.entity';
 import { ResponseStockLocationDto } from '../DTOs/response.stock-location.dto';
 import { toResponseUserDto } from 'src/modules/user/mappers/user.mapper';
 
 export function toResponseStockLocationDto(
-  stockLocation: StockLocation,
+  stockLocation: StockLocationEntity,
 ): ResponseStockLocationDto {
   const responseDto = new ResponseStockLocationDto();
 

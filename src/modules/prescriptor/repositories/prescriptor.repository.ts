@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Prescriptor } from '../entities/prescriptor.entity';
+import { PrescriptorEntity } from '../entities/prescriptor.entity';
 import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm';
 import { FilterPrescriptorDto } from '../DTOs/filter.prescriptor.dto';
 
 @Injectable()
 export class PrescriptorRepository {
   constructor(
-    @InjectRepository(Prescriptor)
-    private readonly repo: Repository<Prescriptor>,
+    @InjectRepository(PrescriptorEntity)
+    private readonly repo: Repository<PrescriptorEntity>,
   ) {}
 
   // TODO finalizar findAll
@@ -16,33 +16,36 @@ export class PrescriptorRepository {
     filters: FilterPrescriptorDto,
     take: number,
     skip: number,
-  ): Promise<[Prescriptor[], number]> {
-    const where: FindOptionsWhere<Prescriptor> = {};
+  ): Promise<[PrescriptorEntity[], number]> {
+    const where: FindOptionsWhere<PrescriptorEntity> = {};
 
     return this.repo.findAndCount({ where, take, skip });
   }
 
-  findById(id: number): Promise<Prescriptor | null> {
+  findById(id: number): Promise<PrescriptorEntity | null> {
     return this.repo.findOne({ where: { id } });
   }
 
   findByRegistrationNumber(
     registrationNumber: string,
-  ): Promise<Prescriptor | null> {
+  ): Promise<PrescriptorEntity | null> {
     return this.repo.findOne({
       where: { registrationNumber: registrationNumber },
     });
   }
 
-  create(prescriptor: Partial<Prescriptor>): Prescriptor {
+  create(prescriptor: Partial<PrescriptorEntity>): PrescriptorEntity {
     return this.repo.create(prescriptor);
   }
 
-  merge(prescriptor: Prescriptor, dto: DeepPartial<Prescriptor>): Prescriptor {
+  merge(
+    prescriptor: PrescriptorEntity,
+    dto: DeepPartial<PrescriptorEntity>,
+  ): PrescriptorEntity {
     return this.repo.merge(prescriptor, dto);
   }
 
-  save(prescriptor: Prescriptor): Promise<Prescriptor> {
+  save(prescriptor: PrescriptorEntity): Promise<PrescriptorEntity> {
     return this.repo.save(prescriptor);
   }
 }

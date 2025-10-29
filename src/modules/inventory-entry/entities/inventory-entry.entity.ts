@@ -1,22 +1,22 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
-import { Company } from 'src/modules/company/entities/company.entity';
-import { StockLocation } from 'src/modules/stock-location/entities/stock-location.entity';
+import { CompanyEntity } from 'src/modules/company/entities/company.entity';
+import { StockLocationEntity } from 'src/modules/stock-location/entities/stock-location.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { EntryItemType } from './entry-item-type.entity';
-import { User } from 'src/modules/user/entities/user.entity';
+import { EntryItemTypeEntity } from './entry-item-type.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 @Entity('inventory_entry', {
   comment: 'Tabela para cadastro de dados de entrada de item',
 })
 @Index(['invoiceNumber', 'entryDate'])
-export class InventoryEntry extends BaseEntity {
-  @ManyToOne(() => User, { eager: true })
+export class InventoryEntryEntity extends BaseEntity {
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'user_created_id' })
-  userCreated: User;
+  userCreated: UserEntity;
 
-  @ManyToOne(() => User, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
-  userUpdated?: User | null;
+  userUpdated?: UserEntity | null;
 
   @Column({
     type: 'varchar',
@@ -36,20 +36,20 @@ export class InventoryEntry extends BaseEntity {
   @Index()
   entryDate: Date;
 
-  @ManyToOne(() => Company, { eager: true })
+  @ManyToOne(() => CompanyEntity, { eager: true })
   @JoinColumn({ name: 'company_id' })
   @Index()
-  company: Company;
+  company: CompanyEntity;
 
-  @ManyToOne(() => EntryItemType, { eager: true })
+  @ManyToOne(() => EntryItemTypeEntity, { eager: true })
   @JoinColumn({ name: 'entry_type_id' })
   @Index()
-  entryType: EntryItemType;
+  entryType: EntryItemTypeEntity;
 
-  @ManyToOne(() => StockLocation, { eager: true })
+  @ManyToOne(() => StockLocationEntity, { eager: true })
   @JoinColumn({ name: 'stock_location_id' })
   @Index()
-  stockLocation: StockLocation;
+  stockLocation: StockLocationEntity;
 
   @Column({
     type: 'decimal',

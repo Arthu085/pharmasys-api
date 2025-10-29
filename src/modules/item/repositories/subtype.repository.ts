@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Subtype } from '../entities/subtype.entity';
+import { SubtypeEntity } from '../entities/subtype.entity';
 
 @Injectable()
 export class SubtypeRepository {
   constructor(
-    @InjectRepository(Subtype)
-    private readonly repo: Repository<Subtype>,
+    @InjectRepository(SubtypeEntity)
+    private readonly repo: Repository<SubtypeEntity>,
   ) {}
 
-  findByName(name: string): Promise<Subtype | null> {
+  findByName(name: string): Promise<SubtypeEntity | null> {
     return this.repo.findOne({ where: { name } });
   }
 }

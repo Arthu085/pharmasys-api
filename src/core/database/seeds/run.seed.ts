@@ -14,18 +14,18 @@ import { ENTRY_TYPES_SEED } from './data/entry-type.seed';
 import { EXIT_TYPES_SEED } from './data/exit-type.seed';
 import { TRANSFER_REASONS_SEED } from './data/transfer-reason.seed';
 
-import { Role } from 'src/modules/user/entities/role.entity';
-import { Type } from 'src/modules/item/entities/type.entity';
-import { CompanyType } from 'src/modules/company/entities/company-type.entity';
-import { Dosage } from 'src/modules/item/entities/dosage.entity';
-import { Presentation } from 'src/modules/item/entities/presentation.entity';
-import { StockLocation } from 'src/modules/stock-location/entities/stock-location.entity';
-import { Subtype } from 'src/modules/item/entities/subtype.entity';
-import { Advice } from 'src/modules/prescriptor/entities/advice.entity';
-import { EntryItemType } from 'src/modules/inventory-entry/entities/entry-item-type.entity';
-import { ExitItemType } from 'src/modules/inventory-exit/entities/exit-item-type.entity';
-import { User } from 'src/modules/user/entities/user.entity';
-import { TransferReason } from 'src/modules/transfer-request/entities/transfer-reason.entity';
+import { RoleEntity } from 'src/modules/user/entities/role.entity';
+import { TypeEntity } from 'src/modules/item/entities/type.entity';
+import { CompanyTypeEntity } from 'src/modules/company/entities/company-type.entity';
+import { DosageEntity } from 'src/modules/item/entities/dosage.entity';
+import { PresentationEntity } from 'src/modules/item/entities/presentation.entity';
+import { StockLocationEntity } from 'src/modules/stock-location/entities/stock-location.entity';
+import { SubtypeEntity } from 'src/modules/item/entities/subtype.entity';
+import { AdviceEntity } from 'src/modules/prescriptor/entities/advice.entity';
+import { EntryItemTypeEntity } from 'src/modules/inventory-entry/entities/entry-item-type.entity';
+import { ExitItemTypeEntity } from 'src/modules/inventory-exit/entities/exit-item-type.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { TransferReasonEntity } from 'src/modules/transfer-request/entities/transfer-reason.entity';
 
 async function upsertGeneric<T extends ObjectLiteral>(
   repository: Repository<T>,
@@ -44,7 +44,7 @@ async function upsertGeneric<T extends ObjectLiteral>(
 
 async function runSeeds(dataSource: DataSource): Promise<void> {
   const roleResults = await upsertGeneric(
-    dataSource.getRepository(Role),
+    dataSource.getRepository(RoleEntity),
     ROLES_SEED,
     ['name'],
     'Roles',
@@ -60,14 +60,14 @@ async function runSeeds(dataSource: DataSource): Promise<void> {
   const rolesWithIds = getRolesSeed(roleId);
 
   await upsertGeneric(
-    dataSource.getRepository(User),
+    dataSource.getRepository(UserEntity),
     rolesWithIds,
     ['email'],
     'Users',
   );
 
   const typeResults = await upsertGeneric(
-    dataSource.getRepository(Type),
+    dataSource.getRepository(TypeEntity),
     TYPES_SEED,
     ['name'],
     'Types',
@@ -85,56 +85,56 @@ async function runSeeds(dataSource: DataSource): Promise<void> {
   const subtypesWithIds = getSubtypesSeed(medicamentoType);
 
   await upsertGeneric(
-    dataSource.getRepository(Subtype),
+    dataSource.getRepository(SubtypeEntity),
     subtypesWithIds,
     ['name'],
     'Subtypes',
   );
 
   await upsertGeneric(
-    dataSource.getRepository(CompanyType),
+    dataSource.getRepository(CompanyTypeEntity),
     COMPANY_TYPES_SEED,
     ['name'],
     'Company Types',
   );
   await upsertGeneric(
-    dataSource.getRepository(Dosage),
+    dataSource.getRepository(DosageEntity),
     DOSAGES_SEED,
     ['format'],
     'Dosages',
   );
   await upsertGeneric(
-    dataSource.getRepository(Presentation),
+    dataSource.getRepository(PresentationEntity),
     PRESENTATIONS_SEED,
     ['name'],
     'Presentations',
   );
   await upsertGeneric(
-    dataSource.getRepository(StockLocation),
+    dataSource.getRepository(StockLocationEntity),
     STOCK_LOCATIONS_SEED,
     ['code'],
     'Stock Locations',
   );
   await upsertGeneric(
-    dataSource.getRepository(Advice),
+    dataSource.getRepository(AdviceEntity),
     ADVICES_SEED,
     ['acronym'],
     'Advices',
   );
   await upsertGeneric(
-    dataSource.getRepository(EntryItemType),
+    dataSource.getRepository(EntryItemTypeEntity),
     ENTRY_TYPES_SEED,
     ['name'],
     'Entry Types',
   );
   await upsertGeneric(
-    dataSource.getRepository(ExitItemType),
+    dataSource.getRepository(ExitItemTypeEntity),
     EXIT_TYPES_SEED,
     ['name'],
     'Exit Types',
   );
   await upsertGeneric(
-    dataSource.getRepository(TransferReason),
+    dataSource.getRepository(TransferReasonEntity),
     TRANSFER_REASONS_SEED,
     ['name'],
     'Transfer Reasons Types',

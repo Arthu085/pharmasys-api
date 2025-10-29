@@ -1,27 +1,27 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { Item } from 'src/modules/item/entities/item.entity';
-import { ItemDispensation } from './item-dispensation.entity';
-import { Batch } from 'src/modules/batch/entities/batch.entity';
+import { ItemEntity } from 'src/modules/item/entities/item.entity';
+import { ItemDispensationEntity } from './item-dispensation.entity';
+import { BatchEntity } from 'src/modules/batch/entities/batch.entity';
 
 @Entity('item_dispensation_item', {
   comment: 'Tabela para cadastro de dados do item na dispensação',
 })
-export class ItemDispensationItem extends BaseEntity {
-  @ManyToOne(() => ItemDispensation, { eager: true })
+export class ItemDispensationItemEntity extends BaseEntity {
+  @ManyToOne(() => ItemDispensationEntity, { eager: true })
   @JoinColumn({ name: 'item_dispensation_id' })
   @Index()
-  itemDispensation: ItemDispensation;
+  itemDispensation: ItemDispensationEntity;
 
-  @ManyToOne(() => Item, { eager: true })
+  @ManyToOne(() => ItemEntity, { eager: true })
   @JoinColumn({ name: 'item_id' })
   @Index()
-  item: Item;
+  item: ItemEntity;
 
-  @ManyToOne(() => Batch, { eager: true })
+  @ManyToOne(() => BatchEntity, { eager: true })
   @JoinColumn({ name: 'batch_id' })
   @Index()
-  batch: Batch;
+  batch: BatchEntity;
 
   @Column({
     type: 'int4',

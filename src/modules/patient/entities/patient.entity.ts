@@ -1,17 +1,17 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
-import { User } from 'src/modules/user/entities/user.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('patient', { comment: 'Tabela para cadastro de pacientes' })
 @Index(['name', 'document'])
-export class Patient extends BaseEntity {
-  @ManyToOne(() => User, { eager: true })
+export class PatientEntity extends BaseEntity {
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'user_created_id' })
-  userCreated: User;
+  userCreated: UserEntity;
 
-  @ManyToOne(() => User, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
-  userUpdated?: User | null;
+  userUpdated?: UserEntity | null;
 
   @Column({ length: 150, comment: 'Nome do paciente' })
   @Index()

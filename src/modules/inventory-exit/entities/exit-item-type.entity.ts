@@ -4,7 +4,7 @@ import { Column, Entity } from 'typeorm';
 @Entity('exit_item_type', {
   comment: 'Tabela para cadastro dos tipos de saída de item',
 })
-export class ExitItemType extends BaseEntity {
+export class ExitItemTypeEntity extends BaseEntity {
   @Column({ length: 150, unique: true, comment: 'Nome dos tipos' })
   name: string;
 }

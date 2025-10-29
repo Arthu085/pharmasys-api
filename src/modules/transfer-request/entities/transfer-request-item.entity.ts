@@ -1,23 +1,23 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { Item } from 'src/modules/item/entities/item.entity';
-import { TransferRequest } from './transfer-request.entity';
+import { ItemEntity } from 'src/modules/item/entities/item.entity';
+import { TransferRequestEntity } from './transfer-request.entity';
 import { TransferStatusItemEnum } from '../enums/transfer-status-item.enum';
 
 @Entity('transfer_request_item', {
   comment:
     'Tabela para cadastro de dados do item no pedido de trasnferência de estoque',
 })
-export class TransferRequestItem extends BaseEntity {
-  @ManyToOne(() => TransferRequest, { eager: true })
+export class TransferRequestItemEntity extends BaseEntity {
+  @ManyToOne(() => TransferRequestEntity, { eager: true })
   @JoinColumn({ name: 'transfer_request_id' })
   @Index()
-  transferRequest: TransferRequest;
+  transferRequest: TransferRequestEntity;
 
-  @ManyToOne(() => Item, { eager: true })
+  @ManyToOne(() => ItemEntity, { eager: true })
   @JoinColumn({ name: 'item_id' })
   @Index()
-  item: Item;
+  item: ItemEntity;
 
   @Column({
     type: 'enum',

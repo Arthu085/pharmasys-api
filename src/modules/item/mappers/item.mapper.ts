@@ -1,8 +1,8 @@
 import { toResponseUserDto } from 'src/modules/user/mappers/user.mapper';
-import { Item } from '../entities/item.entity';
+import { ItemEntity } from '../entities/item.entity';
 import { ResponseItemDto } from '../DTOs/response.item.dto';
 
-export function toResponseItemDto(item: Item): ResponseItemDto {
+export function toResponseItemDto(item: ItemEntity): ResponseItemDto {
   const responseDto = new ResponseItemDto();
 
   responseDto.id = item.id;

@@ -1,43 +1,43 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { Type } from './type.entity';
-import { Presentation } from './presentation.entity';
-import { Dosage } from './dosage.entity';
-import { Subtype } from './subtype.entity';
+import { TypeEntity } from './type.entity';
+import { PresentationEntity } from './presentation.entity';
+import { DosageEntity } from './dosage.entity';
+import { SubtypeEntity } from './subtype.entity';
 import { BaseEntity } from 'src/core/database/entities/base.entity';
-import { User } from 'src/modules/user/entities/user.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 @Entity('item', { comment: 'Tabela para o cadastro de item' })
 @Index(['name', 'type', 'presentation', 'dosage', 'subtype'])
-export class Item extends BaseEntity {
-  @ManyToOne(() => User, { eager: true })
+export class ItemEntity extends BaseEntity {
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'user_created_id' })
-  userCreated: User;
+  userCreated: UserEntity;
 
-  @ManyToOne(() => User, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
-  userUpdated?: User | null;
+  userUpdated?: UserEntity | null;
 
   @Column({ length: 255, comment: 'Nome do item' })
   @Index()
   name: string;
 
-  @ManyToOne(() => Type, { eager: true })
+  @ManyToOne(() => TypeEntity, { eager: true })
   @JoinColumn({ name: 'type_id' })
   @Index()
-  type: Type;
+  type: TypeEntity;
 
-  @ManyToOne(() => Presentation, { eager: true })
+  @ManyToOne(() => PresentationEntity, { eager: true })
   @JoinColumn({ name: 'presentation_id' })
   @Index()
-  presentation: Presentation;
+  presentation: PresentationEntity;
 
-  @ManyToOne(() => Dosage, { eager: true })
+  @ManyToOne(() => DosageEntity, { eager: true })
   @JoinColumn({ name: 'dosage_id' })
   @Index()
-  dosage: Dosage;
+  dosage: DosageEntity;
 
-  @ManyToOne(() => Subtype, { eager: true })
+  @ManyToOne(() => SubtypeEntity, { eager: true })
   @JoinColumn({ name: 'subtype_id' })
   @Index()
-  subtype?: Subtype | null;
+  subtype?: SubtypeEntity | null;
 }

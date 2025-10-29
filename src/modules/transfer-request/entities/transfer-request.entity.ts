@@ -1,31 +1,31 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
-import { StockLocation } from 'src/modules/stock-location/entities/stock-location.entity';
+import { StockLocationEntity } from 'src/modules/stock-location/entities/stock-location.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { TransferReason } from './transfer-reason.entity';
+import { TransferReasonEntity } from './transfer-reason.entity';
 import { TransferStatusEnum } from 'src/modules/transfer-request/enums/transfer-status.enum';
-import { User } from 'src/modules/user/entities/user.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 @Entity('transfer_request', {
   comment: 'Tabela para cadastro de pedidos de transferência de estoque',
 })
-export class TransferRequest extends BaseEntity {
-  @ManyToOne(() => User, { eager: true })
+export class TransferRequestEntity extends BaseEntity {
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'user_created_id' })
-  userCreated: User;
+  userCreated: UserEntity;
 
-  @ManyToOne(() => User, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
-  userUpdated?: User | null;
+  userUpdated?: UserEntity | null;
 
-  @ManyToOne(() => StockLocation, { eager: true })
+  @ManyToOne(() => StockLocationEntity, { eager: true })
   @JoinColumn({ name: 'central_stock_id' })
   @Index()
-  centralStock: StockLocation;
+  centralStock: StockLocationEntity;
 
-  @ManyToOne(() => StockLocation, { eager: true })
+  @ManyToOne(() => StockLocationEntity, { eager: true })
   @JoinColumn({ name: 'destination_id' })
   @Index()
-  destination: StockLocation;
+  destination: StockLocationEntity;
 
   @Column({
     type: 'timestamptz',
@@ -35,10 +35,10 @@ export class TransferRequest extends BaseEntity {
   @Index()
   requestDate: Date;
 
-  @ManyToOne(() => TransferReason, { eager: true })
+  @ManyToOne(() => TransferReasonEntity, { eager: true })
   @JoinColumn({ name: 'transfer_reason_id' })
   @Index()
-  reason: TransferReason;
+  reason: TransferReasonEntity;
 
   @Column({
     type: 'enum',

@@ -1,6 +1,6 @@
-import { Type } from 'src/modules/item/entities/type.entity';
+import { TypeEntity } from 'src/modules/item/entities/type.entity';
 
-export function getSubtypesSeed(medicamentoType: Type) {
+export function getSubtypesSeed(medicamentoType: TypeEntity) {
   return [
     { name: 'Básico', type: medicamentoType },
     { name: 'Antimicrobiano', type: medicamentoType },

@@ -1,29 +1,29 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
-import { StockLocation } from 'src/modules/stock-location/entities/stock-location.entity';
-import { User } from 'src/modules/user/entities/user.entity';
+import { StockLocationEntity } from 'src/modules/stock-location/entities/stock-location.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('stock_transfer', {
   comment: 'Tabela para cadastro de dados de transferência de item do estoque',
 })
-export class StockTransfer extends BaseEntity {
-  @ManyToOne(() => User, { eager: true })
+export class StockTransferEntity extends BaseEntity {
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'user_created_id' })
-  userCreated: User;
+  userCreated: UserEntity;
 
-  @ManyToOne(() => User, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
-  userUpdated?: User | null;
+  userUpdated?: UserEntity | null;
 
-  @ManyToOne(() => StockLocation, { eager: true })
+  @ManyToOne(() => StockLocationEntity, { eager: true })
   @JoinColumn({ name: 'origin_id' })
   @Index()
-  origin: StockLocation;
+  origin: StockLocationEntity;
 
-  @ManyToOne(() => StockLocation, { eager: true })
+  @ManyToOne(() => StockLocationEntity, { eager: true })
   @JoinColumn({ name: 'destination_id' })
   @Index()
-  destination: StockLocation;
+  destination: StockLocationEntity;
 
   @Column({
     type: 'timestamptz',

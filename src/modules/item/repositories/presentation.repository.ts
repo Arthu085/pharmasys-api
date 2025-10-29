@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Presentation } from '../entities/presentation.entity';
+import { PresentationEntity } from '../entities/presentation.entity';
 
 @Injectable()
 export class PresentationRepository {
   constructor(
-    @InjectRepository(Presentation)
-    private readonly repo: Repository<Presentation>,
+    @InjectRepository(PresentationEntity)
+    private readonly repo: Repository<PresentationEntity>,
   ) {}
 
-  findByName(name: string): Promise<Presentation | null> {
+  findByName(name: string): Promise<PresentationEntity | null> {
     return this.repo.findOne({ where: { name } });
   }
 }

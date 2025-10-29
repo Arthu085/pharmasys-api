@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TransferReason } from './entities/transfer-reason.entity';
-import { TransferRequest } from './entities/transfer-request.entity';
-import { TransferRequestItem } from './entities/transfer-request-item.entity';
+import { TransferReasonEntity } from './entities/transfer-reason.entity';
+import { TransferRequestEntity } from './entities/transfer-request.entity';
+import { TransferRequestItemEntity } from './entities/transfer-request-item.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      TransferReason,
-      TransferRequest,
-      TransferRequestItem,
+      TransferReasonEntity,
+      TransferRequestEntity,
+      TransferRequestItemEntity,
     ]),
   ],
   controllers: [],

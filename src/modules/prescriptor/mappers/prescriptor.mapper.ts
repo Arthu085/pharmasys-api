@@ -1,9 +1,9 @@
 import { toResponseUserDto } from 'src/modules/user/mappers/user.mapper';
 import { ResponsePrescriptorDto } from '../DTOs/response.prescriptor.dto';
-import { Prescriptor } from '../entities/prescriptor.entity';
+import { PrescriptorEntity } from '../entities/prescriptor.entity';
 
 export function toResponsePrescriptorDto(
-  prescriptor: Prescriptor,
+  prescriptor: PrescriptorEntity,
 ): ResponsePrescriptorDto {
   const responseDto = new ResponsePrescriptorDto();
 

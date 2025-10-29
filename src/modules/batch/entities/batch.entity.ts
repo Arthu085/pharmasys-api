@@ -1,29 +1,29 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
-import { Company } from 'src/modules/company/entities/company.entity';
-import { Item } from 'src/modules/item/entities/item.entity';
-import { User } from 'src/modules/user/entities/user.entity';
+import { CompanyEntity } from 'src/modules/company/entities/company.entity';
+import { ItemEntity } from 'src/modules/item/entities/item.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('batch', { comment: 'Tabela para cadastro de lotes' })
 @Index(['item', 'company', 'batchCode'])
-export class Batch extends BaseEntity {
-  @ManyToOne(() => User, { eager: true })
+export class BatchEntity extends BaseEntity {
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'user_created_id' })
-  userCreated: User;
+  userCreated: UserEntity;
 
-  @ManyToOne(() => User, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
-  userUpdated?: User | null;
+  userUpdated?: UserEntity | null;
 
-  @ManyToOne(() => Item, { eager: true })
+  @ManyToOne(() => ItemEntity, { eager: true })
   @JoinColumn({ name: 'item_id' })
   @Index()
-  item: Item;
+  item: ItemEntity;
 
-  @ManyToOne(() => Company, { eager: true })
+  @ManyToOne(() => CompanyEntity, { eager: true })
   @JoinColumn({ name: 'company_id' })
   @Index()
-  company: Company;
+  company: CompanyEntity;
 
   @Column({
     length: 90,

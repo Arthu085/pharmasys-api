@@ -4,7 +4,7 @@ import { Column, Entity } from 'typeorm';
 @Entity('transfer_reason', {
   comment: 'Tabela para cadastro dos motivos de transferência',
 })
-export class TransferReason extends BaseEntity {
+export class TransferReasonEntity extends BaseEntity {
   @Column({
     length: 150,
     unique: true,

@@ -1,7 +1,7 @@
 import { ResponseUserDto } from '../DTOs/response.user.dto';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 
-export function toResponseUserDto(user: User): ResponseUserDto {
+export function toResponseUserDto(user: UserEntity): ResponseUserDto {
   const responseDto = new ResponseUserDto();
 
   responseDto.id = user.id;

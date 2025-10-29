@@ -1,27 +1,27 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { InventoryEntry } from './inventory-entry.entity';
-import { Item } from 'src/modules/item/entities/item.entity';
-import { Batch } from 'src/modules/batch/entities/batch.entity';
+import { InventoryEntryEntity } from './inventory-entry.entity';
+import { ItemEntity } from 'src/modules/item/entities/item.entity';
+import { BatchEntity } from 'src/modules/batch/entities/batch.entity';
 
 @Entity('inventory_entry_item', {
   comment: 'Tabela para cadastro de dados do item na entrada',
 })
-export class InventoryEntryItem extends BaseEntity {
-  @ManyToOne(() => InventoryEntry, { eager: true })
+export class InventoryEntryItemEntity extends BaseEntity {
+  @ManyToOne(() => InventoryEntryEntity, { eager: true })
   @JoinColumn({ name: 'inventory_entry_id' })
   @Index()
-  inventoryEntry: InventoryEntry;
+  inventoryEntry: InventoryEntryEntity;
 
-  @ManyToOne(() => Item, { eager: true })
+  @ManyToOne(() => ItemEntity, { eager: true })
   @JoinColumn({ name: 'item_id' })
   @Index()
-  item: Item;
+  item: ItemEntity;
 
-  @ManyToOne(() => Batch, { eager: true })
+  @ManyToOne(() => BatchEntity, { eager: true })
   @JoinColumn({ name: 'batch_id' })
   @Index()
-  batch: Batch;
+  batch: BatchEntity;
 
   @Column({
     type: 'int4',

@@ -7,20 +7,20 @@ import {
   ManyToMany,
   ManyToOne,
 } from 'typeorm';
-import { CompanyType } from './company-type.entity';
+import { CompanyTypeEntity } from './company-type.entity';
 import { BaseEntity } from 'src/core/database/entities/base.entity';
-import { User } from 'src/modules/user/entities/user.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 @Entity('company', { comment: 'Tabela para cadastro de empresa' })
 @Index(['name', 'cnpj'])
-export class Company extends BaseEntity {
-  @ManyToOne(() => User, { eager: true })
+export class CompanyEntity extends BaseEntity {
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'user_created_id' })
-  userCreated: User;
+  userCreated: UserEntity;
 
-  @ManyToOne(() => User, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
-  userUpdated?: User | null;
+  userUpdated?: UserEntity | null;
 
   @Column({ length: 255, comment: 'Nome da empresa' })
   @Index()
@@ -29,7 +29,9 @@ export class Company extends BaseEntity {
   @Column({ length: 18, unique: true, comment: 'CNPJ da empresa' })
   cnpj: string;
 
-  @ManyToMany(() => CompanyType, (type) => type.companies, { eager: true })
+  @ManyToMany(() => CompanyTypeEntity, (type) => type.companies, {
+    eager: true,
+  })
   @JoinTable({
     name: 'company_type_rel',
     joinColumn: {
@@ -41,5 +43,5 @@ export class Company extends BaseEntity {
       referencedColumnName: 'id',
     },
   })
-  companyTypes: CompanyType[];
+  companyTypes: CompanyTypeEntity[];
 }

@@ -1,26 +1,26 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
-import { Batch } from 'src/modules/batch/entities/batch.entity';
-import { Item } from 'src/modules/item/entities/item.entity';
-import { StockLocation } from 'src/modules/stock-location/entities/stock-location.entity';
+import { BatchEntity } from 'src/modules/batch/entities/batch.entity';
+import { ItemEntity } from 'src/modules/item/entities/item.entity';
+import { StockLocationEntity } from 'src/modules/stock-location/entities/stock-location.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('stock_balance', { comment: 'Tabela para consulta de estoque' })
 @Index(['item', 'batch', 'stockLocation'])
-export class StockBalance extends BaseEntity {
-  @ManyToOne(() => Item, { eager: true })
+export class StockBalanceEntity extends BaseEntity {
+  @ManyToOne(() => ItemEntity, { eager: true })
   @JoinColumn({ name: 'item_id' })
   @Index()
-  item: Item;
+  item: ItemEntity;
 
-  @ManyToOne(() => Batch, { eager: true })
+  @ManyToOne(() => BatchEntity, { eager: true })
   @JoinColumn({ name: 'batch_id' })
   @Index()
-  batch: Batch;
+  batch: BatchEntity;
 
-  @ManyToOne(() => StockLocation, { eager: true })
+  @ManyToOne(() => StockLocationEntity, { eager: true })
   @JoinColumn({ name: 'stock_location_id' })
   @Index()
-  stockLocation: StockLocation;
+  stockLocation: StockLocationEntity;
 
   @Column({ type: 'int4', comment: 'Quantidade no estoque' })
   quantity: number;

@@ -1,8 +1,10 @@
 import { toResponseUserDto } from 'src/modules/user/mappers/user.mapper';
-import { Company } from '../entities/company.entity';
+import { CompanyEntity } from '../entities/company.entity';
 import { ResponseCompanyDto } from '../DTOs/response.company.dto';
 
-export function toResponseCompanyDto(company: Company): ResponseCompanyDto {
+export function toResponseCompanyDto(
+  company: CompanyEntity,
+): ResponseCompanyDto {
   const responseDto = new ResponseCompanyDto();
 
   responseDto.id = company.id;

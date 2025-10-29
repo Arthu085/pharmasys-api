@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Item } from './entities/item.entity';
-import { User } from '../user/entities/user.entity';
-import { Dosage } from './entities/dosage.entity';
-import { Type } from './entities/type.entity';
-import { Subtype } from './entities/subtype.entity';
-import { Presentation } from './entities/presentation.entity';
+import { ItemEntity } from './entities/item.entity';
+import { UserEntity } from '../user/entities/user.entity';
+import { DosageEntity } from './entities/dosage.entity';
+import { TypeEntity } from './entities/type.entity';
+import { SubtypeEntity } from './entities/subtype.entity';
+import { PresentationEntity } from './entities/presentation.entity';
 import { ItemController } from './controllers/item.controller';
 import { ItemRepository } from './repositories/item.repository';
 import { DosageRepository } from './repositories/dosage.repository';
@@ -16,18 +16,18 @@ import { ItemService } from './services/item.service';
 import { UserService } from '../user/services/user.service';
 import { UserRepository } from '../user/repositories/user.repository';
 import { RoleRepository } from '../user/repositories/role.repository';
-import { Role } from '../user/entities/role.entity';
+import { RoleEntity } from '../user/entities/role.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      Item,
-      User,
-      Dosage,
-      Type,
-      Subtype,
-      Presentation,
-      Role,
+      ItemEntity,
+      UserEntity,
+      DosageEntity,
+      TypeEntity,
+      SubtypeEntity,
+      PresentationEntity,
+      RoleEntity,
     ]),
   ],
   controllers: [ItemController],

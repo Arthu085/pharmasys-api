@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, FindOptionsWhere, ILike, Repository } from 'typeorm';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { FilterUserDto } from '../DTOs/filter.user.dto';
 import { RoleEnum } from 'src/shared/enums/role.enum';
 import { StatusEnum } from 'src/shared/enums/status.enum';
@@ -9,16 +9,16 @@ import { StatusEnum } from 'src/shared/enums/status.enum';
 @Injectable()
 export class UserRepository {
   constructor(
-    @InjectRepository(User)
-    private readonly repo: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly repo: Repository<UserEntity>,
   ) {}
 
   findAll(
     filters: FilterUserDto,
     take: number,
     skip: number,
-  ): Promise<[User[], number]> {
-    const where: FindOptionsWhere<User> = {};
+  ): Promise<[UserEntity[], number]> {
+    const where: FindOptionsWhere<UserEntity> = {};
 
     if (filters.name) {
       where.name = ILike(`%${filters.name}%`);
@@ -40,27 +40,27 @@ export class UserRepository {
     return this.repo.findAndCount({ where, relations: ['role'], take, skip });
   }
 
-  findById(id: number): Promise<User | null> {
+  findById(id: number): Promise<UserEntity | null> {
     return this.repo.findOne({ where: { id }, relations: ['role'] });
   }
 
-  findByEmail(email: string): Promise<User | null> {
+  findByEmail(email: string): Promise<UserEntity | null> {
     return this.repo.findOne({ where: { email }, relations: ['role'] });
   }
 
-  findByEmailWithoutRelations(email: string): Promise<User | null> {
+  findByEmailWithoutRelations(email: string): Promise<UserEntity | null> {
     return this.repo.findOne({ where: { email } });
   }
 
-  create(user: Partial<User>): User {
+  create(user: Partial<UserEntity>): UserEntity {
     return this.repo.create(user);
   }
 
-  merge(user: User, dto: DeepPartial<User>): User {
+  merge(user: UserEntity, dto: DeepPartial<UserEntity>): UserEntity {
     return this.repo.merge(user, dto);
   }
 
-  save(user: User): Promise<User> {
+  save(user: UserEntity): Promise<UserEntity> {
     return this.repo.save(user);
   }
 }

@@ -4,7 +4,7 @@ import { Column, Entity } from 'typeorm';
 @Entity('advice', {
   comment: 'Tabela para o cadastro dos conselhos profissionais',
 })
-export class Advice extends BaseEntity {
+export class AdviceEntity extends BaseEntity {
   @Column({ length: 10, unique: true, comment: 'Código do conselho' })
   acronym: string;
 
