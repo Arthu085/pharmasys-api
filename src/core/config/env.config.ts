@@ -15,6 +15,8 @@ const envSchema = Joi.object({
   DB_NAME: Joi.string().required(),
   DB_SSL: Joi.string().valid('true', 'false').default('false'),
   DB_SCHEMA: Joi.string().required(),
+  JWT_SECRET: Joi.string().required(),
+  JWT_EXPIRES_IN: Joi.string().default('4h'),
 }).unknown();
 
 const { error, value: envVars } = envSchema.validate(process.env);
@@ -33,5 +35,9 @@ export const env = {
     name: envVars.DB_NAME,
     ssl: envVars.DB_SSL === 'true',
     schema: envVars.DB_SCHEMA,
+  },
+  jwt: {
+    secret: envVars.JWT_SECRET,
+    expiresIn: envVars.JWT_EXPIRES_IN,
   },
 };
