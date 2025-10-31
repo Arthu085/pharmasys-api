@@ -14,7 +14,7 @@ import { UserService } from '../services/user.service';
 import { CreateUserDto } from '../DTOs/create.user.dto';
 import { UpdateUserDto } from '../DTOs/update.user.dto';
 import { JwtAuthGuard, RolesGuard } from 'src/core/guards';
-import { Roles, ResponseMessage, User } from 'src/core/decorators';
+import { Roles, ResponseMessage, User, Public } from 'src/core/decorators';
 import { RoleEnum } from 'src/shared/enums/role.enum';
 import { FilterUserDto } from '../DTOs/filter.user.dto';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
@@ -47,6 +47,7 @@ export class UserController {
     return this.userService.createUser(dto);
   }
 
+  @Public()
   @Post('register')
   @ResponseMessage('Usuário registrado com sucesso')
   registerUser(@Body() dto: CreateUserDto) {
