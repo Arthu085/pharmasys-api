@@ -1,4 +1,4 @@
-import { DataSource, ObjectLiteral, Repository } from 'typeorm';
+import { DataSource, ObjectLiteral, Repository, In } from 'typeorm';
 import AppDataSource from 'src/core/database/data-source';
 
 import { ROLES_SEED } from './data/role.seed';
@@ -38,7 +38,10 @@ async function upsertGeneric<T extends ObjectLiteral>(
     conflictColumns as string[],
   );
   console.log(`${entityName} seeded`);
-  const insertedEntities = await repository.findByIds(result.identifiers);
+
+  const ids = result.identifiers.map((identifier) => identifier.id);
+  const insertedEntities = await repository.findBy({ id: In(ids) } as any);
+
   return insertedEntities;
 }
 
