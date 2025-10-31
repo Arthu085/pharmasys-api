@@ -9,7 +9,14 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RESPONSE_MESSAGE_KEY } from '../decorators/response-message.decorator';
 
-// Define a estrutura da nossa resposta padrão
+export interface PaginatedData {
+  meta?: {
+    total: number;
+    page?: number;
+    limit?: number;
+  };
+}
+
 export interface Response<T> {
   success: boolean;
   message: string;
@@ -27,24 +34,29 @@ export class TransformResponseInterceptor<T>
     next: CallHandler,
   ): Observable<Response<T>> {
     const responseMessage =
-      this.reflector.get<string>(RESPONSE_MESSAGE_KEY, context.getHandler()) ??
+      this.reflector.get<string>(RESPONSE_MESSAGE_KEY, context.getHandler()) ||
       'Operação realizada com sucesso';
 
     return next.handle().pipe(
-      map((data: any) => {
-        if (data && data.meta && data.meta.total === 0) {
-          return {
-            success: true,
-            message: 'Nenhum dado encontrado com os filtros aplicados',
-            data: data,
-          };
-        }
+      map((data: T & PaginatedData) => {
+        const message = this.getResponseMessage(data, responseMessage);
+
         return {
           success: true,
-          message: responseMessage,
-          data: data,
+          message,
+          data,
         };
       }),
     );
+  }
+
+  private getResponseMessage(
+    data: PaginatedData,
+    defaultMessage: string,
+  ): string {
+    if (data?.meta?.total === 0) {
+      return 'Nenhum dado encontrado com os filtros aplicados';
+    }
+    return defaultMessage;
   }
 }
