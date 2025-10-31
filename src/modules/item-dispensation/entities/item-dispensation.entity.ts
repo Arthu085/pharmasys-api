@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/core/database/entities/base.entity';
+import { BaseEntity } from 'src/core/database';
 import { PatientEntity } from 'src/modules/patient/entities/patient.entity';
 import { PrescriptorEntity } from 'src/modules/prescriptor/entities/prescriptor.entity';
 import { UserEntity } from 'src/modules/user/entities/user.entity';

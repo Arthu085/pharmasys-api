@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToMany } from 'typeorm';
 import { CompanyEntity } from './company.entity';
-import { BaseEntity } from 'src/core/database/entities/base.entity';
+import { BaseEntity } from 'src/core/database';
 
 @Entity('company_type', {
   comment: 'Tabela para cadastro dos tipos de empresa',

@@ -10,13 +10,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { StockLocationService } from '../services/stock-location.service';
-import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
-import { RolesGuard } from 'src/modules/auth/roles.guard';
-import { Roles } from 'src/core/decorators/role.decorator';
+import { JwtAuthGuard, RolesGuard } from 'src/core/guards';
+import { Roles, ResponseMessage, User } from 'src/core/decorators';
 import { RoleEnum } from 'src/shared/enums/role.enum';
-import { ResponseMessage } from 'src/core/decorators/response-message.decorator';
 import { CreateStockLocationDto } from '../DTOs/create.stock-location.dto';
-import { User } from 'src/core/decorators/user.decorator';
 import { UpdateStockLocationDto } from '../DTOs/update.stock-location.dto';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 import { FilterStockLocationDto } from '../DTOs/filter.stock-location.dto';

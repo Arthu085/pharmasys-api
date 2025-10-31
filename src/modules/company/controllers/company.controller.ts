@@ -10,13 +10,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CompanyService } from '../services/company.service';
-import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
-import { RolesGuard } from 'src/modules/auth/roles.guard';
-import { Roles } from 'src/core/decorators/role.decorator';
+import { JwtAuthGuard, RolesGuard } from 'src/core/guards';
+import { Roles, ResponseMessage, User } from 'src/core/decorators';
 import { RoleEnum } from 'src/shared/enums/role.enum';
-import { ResponseMessage } from 'src/core/decorators/response-message.decorator';
 import { CreateCompanyDto } from '../DTOs/create.company.dto';
-import { User } from 'src/core/decorators/user.decorator';
 import { UpdateCompanyDto } from '../DTOs/update.company.dto';
 import { ChangeStatusDto } from 'src/shared/DTOs/change-status.dto';
 import { FilterCompanyDto } from '../DTOs/filter.company.dto';

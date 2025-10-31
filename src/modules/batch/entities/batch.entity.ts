@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/core/database/entities/base.entity';
+import { BaseEntity } from 'src/core/database';
 import { CompanyEntity } from 'src/modules/company/entities/company.entity';
 import { ItemEntity } from 'src/modules/item/entities/item.entity';
 import { UserEntity } from 'src/modules/user/entities/user.entity';

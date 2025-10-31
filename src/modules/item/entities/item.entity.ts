@@ -3,7 +3,7 @@ import { TypeEntity } from './type.entity';
 import { PresentationEntity } from './presentation.entity';
 import { DosageEntity } from './dosage.entity';
 import { SubtypeEntity } from './subtype.entity';
-import { BaseEntity } from 'src/core/database/entities/base.entity';
+import { BaseEntity } from 'src/core/database';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 @Entity('item', { comment: 'Tabela para o cadastro de item' })

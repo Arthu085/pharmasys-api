@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/core/database/entities/base.entity';
+import { BaseEntity } from 'src/core/database';
 import { Column, Entity } from 'typeorm';
 
 @Entity('role', { comment: 'Tabela para cadastro de funções' })

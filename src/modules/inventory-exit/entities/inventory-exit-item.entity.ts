@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/core/database/entities/base.entity';
+import { BaseEntity } from 'src/core/database';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { ItemEntity } from 'src/modules/item/entities/item.entity';
 import { BatchEntity } from 'src/modules/batch/entities/batch.entity';
