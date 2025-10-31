@@ -55,8 +55,9 @@ async function main() {
     );
     if (!fs.existsSync(dataSourcePath)) {
       fs.writeFileSync(dataSourcePath, generateDataSourceContent(moduleName));
+      console.log(`Created datasource for module: ${moduleName}`);
     } else {
-      return;
+      console.log(`- Datasource already exists for module: ${moduleName}`);
     }
   }
 }
