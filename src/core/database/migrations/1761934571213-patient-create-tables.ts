@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddPatientModule1761681500776 implements MigrationInterface {
-    name = 'AddPatientModule1761681500776'
+export class PatientCreateTables1761934571213 implements MigrationInterface {
+    name = 'PatientCreateTables1761934571213'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "pharmasys"."patient_status_enum" AS ENUM('A', 'I')`);
-        await queryRunner.query(`CREATE TABLE "pharmasys"."patient" ("id" SERIAL NOT NULL, "uuid" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now(), "status" "pharmasys"."patient_status_enum" NOT NULL DEFAULT 'A', "name" character varying(150) NOT NULL, "document" character varying(14) NOT NULL, "user_created_id" integer, "user_updated_id" integer, CONSTRAINT "UQ_b8c20e4706d589a3f87b1c417c7" UNIQUE ("uuid"), CONSTRAINT "UQ_56a59567f38ccf4d8209c8e1fc7" UNIQUE ("document"), CONSTRAINT "PK_8dfa510bb29ad31ab2139fbfb99" PRIMARY KEY ("id")); COMMENT ON COLUMN "pharmasys"."patient"."uuid" IS 'Identificador único universal'; COMMENT ON COLUMN "pharmasys"."patient"."status" IS 'Status da entidade (A-Ativo, I-Inativo)'; COMMENT ON COLUMN "pharmasys"."patient"."name" IS 'Nome do paciente'; COMMENT ON COLUMN "pharmasys"."patient"."document" IS 'Documento do paciente'`);
+        await queryRunner.query(`CREATE TABLE "pharmasys"."patient" ("id" SERIAL NOT NULL, "uuid" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "status" "pharmasys"."patient_status_enum" NOT NULL DEFAULT 'A', "name" character varying(150) NOT NULL, "document" character varying(14) NOT NULL, "user_created_id" integer, "user_updated_id" integer, CONSTRAINT "UQ_b8c20e4706d589a3f87b1c417c7" UNIQUE ("uuid"), CONSTRAINT "UQ_56a59567f38ccf4d8209c8e1fc7" UNIQUE ("document"), CONSTRAINT "PK_8dfa510bb29ad31ab2139fbfb99" PRIMARY KEY ("id")); COMMENT ON COLUMN "pharmasys"."patient"."uuid" IS 'Identificador único universal'; COMMENT ON COLUMN "pharmasys"."patient"."status" IS 'Status da entidade (A-Ativo, I-Inativo)'; COMMENT ON COLUMN "pharmasys"."patient"."name" IS 'Nome do paciente'; COMMENT ON COLUMN "pharmasys"."patient"."document" IS 'Documento do paciente'`);
         await queryRunner.query(`CREATE INDEX "IDX_b8c20e4706d589a3f87b1c417c" ON "pharmasys"."patient" ("uuid") `);
         await queryRunner.query(`CREATE INDEX "IDX_93dba9ca93e029fd2e2f103540" ON "pharmasys"."patient" ("status") `);
         await queryRunner.query(`CREATE INDEX "IDX_054a6cba30d6f51a1cb1e96f38" ON "pharmasys"."patient" ("name") `);

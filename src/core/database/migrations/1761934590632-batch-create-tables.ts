@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddBatchModule1761681470814 implements MigrationInterface {
-    name = 'AddBatchModule1761681470814'
+export class BatchCreateTables1761934590632 implements MigrationInterface {
+    name = 'BatchCreateTables1761934590632'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "pharmasys"."batch_status_enum" AS ENUM('A', 'I')`);
-        await queryRunner.query(`CREATE TABLE "pharmasys"."batch" ("id" SERIAL NOT NULL, "uuid" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now(), "status" "pharmasys"."batch_status_enum" NOT NULL DEFAULT 'A', "batch_code" character varying(90) NOT NULL, "expiration_date" date NOT NULL, "user_created_id" integer, "user_updated_id" integer, "item_id" integer, "company_id" integer, CONSTRAINT "UQ_fa94ae7db217b0a28eba8c11c10" UNIQUE ("uuid"), CONSTRAINT "UQ_92e8e8867845483820a82e3724d" UNIQUE ("batch_code"), CONSTRAINT "PK_57da3b830b57bec1fd329dcaf43" PRIMARY KEY ("id")); COMMENT ON COLUMN "pharmasys"."batch"."uuid" IS 'Identificador único universal'; COMMENT ON COLUMN "pharmasys"."batch"."status" IS 'Status da entidade (A-Ativo, I-Inativo)'; COMMENT ON COLUMN "pharmasys"."batch"."batch_code" IS 'Código do lote'; COMMENT ON COLUMN "pharmasys"."batch"."expiration_date" IS 'Data de expiração'`);
+        await queryRunner.query(`CREATE TABLE "pharmasys"."batch" ("id" SERIAL NOT NULL, "uuid" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "status" "pharmasys"."batch_status_enum" NOT NULL DEFAULT 'A', "batch_code" character varying(90) NOT NULL, "expiration_date" date NOT NULL, "user_created_id" integer, "user_updated_id" integer, "item_id" integer, "company_id" integer, CONSTRAINT "UQ_fa94ae7db217b0a28eba8c11c10" UNIQUE ("uuid"), CONSTRAINT "UQ_92e8e8867845483820a82e3724d" UNIQUE ("batch_code"), CONSTRAINT "PK_57da3b830b57bec1fd329dcaf43" PRIMARY KEY ("id")); COMMENT ON COLUMN "pharmasys"."batch"."uuid" IS 'Identificador único universal'; COMMENT ON COLUMN "pharmasys"."batch"."status" IS 'Status da entidade (A-Ativo, I-Inativo)'; COMMENT ON COLUMN "pharmasys"."batch"."batch_code" IS 'Código do lote'; COMMENT ON COLUMN "pharmasys"."batch"."expiration_date" IS 'Data de expiração'`);
         await queryRunner.query(`CREATE INDEX "IDX_fa94ae7db217b0a28eba8c11c1" ON "pharmasys"."batch" ("uuid") `);
         await queryRunner.query(`CREATE INDEX "IDX_cfea8cb6e387bc8738a456865b" ON "pharmasys"."batch" ("status") `);
         await queryRunner.query(`CREATE INDEX "IDX_4be0d33148594e732642334336" ON "pharmasys"."batch" ("item_id") `);

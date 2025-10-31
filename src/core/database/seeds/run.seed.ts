@@ -1,5 +1,5 @@
 import { DataSource, ObjectLiteral, Repository, In } from 'typeorm';
-import AppDataSource from 'src/core/database/data-source';
+import AppDataSource from '../data-source';
 
 import { ROLES_SEED } from './data/role.seed';
 import { TYPES_SEED } from './data/type.seed';
@@ -14,18 +14,18 @@ import { ENTRY_TYPES_SEED } from './data/entry-type.seed';
 import { EXIT_TYPES_SEED } from './data/exit-type.seed';
 import { TRANSFER_REASONS_SEED } from './data/transfer-reason.seed';
 
-import { RoleEntity } from 'src/modules/user/entities/role.entity';
-import { TypeEntity } from 'src/modules/item/entities/type.entity';
-import { CompanyTypeEntity } from 'src/modules/company/entities/company-type.entity';
-import { DosageEntity } from 'src/modules/item/entities/dosage.entity';
-import { PresentationEntity } from 'src/modules/item/entities/presentation.entity';
-import { StockLocationEntity } from 'src/modules/stock-location/entities/stock-location.entity';
-import { SubtypeEntity } from 'src/modules/item/entities/subtype.entity';
-import { AdviceEntity } from 'src/modules/prescriptor/entities/advice.entity';
-import { EntryItemTypeEntity } from 'src/modules/inventory-entry/entities/entry-item-type.entity';
-import { ExitItemTypeEntity } from 'src/modules/inventory-exit/entities/exit-item-type.entity';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
-import { TransferReasonEntity } from 'src/modules/transfer-request/entities/transfer-reason.entity';
+import { RoleEntity } from '../../../modules/user/entities/role.entity';
+import { TypeEntity } from '../../../modules/item/entities/type.entity';
+import { CompanyTypeEntity } from '../../../modules/company/entities/company-type.entity';
+import { DosageEntity } from '../../../modules/item/entities/dosage.entity';
+import { PresentationEntity } from '../../../modules/item/entities/presentation.entity';
+import { StockLocationEntity } from '../../../modules/stock-location/entities/stock-location.entity';
+import { SubtypeEntity } from '../../../modules/item/entities/subtype.entity';
+import { AdviceEntity } from '../../../modules/prescriptor/entities/advice.entity';
+import { EntryItemTypeEntity } from '../../../modules/inventory-entry/entities/entry-item-type.entity';
+import { ExitItemTypeEntity } from '../../../modules/inventory-exit/entities/exit-item-type.entity';
+import { UserEntity } from '../../../modules/user/entities/user.entity';
+import { TransferReasonEntity } from '../../../modules/transfer-request/entities/transfer-reason.entity';
 
 async function upsertGeneric<T extends ObjectLiteral>(
   repository: Repository<T>,

@@ -7,7 +7,7 @@ const dataSourceOptions: DataSourceOptions = {
     __dirname + '/../**/*.entity{.ts,.js}',
     __dirname + '/../../modules/**/*.entity{.ts,.js}',
   ],
-  migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+  migrations: [__dirname + '/migrations/*{.ts,.js}'],
 };
 
 const AppDataSource = new DataSource(dataSourceOptions);

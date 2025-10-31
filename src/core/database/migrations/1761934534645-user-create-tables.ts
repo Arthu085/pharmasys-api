@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddUserModule1761681213938 implements MigrationInterface {
-    name = 'AddUserModule1761681213938'
+export class UserCreateTables1761934534645 implements MigrationInterface {
+    name = 'UserCreateTables1761934534645'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "pharmasys"."role_status_enum" AS ENUM('A', 'I')`);
-        await queryRunner.query(`CREATE TABLE "pharmasys"."role" ("id" SERIAL NOT NULL, "uuid" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now(), "status" "pharmasys"."role_status_enum" NOT NULL DEFAULT 'A', "name" character varying(50) NOT NULL, CONSTRAINT "UQ_16fc336b9576146aa1f03fdc7c5" UNIQUE ("uuid"), CONSTRAINT "UQ_ae4578dcaed5adff96595e61660" UNIQUE ("name"), CONSTRAINT "PK_b36bcfe02fc8de3c57a8b2391c2" PRIMARY KEY ("id")); COMMENT ON COLUMN "pharmasys"."role"."uuid" IS 'Identificador único universal'; COMMENT ON COLUMN "pharmasys"."role"."status" IS 'Status da entidade (A-Ativo, I-Inativo)'; COMMENT ON COLUMN "pharmasys"."role"."name" IS 'Nome da função'`);
+        await queryRunner.query(`CREATE TABLE "pharmasys"."role" ("id" SERIAL NOT NULL, "uuid" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "status" "pharmasys"."role_status_enum" NOT NULL DEFAULT 'A', "name" character varying(50) NOT NULL, CONSTRAINT "UQ_16fc336b9576146aa1f03fdc7c5" UNIQUE ("uuid"), CONSTRAINT "UQ_ae4578dcaed5adff96595e61660" UNIQUE ("name"), CONSTRAINT "PK_b36bcfe02fc8de3c57a8b2391c2" PRIMARY KEY ("id")); COMMENT ON COLUMN "pharmasys"."role"."uuid" IS 'Identificador único universal'; COMMENT ON COLUMN "pharmasys"."role"."status" IS 'Status da entidade (A-Ativo, I-Inativo)'; COMMENT ON COLUMN "pharmasys"."role"."name" IS 'Nome da função'`);
         await queryRunner.query(`CREATE INDEX "IDX_16fc336b9576146aa1f03fdc7c" ON "pharmasys"."role" ("uuid") `);
         await queryRunner.query(`CREATE INDEX "IDX_06ccdafcccf342078162c12753" ON "pharmasys"."role" ("status") `);
         await queryRunner.query(`COMMENT ON TABLE "pharmasys"."role" IS 'Tabela para cadastro de funções'`);

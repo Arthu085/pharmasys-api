@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddStockBalanceModule1761681596501 implements MigrationInterface {
-    name = 'AddStockBalanceModule1761681596501'
+export class StockBalanceCreateTables1761934601757 implements MigrationInterface {
+    name = 'StockBalanceCreateTables1761934601757'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "pharmasys"."stock_balance_status_enum" AS ENUM('A', 'I')`);
-        await queryRunner.query(`CREATE TABLE "pharmasys"."stock_balance" ("id" SERIAL NOT NULL, "uuid" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now(), "status" "pharmasys"."stock_balance_status_enum" NOT NULL DEFAULT 'A', "quantity" integer NOT NULL, "item_id" integer, "batch_id" integer, "stock_location_id" integer, CONSTRAINT "UQ_faa85b410dbe5dea3643b65d25f" UNIQUE ("uuid"), CONSTRAINT "PK_0296c3ed44274fe05333f9609d9" PRIMARY KEY ("id")); COMMENT ON COLUMN "pharmasys"."stock_balance"."uuid" IS 'Identificador único universal'; COMMENT ON COLUMN "pharmasys"."stock_balance"."status" IS 'Status da entidade (A-Ativo, I-Inativo)'; COMMENT ON COLUMN "pharmasys"."stock_balance"."quantity" IS 'Quantidade no estoque'`);
+        await queryRunner.query(`CREATE TABLE "pharmasys"."stock_balance" ("id" SERIAL NOT NULL, "uuid" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "status" "pharmasys"."stock_balance_status_enum" NOT NULL DEFAULT 'A', "quantity" integer NOT NULL, "item_id" integer, "batch_id" integer, "stock_location_id" integer, CONSTRAINT "UQ_faa85b410dbe5dea3643b65d25f" UNIQUE ("uuid"), CONSTRAINT "PK_0296c3ed44274fe05333f9609d9" PRIMARY KEY ("id")); COMMENT ON COLUMN "pharmasys"."stock_balance"."uuid" IS 'Identificador único universal'; COMMENT ON COLUMN "pharmasys"."stock_balance"."status" IS 'Status da entidade (A-Ativo, I-Inativo)'; COMMENT ON COLUMN "pharmasys"."stock_balance"."quantity" IS 'Quantidade no estoque'`);
         await queryRunner.query(`CREATE INDEX "IDX_faa85b410dbe5dea3643b65d25" ON "pharmasys"."stock_balance" ("uuid") `);
         await queryRunner.query(`CREATE INDEX "IDX_0bc5570bc31c816e172e7ee9ad" ON "pharmasys"."stock_balance" ("status") `);
         await queryRunner.query(`CREATE INDEX "IDX_a50119e7fff048aff1efe081ae" ON "pharmasys"."stock_balance" ("item_id") `);
