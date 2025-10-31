@@ -8,20 +8,10 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RESPONSE_MESSAGE_KEY } from '../decorators/response-message.decorator';
-
-export interface PaginatedData {
-  meta?: {
-    total: number;
-    page?: number;
-    limit?: number;
-  };
-}
-
-export interface Response<T> {
-  success: boolean;
-  message: string;
-  data: T;
-}
+import {
+  Response,
+  PaginatedData,
+} from '../../shared/interfaces/response.interface';
 
 @Injectable()
 export class TransformResponseInterceptor<T>
