@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 
 export abstract class BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ comment: 'Identificador único da entidade' })
   id: number;
 
   @Generated('uuid')
@@ -24,13 +24,27 @@ export abstract class BaseEntity {
   @Index()
   uuid: string;
 
-  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+  @CreateDateColumn({
+    name: 'created_at',
+    type: 'timestamptz',
+    comment: 'Data de criação da entidade',
+  })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz', nullable: true })
+  @UpdateDateColumn({
+    name: 'updated_at',
+    type: 'timestamptz',
+    nullable: true,
+    comment: 'Data de atualização da entidade',
+  })
   updatedAt: Date | null;
 
-  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', nullable: true })
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamptz',
+    nullable: true,
+    comment: 'Data de exclusão da entidade',
+  })
   deletedAt: Date | null;
 
   @Column({
