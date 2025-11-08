@@ -13,9 +13,9 @@ export class DeleteUserUseCase {
   ) {}
 
   async execute(uuid: string) {
-    const user = await this.findOneUserUseCase.findEntityByUuid(uuid, false);
+    const user = await this.findOneUserUseCase.findEntityByUuid(uuid);
 
-    await this.userDomainService.validateUserDelete(user);
+    await this.userDomainService.validateUser(user);
 
     return this.userRepository.softDelete(uuid);
   }

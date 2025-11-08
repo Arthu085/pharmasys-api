@@ -16,22 +16,15 @@ export class RegisterUseCase {
   async execute(dto: RegisterDto): Promise<RegisterResponseDto> {
     await this.authDomainService.validateRoleForRegister(dto.role);
 
-    const newUser = await this.createUserUseCase.execute(dto);
+    const newUserEntity = await this.createUserUseCase.createEntity(dto);
 
-    const userForToken = {
-      id: newUser.id,
-      name: newUser.name,
-      email: newUser.email,
-      role: { name: newUser.role as string },
-    };
-
-    const token = this.jwtTokenService.generateToken(userForToken as any);
+    const token = this.jwtTokenService.generateToken(newUserEntity);
 
     return {
-      id: newUser.id,
-      name: newUser.name,
-      email: newUser.email,
-      role: newUser.role as string,
+      id: newUserEntity.id,
+      name: newUserEntity.name,
+      email: newUserEntity.email,
+      role: newUserEntity.role.name,
       token,
     };
   }

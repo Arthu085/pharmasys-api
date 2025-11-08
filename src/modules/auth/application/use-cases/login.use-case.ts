@@ -14,11 +14,14 @@ export class LoginUseCase {
   ) {}
 
   async execute(dto: LoginDto): Promise<LoginResponseDto> {
-    const user = await this.findOneUserUseCase.findByEmail(dto.email, false);
+    const user = await this.findOneUserUseCase.findByEmail(dto.email);
 
-    await this.authDomainService.validateCredentialsLogin(user, dto.password);
+    const validatedUser = await this.authDomainService.validateCredentialsLogin(
+      user,
+      dto.password,
+    );
 
-    const token = this.jwtTokenService.generateToken(user!);
+    const token = this.jwtTokenService.generateToken(validatedUser);
 
     return { token };
   }

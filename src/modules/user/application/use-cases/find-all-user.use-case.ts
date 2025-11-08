@@ -12,7 +12,7 @@ export class FindAllUserUseCase {
 
   async execute(
     filters: UserFilterDto,
-  ): Promise<IPaginatedResponse<UserResponseDto>> {
+  ): Promise<IPaginatedResponse<UserResponseDto | null>> {
     const page = filters.page || 1;
     const limit = filters.limit || 10;
     const skip = (page - 1) * limit;

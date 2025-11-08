@@ -14,7 +14,7 @@ export class AuthDomainService {
   async validateCredentialsLogin(
     user: UserEntity | null,
     password: string,
-  ): Promise<void> {
+  ): Promise<UserEntity> {
     if (!user) {
       throw new InvalidCredentialsException();
     }
@@ -31,6 +31,8 @@ export class AuthDomainService {
     if (!isPasswordValid) {
       throw new InvalidCredentialsException();
     }
+
+    return user;
   }
 
   async validateRoleForRegister(role: RoleEnum): Promise<void> {
