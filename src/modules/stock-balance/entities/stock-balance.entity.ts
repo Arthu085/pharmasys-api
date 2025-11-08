@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/core/database';
+import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { BatchEntity } from 'src/modules/batch/entities/batch.entity';
 import { ItemEntity } from 'src/modules/item/entities/item.entity';
 import { StockLocationEntity } from 'src/modules/stock-location/entities/stock-location.entity';

@@ -1,9 +1,9 @@
-import { BaseEntity } from 'src/core/database';
+import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { StockLocationEntity } from 'src/modules/stock-location/entities/stock-location.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { TransferReasonEntity } from './transfer-reason.entity';
 import { TransferStatusEnum } from 'src/modules/transfer-request/enums/transfer-status.enum';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
 
 @Entity('transfer_request', {
   comment: 'Tabela para cadastro de pedidos de transferência de estoque',

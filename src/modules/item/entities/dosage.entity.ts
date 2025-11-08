@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/core/database';
+import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { Column, Entity } from 'typeorm';
 
 @Entity('dosage', { comment: 'Tabela para cadastro de dosagens de item' })

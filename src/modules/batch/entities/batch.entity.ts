@@ -1,7 +1,7 @@
-import { BaseEntity } from 'src/core/database';
+import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { CompanyEntity } from 'src/modules/company/entities/company.entity';
 import { ItemEntity } from 'src/modules/item/entities/item.entity';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('batch', { comment: 'Tabela para cadastro de lotes' })

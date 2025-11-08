@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { RoleEntity } from 'src/modules/user/entities/role.entity';
+import { RoleEntity } from 'src/modules/user/domain/entities/role.entity';
 
 const hashedPassword = bcrypt.hashSync('123456', 10);
 

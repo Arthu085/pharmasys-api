@@ -1,5 +1,8 @@
 export interface UserPayload {
-  id: number;
+  sub: number;
+  name: string;
   email: string;
   role: string;
+  iat?: number;
+  exp?: number;
 }

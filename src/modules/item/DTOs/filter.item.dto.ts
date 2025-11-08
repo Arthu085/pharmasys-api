@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { FilterDto } from 'src/shared/DTOs/filter.dto';
+import { FilterDto } from 'src/shared/dtos/filter.dto';
 import { TypeEnum } from '../enums/type.enum';
 import { PresentationEnum } from '../enums/presentation.enum';
 import { DosageEnum } from '../enums/dosage.enum';

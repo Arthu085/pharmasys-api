@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { FilterDto } from 'src/shared/DTOs/filter.dto';
+import { FilterDto } from 'src/shared/dtos/filter.dto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { AdviceEnum } from '../enums/advice.enum';
 import { UfEnum } from '../enums/uf.enum';

@@ -1,7 +1,7 @@
-import { BaseEntity } from 'src/core/database';
+import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { AdviceEntity } from './advice.entity';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
 
 @Entity('prescriptor', { comment: 'Tabela para cadastro de prescritores' })
 @Index(['name', 'registrationNumber', 'advice'])

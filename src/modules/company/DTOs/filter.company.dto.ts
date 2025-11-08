@@ -1,7 +1,7 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { CompanyTypeEnum } from '../enums/company-type.enum';
-import { FilterDto } from 'src/shared/DTOs/filter.dto';
+import { FilterDto } from 'src/shared/dtos/filter.dto';
 
 export class FilterCompanyDto extends FilterDto {
   @IsOptional()

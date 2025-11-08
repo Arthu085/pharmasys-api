@@ -8,8 +8,8 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { CompanyTypeEntity } from './company-type.entity';
-import { BaseEntity } from 'src/core/database';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { BaseEntity } from 'src/core/database/entities/base.entity';
+import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
 
 @Entity('company', { comment: 'Tabela para cadastro de empresa' })
 @Index(['name', 'cnpj'])

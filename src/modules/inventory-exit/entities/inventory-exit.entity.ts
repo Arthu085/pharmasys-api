@@ -1,7 +1,7 @@
-import { BaseEntity } from 'src/core/database';
+import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { ExitItemTypeEntity } from './exit-item-type.entity';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
 
 @Entity('inventory_exit', {
   comment: 'Tabela para cadastro de dados de saída de item',
