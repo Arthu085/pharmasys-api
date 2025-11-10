@@ -53,18 +53,20 @@ export class UpdateUserUseCase {
     }
 
     user.userUpdated = userId;
+    user.updatedAt = new Date();
 
-    await this.userRepository.update(user.uuid, user);
+    await this.userRepository.update(user);
   }
 
   async updateStatus(uuid: string, dto: ChangeStatusDto, userId: number) {
-    const user = await this.findOneUserUseCase.findEntityByUuid(uuid);
+    const user = await this.findOneUserUseCase.findEntityByUuid(uuid, false);
 
     await this.userDomainService.validateUserSameStatus(user, dto.status);
 
     user.status = dto.status;
     user.userUpdated = userId;
+    user.updatedAt = new Date();
 
-    await this.userRepository.update(uuid, user);
+    await this.userRepository.update(user);
   }
 }

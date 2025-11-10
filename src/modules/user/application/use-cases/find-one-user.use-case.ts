@@ -26,13 +26,21 @@ export class FindOneUserUseCase {
     return data;
   }
 
-  async findEntityByUuid(uuid: string): Promise<UserEntity> {
+  async findEntityByUuid(
+    uuid: string,
+    validateActive = true,
+  ): Promise<UserEntity> {
     const user = await this.userRepository.findOne(uuid);
     const validatedUser = await this.userDomainService.validateUser(user);
-    const activeUser =
-      await this.userDomainService.validateUserStatus(validatedUser);
 
-    return activeUser;
+    if (validateActive) {
+      const activeUser =
+        await this.userDomainService.validateUserStatus(validatedUser);
+
+      return activeUser;
+    }
+
+    return validatedUser;
   }
 
   async findByEmail(email: string): Promise<UserEntity> {

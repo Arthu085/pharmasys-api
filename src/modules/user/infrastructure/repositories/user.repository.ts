@@ -69,8 +69,8 @@ export class UserRepository {
     return this.repo.save(newUser);
   }
 
-  update(uuid: string, user: Partial<UserEntity>): Promise<UpdateResult> {
-    return this.repo.update({ uuid }, user);
+  update(user: UserEntity): Promise<UpdateResult> {
+    return this.repo.update({ uuid: user.uuid }, user);
   }
 
   softDelete(uuid: string): Promise<UpdateResult> {
