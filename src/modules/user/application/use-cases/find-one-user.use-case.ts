@@ -19,11 +19,9 @@ export class FindOneUserUseCase {
     const activeUser =
       await this.userDomainService.validateUserStatus(validatedUser);
 
-    const data = plainToInstance(UserResponseDto, activeUser, {
+    return plainToInstance(UserResponseDto, activeUser, {
       excludeExtraneousValues: true,
     });
-
-    return data;
   }
 
   async findEntityByUuid(
@@ -34,10 +32,7 @@ export class FindOneUserUseCase {
     const validatedUser = await this.userDomainService.validateUser(user);
 
     if (validateActive) {
-      const activeUser =
-        await this.userDomainService.validateUserStatus(validatedUser);
-
-      return activeUser;
+      return await this.userDomainService.validateUserStatus(validatedUser);
     }
 
     return validatedUser;
@@ -45,12 +40,19 @@ export class FindOneUserUseCase {
 
   async findByEmail(email: string): Promise<UserEntity> {
     const user = await this.userRepository.findByEmail(email);
-    const validatedUser = await this.userDomainService.validateUser(user);
 
-    return validatedUser;
+    return await this.userDomainService.validateUser(user);
   }
 
-  async findByEmailForUpdate(email: string): Promise<UserEntity | null> {
-    return this.userRepository.findByEmail(email);
+  async findByEmailWithoutValidation(
+    email: string,
+  ): Promise<UserEntity | null> {
+    return await this.userRepository.findByEmail(email);
+  }
+
+  async findById(id: number): Promise<UserEntity> {
+    const user = await this.userRepository.findById(id);
+
+    return await this.userDomainService.validateUser(user);
   }
 }

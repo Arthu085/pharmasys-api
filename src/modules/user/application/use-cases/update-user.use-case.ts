@@ -7,7 +7,6 @@ import { FindOneRoleUseCase } from './find-one-role.use-case';
 import { FindOneUserUseCase } from './find-one-user.use-case';
 import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
 import { RoleEnum } from 'src/shared/enums/role.enum';
-import { UserResponseDto } from '../dtos/user-response.dto';
 
 @Injectable()
 export class UpdateUserUseCase {
@@ -27,12 +26,14 @@ export class UpdateUserUseCase {
 
     if (dto.email && dto.email !== user.email) {
       const existingUserWithEmail =
-        await this.findOneUserUseCase.findByEmailForUpdate(dto.email);
-      await this.userDomainService.validateUserEmailUpdate(
-        user,
-        dto.email,
-        existingUserWithEmail,
-      );
+        await this.findOneUserUseCase.findByEmailWithoutValidation(dto.email);
+
+      if (existingUserWithEmail) {
+        await this.userDomainService.validateUserEmailUpdate(
+          user,
+          existingUserWithEmail,
+        );
+      }
     }
 
     if (dto.role) {

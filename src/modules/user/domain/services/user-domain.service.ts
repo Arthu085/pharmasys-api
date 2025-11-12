@@ -6,8 +6,8 @@ import { UserEntity } from '../entities/user.entity';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { ExistingUserException } from '../exceptions/existing-user.exception';
 import { InactiveUserException } from 'src/modules/auth/domain/exceptions/inactive-user.exception';
-import { SameStatusUserException } from '../exceptions/same-status-user.exception';
 import { NotFoundGenericException } from 'src/shared/exceptions/not-found.exception';
+import { SameStatusException } from 'src/shared/exceptions/same-status.exception';
 
 @Injectable()
 export class UserDomainService {
@@ -54,13 +54,10 @@ export class UserDomainService {
 
   async validateUserEmailUpdate(
     user: UserEntity,
-    email: string,
-    userEmail: UserEntity | null,
+    userEmail: UserEntity,
   ): Promise<void> {
-    if (email && email !== user.email) {
-      if (userEmail && userEmail.id !== user.id) {
-        throw new ExistingUserException();
-      }
+    if (userEmail.id !== user.id) {
+      throw new ExistingUserException();
     }
   }
 
@@ -68,8 +65,8 @@ export class UserDomainService {
     user: UserEntity,
     status: StatusEnum,
   ): Promise<void> {
-    if (user?.status === status) {
-      throw new SameStatusUserException();
+    if (user.status === status) {
+      throw new SameStatusException();
     }
   }
 }

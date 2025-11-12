@@ -2,7 +2,7 @@ import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { FilterDto } from 'src/shared/dtos/filter.dto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 
-export class FilterStockLocationDto extends FilterDto {
+export class StockLocationFilterDto extends FilterDto {
   @IsOptional()
   @IsString({ message: 'O nome deve ser uma string' })
   name?: string;

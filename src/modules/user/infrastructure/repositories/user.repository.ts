@@ -64,6 +64,14 @@ export class UserRepository {
     });
   }
 
+  findById(id: number): Promise<UserEntity | null> {
+    return this.repo.findOne({
+      where: { id },
+      relations: ['role'],
+      withDeleted: false,
+    });
+  }
+
   create(user: Partial<UserEntity>): Promise<UserEntity> {
     const newUser = this.repo.create(user);
     return this.repo.save(newUser);

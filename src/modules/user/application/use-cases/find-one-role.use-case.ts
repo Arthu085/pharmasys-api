@@ -13,8 +13,7 @@ export class FindOneRoleUseCase {
 
   async findByName(name: string): Promise<RoleEntity> {
     const role = await this.roleRepository.findByName(name);
-    const validatedRole = await this.userDomainService.validateRole(role);
 
-    return validatedRole;
+    return await this.userDomainService.validateRole(role);
   }
 }

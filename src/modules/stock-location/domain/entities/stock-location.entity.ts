@@ -6,12 +6,16 @@ import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
   comment: 'Tabela para cadastro de locais de estoque',
 })
 @Index(['name', 'code'])
+@Index('IDX_stoc_location_code_unique_when_not_deleted', ['code'], {
+  unique: true,
+  where: '"deleted_at" IS NULL',
+})
 export class StockLocationEntity extends BaseEntity {
-  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'user_created_id' })
   userCreated?: UserEntity | null;
 
-  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
   userUpdated?: UserEntity | null;
 
@@ -19,7 +23,7 @@ export class StockLocationEntity extends BaseEntity {
   @Index()
   name: string;
 
-  @Column({ length: 50, unique: true, comment: 'Código do local de estoque' })
+  @Column({ length: 50, comment: 'Código do local de estoque' })
   code: string;
 
   @Column({

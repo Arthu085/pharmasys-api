@@ -32,7 +32,8 @@ export class CreateUserUseCase {
 
   async createEntity(dto: UserCreateDto): Promise<UserEntity> {
     const role = await this.findOneRoleUseCase.findByName(RoleEnum[dto.role]);
-    const existingUser = await this.userRepository.findByEmail(dto.email);
+    const existingUser =
+      await this.findOneUserUseCase.findByEmailWithoutValidation(dto.email);
 
     await this.userDomainService.validateUserExists(existingUser);
 

@@ -19,7 +19,7 @@ import { TypeEntity } from '../../../modules/item/entities/type.entity';
 import { CompanyTypeEntity } from '../../../modules/company/entities/company-type.entity';
 import { DosageEntity } from '../../../modules/item/entities/dosage.entity';
 import { PresentationEntity } from '../../../modules/item/entities/presentation.entity';
-import { StockLocationEntity } from '../../../modules/stock-location/entities/stock-location.entity';
+import { StockLocationEntity } from '../../../modules/stock-location/domain/entities/stock-location.entity';
 import { SubtypeEntity } from '../../../modules/item/entities/subtype.entity';
 import { AdviceEntity } from '../../../modules/prescriptor/entities/advice.entity';
 import { EntryItemTypeEntity } from '../../../modules/inventory-entry/entities/entry-item-type.entity';

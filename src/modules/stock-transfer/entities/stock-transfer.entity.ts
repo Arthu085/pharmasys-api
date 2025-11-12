@@ -1,5 +1,5 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
-import { StockLocationEntity } from 'src/modules/stock-location/entities/stock-location.entity';
+import { StockLocationEntity } from 'src/modules/stock-location/domain/entities/stock-location.entity';
 import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
