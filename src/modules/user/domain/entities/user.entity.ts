@@ -57,8 +57,9 @@ export class UserEntity {
   })
   deletedAt: Date | null;
 
-  @Column({ type: 'integer', nullable: true, name: 'user_updated_id' })
-  userUpdated: number | null;
+  @ManyToOne(() => UserEntity, { nullable: true })
+  @JoinColumn({ name: 'user_updated_id' })
+  userUpdated?: UserEntity | null;
 
   @Column({ length: 100, comment: 'Nome do usuário' })
   @Index()

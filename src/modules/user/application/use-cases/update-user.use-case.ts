@@ -22,6 +22,7 @@ export class UpdateUserUseCase {
     dto: UserUpdateDto,
     userId: number,
   ): Promise<void> {
+    const updatingUser = await this.findOneUserUseCase.findById(userId);
     const user = await this.findOneUserUseCase.findEntityByUuid(uuid);
 
     if (dto.email && dto.email !== user.email) {
@@ -29,7 +30,7 @@ export class UpdateUserUseCase {
         await this.findOneUserUseCase.findByEmailWithoutValidation(dto.email);
 
       if (existingUserWithEmail) {
-        await this.userDomainService.validateUserEmailUpdate(
+        this.userDomainService.validateUserEmailUpdate(
           user,
           existingUserWithEmail,
         );
@@ -53,7 +54,7 @@ export class UpdateUserUseCase {
       user.password = await this.userDomainService.hashPassword(dto.password);
     }
 
-    user.userUpdated = userId;
+    user.userUpdated = updatingUser;
     user.updatedAt = new Date();
 
     await this.userRepository.update(user);
@@ -64,12 +65,13 @@ export class UpdateUserUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
+    const updatingUser = await this.findOneUserUseCase.findById(userId);
     const user = await this.findOneUserUseCase.findEntityByUuid(uuid, false);
 
-    await this.userDomainService.validateUserSameStatus(user, dto.status);
+    this.userDomainService.validateUserSameStatus(user, dto.status);
 
     user.status = dto.status;
-    user.userUpdated = userId;
+    user.userUpdated = updatingUser;
     user.updatedAt = new Date();
 
     await this.userRepository.update(user);

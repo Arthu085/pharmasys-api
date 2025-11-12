@@ -20,10 +20,7 @@ export class CreateStockLocationUseCase {
       await this.findOneStockLocationUseCase.findByCode(dto.code);
 
     if (existingStockLocation) {
-      await this.stockLocationDomainService.validateStockLocationSameCode(
-        existingStockLocation,
-        dto.code,
-      );
+      this.stockLocationDomainService.validateStockLocationSameCode();
     }
 
     await this.stockLocationRepository.create({

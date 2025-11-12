@@ -11,9 +11,14 @@ import { FindOneStockLocationUseCase } from './application/use-cases/find-one-st
 import { FindAllStockLocationUseCase } from './application/use-cases/find-all-stock-location.use-case';
 import { DeleteStockLocationUseCase } from './application/use-cases/delete-stock-location.use-case';
 import { UserModule } from '../user/user.module';
+import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([StockLocationEntity]), UserModule],
+  imports: [
+    TypeOrmModule.forFeature([StockLocationEntity]),
+    UserModule,
+    SharedModule,
+  ],
   controllers: [
     StockLocationProtectedController,
     StockLocationPublicController,

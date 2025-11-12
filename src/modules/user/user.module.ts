@@ -15,11 +15,13 @@ import { FindAllUserUseCase } from './application/use-cases/find-all-user.use-ca
 import { FindOneRoleUseCase } from './application/use-cases/find-one-role.use-case';
 import { FindOneUserUseCase } from './application/use-cases/find-one-user.use-case';
 import { UpdateUserUseCase } from './application/use-cases/update-user.use-case';
+import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity, RoleEntity]),
     forwardRef(() => AuthModule),
+    SharedModule,
   ],
   controllers: [UserPublicController, UserProtectedController],
   providers: [

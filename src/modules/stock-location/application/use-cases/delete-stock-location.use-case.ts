@@ -15,7 +15,7 @@ export class DeleteStockLocationUseCase {
     const stockLocation =
       await this.findOneStockLocationUseCase.findEntityByUuid(uuid, false);
 
-    await this.stockLocationDomainService.validateStockLocationCentralStock(
+    this.stockLocationDomainService.validateStockLocationCentralStock(
       stockLocation,
     );
 

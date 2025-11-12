@@ -14,7 +14,7 @@ export class RegisterUseCase {
   ) {}
 
   async execute(dto: RegisterDto): Promise<RegisterResponseDto> {
-    await this.authDomainService.validateRoleForRegister(dto.role);
+    this.authDomainService.validateRoleForRegister(dto.role);
 
     const newUserEntity = await this.createUserUseCase.createEntity(dto);
 

@@ -26,7 +26,7 @@ export class UpdateStockLocationUseCase {
     const stockLocation =
       await this.findOneStockLocationUseCase.findEntityByUuid(uuid);
 
-    await this.stockLocationDomainService.validateStockLocationCentralStock(
+    this.stockLocationDomainService.validateStockLocationCentralStock(
       stockLocation,
     );
 
@@ -35,7 +35,7 @@ export class UpdateStockLocationUseCase {
         await this.findOneStockLocationUseCase.findByCode(dto.code);
 
       if (existingStockLocation) {
-        await this.stockLocationDomainService.validateStockLocationSameCodeUpdate(
+        this.stockLocationDomainService.validateStockLocationSameCodeUpdate(
           stockLocation,
           existingStockLocation,
         );
@@ -59,11 +59,11 @@ export class UpdateStockLocationUseCase {
     const stockLocation =
       await this.findOneStockLocationUseCase.findEntityByUuid(uuid, false);
 
-    await this.stockLocationDomainService.validateStockLocationCentralStock(
+    this.stockLocationDomainService.validateStockLocationCentralStock(
       stockLocation,
     );
 
-    await this.stockLocationDomainService.validateStockLocationSameStatus(
+    this.stockLocationDomainService.validateStockLocationSameStatus(
       stockLocation,
       dto.status,
     );

@@ -35,7 +35,7 @@ export class AuthDomainService {
     return user;
   }
 
-  async validateRoleForRegister(role: RoleEnum): Promise<void> {
+  validateRoleForRegister(role: RoleEnum): void {
     const allowedRoles = [RoleEnum.FARMACEUTICO, RoleEnum.OPERADOR];
 
     if (!role || !allowedRoles.includes(role)) {

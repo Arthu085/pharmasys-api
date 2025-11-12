@@ -14,13 +14,11 @@ export class FindOneStockLocationUseCase {
 
   async execute(uuid: string): Promise<StockLocationResponseDto> {
     const stockLocation = await this.stockLocationRepository.findOne(uuid);
-    const validateStockLocation =
-      await this.stockLocationDomainService.validateStockLocation(
-        stockLocation,
-      );
+    const validatedStockLocation =
+      this.stockLocationDomainService.validateStockLocation(stockLocation);
     const activeStockLocation =
-      await this.stockLocationDomainService.validateStockLocationStatus(
-        validateStockLocation,
+      this.stockLocationDomainService.validateStockLocationStatus(
+        validatedStockLocation,
       );
 
     return plainToInstance(StockLocationResponseDto, activeStockLocation, {
@@ -33,18 +31,16 @@ export class FindOneStockLocationUseCase {
     validateActive = true,
   ): Promise<StockLocationEntity> {
     const stockLocation = await this.stockLocationRepository.findOne(uuid);
-    const validateStockLocation =
-      await this.stockLocationDomainService.validateStockLocation(
-        stockLocation,
-      );
+    const validatedStockLocation =
+      this.stockLocationDomainService.validateStockLocation(stockLocation);
 
     if (validateActive) {
-      return await this.stockLocationDomainService.validateStockLocationStatus(
-        validateStockLocation,
+      return this.stockLocationDomainService.validateStockLocationStatus(
+        validatedStockLocation,
       );
     }
 
-    return validateStockLocation;
+    return validatedStockLocation;
   }
 
   async findByCode(code: string): Promise<StockLocationEntity | null> {

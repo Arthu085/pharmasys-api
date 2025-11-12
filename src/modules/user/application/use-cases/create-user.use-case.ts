@@ -6,9 +6,7 @@ import { UserCreateDto } from '../dtos/user-create.dto';
 import { FindOneRoleUseCase } from './find-one-role.use-case';
 import { FindOneUserUseCase } from './find-one-user.use-case';
 import { RoleEnum } from 'src/shared/enums/role.enum';
-import { UserResponseDto } from '../dtos/user-response.dto';
 import { UserEntity } from '../../domain/entities/user.entity';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class CreateUserUseCase {
@@ -28,7 +26,7 @@ export class CreateUserUseCase {
     const existingUser =
       await this.findOneUserUseCase.findByEmailWithoutValidation(dto.email);
 
-    await this.userDomainService.validateUserExists(existingUser);
+    this.userDomainService.validateUserExists(existingUser);
 
     const hashedPassword = await this.userDomainService.hashPassword(
       dto.password,
