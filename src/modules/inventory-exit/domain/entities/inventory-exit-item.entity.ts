@@ -1,17 +1,17 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { ItemEntity } from 'src/modules/item/entities/item.entity';
-import { BatchEntity } from 'src/modules/batch/entities/batch.entity';
-import { StockTransferEntity } from './stock-transfer.entity';
+import { BatchEntity } from 'src/modules/batch/domain/entities/batch.entity';
+import { InventoryExitEntity } from './inventory-exit.entity';
 
-@Entity('stock_transfer_item', {
-  comment: 'Tabela para cadastro de dados do item na trasnferência de estoque',
+@Entity('inventory-exit-item', {
+  comment: 'Tabela para cadastro de dados do item na saída',
 })
-export class StockTransferItemEntity extends BaseEntity {
-  @ManyToOne(() => StockTransferEntity, { eager: true })
-  @JoinColumn({ name: 'stock_transfer_id' })
+export class InventoryExitItemEntity extends BaseEntity {
+  @ManyToOne(() => InventoryExitEntity, { eager: true })
+  @JoinColumn({ name: 'inventory_exit_id' })
   @Index()
-  stockTransfer: StockTransferEntity;
+  inventoryExit: InventoryExitEntity;
 
   @ManyToOne(() => ItemEntity, { eager: true })
   @JoinColumn({ name: 'item_id' })

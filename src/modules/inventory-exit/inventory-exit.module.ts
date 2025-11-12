@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { InventoryExitEntity } from './entities/inventory-exit.entity';
-import { InventoryExitItemEntity } from './entities/inventory-exit-item.entity';
-import { ExitItemTypeEntity } from './entities/exit-item-type.entity';
+import { InventoryExitEntity } from './domain/entities/inventory-exit.entity';
+import { InventoryExitItemEntity } from './domain/entities/inventory-exit-item.entity';
+import { ExitItemTypeEntity } from './domain/entities/exit-item-type.entity';
 
 @Module({
   imports: [

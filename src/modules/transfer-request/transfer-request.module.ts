@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TransferReasonEntity } from './entities/transfer-reason.entity';
-import { TransferRequestEntity } from './entities/transfer-request.entity';
-import { TransferRequestItemEntity } from './entities/transfer-request-item.entity';
+import { TransferReasonEntity } from './domain/entities/transfer-reason.entity';
+import { TransferRequestEntity } from './domain/entities/transfer-request.entity';
+import { TransferRequestItemEntity } from './domain/entities/transfer-request-item.entity';
 
 @Module({
   imports: [

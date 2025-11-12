@@ -9,6 +9,7 @@ export class UuidValidationPipe implements PipeTransform<string> {
     if (!this.uuidRegex.test(value)) {
       throw new BadRequestException('UUID inválido');
     }
+
     return value;
   }
 }
