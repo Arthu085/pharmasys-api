@@ -11,7 +11,7 @@ export class DeleteStockLocationUseCase {
     private readonly stockLocationDomainService: StockLocationDomainService,
   ) {}
 
-  async execute(uuid: string) {
+  async execute(uuid: string): Promise<void> {
     const stockLocation =
       await this.findOneStockLocationUseCase.findEntityByUuid(uuid, false);
 
@@ -19,6 +19,6 @@ export class DeleteStockLocationUseCase {
       stockLocation,
     );
 
-    return await this.stockLocationRepository.softDelete(uuid);
+    await this.stockLocationRepository.softDelete(uuid);
   }
 }

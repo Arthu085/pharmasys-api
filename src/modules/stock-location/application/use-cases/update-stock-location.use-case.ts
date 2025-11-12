@@ -21,7 +21,7 @@ export class UpdateStockLocationUseCase {
     uuid: string,
     dto: StockLocationUpdateDto,
     userId: number,
-  ): Promise<StockLocationResponseDto> {
+  ): Promise<void> {
     const user = await this.findOneUserUseCase.findById(userId);
     const stockLocation =
       await this.findOneStockLocationUseCase.findEntityByUuid(uuid);
@@ -47,16 +47,14 @@ export class UpdateStockLocationUseCase {
     stockLocation.userUpdated = user;
     stockLocation.updatedAt = new Date();
 
-    const data = plainToInstance(
-      StockLocationResponseDto,
-      await this.stockLocationRepository.update(stockLocation),
-      { excludeExtraneousValues: true },
-    );
-
-    return data;
+    await this.stockLocationRepository.update(stockLocation);
   }
 
-  async updateStatus(uuid: string, dto: ChangeStatusDto, userId: number) {
+  async updateStatus(
+    uuid: string,
+    dto: ChangeStatusDto,
+    userId: number,
+  ): Promise<void> {
     const user = await this.findOneUserUseCase.findById(userId);
     const stockLocation =
       await this.findOneStockLocationUseCase.findEntityByUuid(uuid, false);

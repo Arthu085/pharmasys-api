@@ -20,16 +20,9 @@ export class CreateUserUseCase {
     private readonly userDomainService: UserDomainService,
   ) {}
 
-  async execute(dto: UserCreateDto): Promise<UserResponseDto> {
-    const newUser = await this.createEntity(dto);
-
-    const data = plainToInstance(UserResponseDto, newUser, {
-      excludeExtraneousValues: true,
-    });
-
-    return data;
+  async execute(dto: UserCreateDto): Promise<void> {
+    await this.createEntity(dto);
   }
-
   async createEntity(dto: UserCreateDto): Promise<UserEntity> {
     const role = await this.findOneRoleUseCase.findByName(RoleEnum[dto.role]);
     const existingUser =

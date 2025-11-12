@@ -13,7 +13,7 @@ export class FindAllStockLocationUseCase {
 
   async execute(
     filters: StockLocationFilterDto,
-  ): Promise<IPaginatedResponse<StockLocationResponseDto>> {
+  ): Promise<IPaginatedResponse<StockLocationResponseDto | null>> {
     const page = filters.page || 1;
     const limit = filters.limit || 10;
     const skip = (page - 1) * limit;

@@ -59,7 +59,11 @@ export class UpdateUserUseCase {
     await this.userRepository.update(user);
   }
 
-  async updateStatus(uuid: string, dto: ChangeStatusDto, userId: number) {
+  async updateStatus(
+    uuid: string,
+    dto: ChangeStatusDto,
+    userId: number,
+  ): Promise<void> {
     const user = await this.findOneUserUseCase.findEntityByUuid(uuid, false);
 
     await this.userDomainService.validateUserSameStatus(user, dto.status);

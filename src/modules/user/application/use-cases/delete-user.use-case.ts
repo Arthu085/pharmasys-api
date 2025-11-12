@@ -10,9 +10,8 @@ export class DeleteUserUseCase {
     private readonly findOneUserUseCase: FindOneUserUseCase,
   ) {}
 
-  async execute(uuid: string) {
+  async execute(uuid: string): Promise<void> {
     await this.findOneUserUseCase.findEntityByUuid(uuid, false);
-
-    return await this.userRepository.softDelete(uuid);
+    await this.userRepository.softDelete(uuid);
   }
 }
