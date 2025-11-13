@@ -6,6 +6,9 @@ import { FindOnePrescriptorUseCase } from './find-one-prescriptor.use-case';
 import { FindOneAdviceUseCase } from './find-one-advice.use-case';
 import { PrescriptorDomainService } from '../../domain/services/prescriptor-domain.service';
 import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
+import { PrescriptorName } from '../../domain/value-objects/prescriptor-name.vo';
+import { RegistrationNumber } from '../../domain/value-objects/registration-number.vo';
+import { State } from '../../domain/value-objects/state.vo';
 
 @Injectable()
 export class UpdatePrescriptorUseCase {
@@ -33,7 +36,10 @@ export class UpdatePrescriptorUseCase {
 
     let newRegistrationNumber = prescriptor.registrationNumber;
     if (dto.registrationNumber) {
-      newRegistrationNumber = dto.registrationNumber;
+      const registrationNumberVO = RegistrationNumber.create(
+        dto.registrationNumber,
+      );
+      newRegistrationNumber = registrationNumberVO.getValue();
     }
 
     if (dto.registrationNumber || dto.advice) {
@@ -48,7 +54,23 @@ export class UpdatePrescriptorUseCase {
       }
     }
 
-    Object.assign(prescriptor, dto);
+    if (dto.name) {
+      const name = PrescriptorName.create(dto.name);
+      prescriptor.name = name.getValue();
+    }
+
+    if (dto.registrationNumber) {
+      prescriptor.registrationNumber = newRegistrationNumber;
+    }
+
+    if (dto.state) {
+      const state = State.create(dto.state);
+      prescriptor.state = state.getValue();
+    }
+
+    if (dto.specialty !== undefined) {
+      prescriptor.specialty = dto.specialty;
+    }
 
     if (dto.advice) {
       prescriptor.advice = newAdvice;

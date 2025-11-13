@@ -5,6 +5,7 @@ import { UserDomainService } from '../../domain/services/user-domain.service';
 import { UserResponseDto } from '../dtos/user-response.dto';
 import { plainToInstance } from 'class-transformer';
 import { UserEntity } from '../../domain/entities/user.entity';
+import { Email } from '../../domain/value-objects/email.vo';
 
 @Injectable()
 export class FindOneUserUseCase {
@@ -38,7 +39,8 @@ export class FindOneUserUseCase {
   }
 
   async findByEmail(email: string): Promise<UserEntity> {
-    const user = await this.userRepository.findByEmail(email);
+    const emailVO = Email.create(email);
+    const user = await this.userRepository.findByEmail(emailVO.getValue());
 
     return this.userDomainService.validateUser(user);
   }

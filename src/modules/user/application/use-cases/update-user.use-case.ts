@@ -7,6 +7,9 @@ import { FindOneRoleUseCase } from './find-one-role.use-case';
 import { FindOneUserUseCase } from './find-one-user.use-case';
 import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
 import { RoleEnum } from 'src/shared/enums/role.enum';
+import { Email } from '../../domain/value-objects/email.vo';
+import { Password } from '../../domain/value-objects/password.vo';
+import { UserName } from '../../domain/value-objects/user-name.vo';
 
 @Injectable()
 export class UpdateUserUseCase {
@@ -26,12 +29,17 @@ export class UpdateUserUseCase {
     const user = await this.findOneUserUseCase.findEntityByUuid(uuid);
 
     if (dto.email && dto.email !== user.email) {
+      const email = Email.create(dto.email);
       const existingUserWithEmail =
-        await this.findOneUserUseCase.findByEmailWithoutValidation(dto.email);
+        await this.findOneUserUseCase.findByEmailWithoutValidation(
+          email.getValue(),
+        );
 
       if (existingUserWithEmail && existingUserWithEmail.id !== user.id) {
         this.userDomainService.validateUserExists();
       }
+
+      user.email = email.getValue();
     }
 
     if (dto.role) {
@@ -40,15 +48,15 @@ export class UpdateUserUseCase {
     }
 
     if (dto.name) {
-      user.name = dto.name;
-    }
-
-    if (dto.email) {
-      user.email = dto.email;
+      const name = UserName.create(dto.name);
+      user.name = name.getValue();
     }
 
     if (dto.password) {
-      user.password = await this.userDomainService.hashPassword(dto.password);
+      const password = Password.create(dto.password);
+      user.password = await this.userDomainService.hashPassword(
+        password.getValue(),
+      );
     }
 
     user.userUpdated = updatingUser;

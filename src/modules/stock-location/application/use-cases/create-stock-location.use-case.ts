@@ -4,6 +4,8 @@ import { StockLocationCreateDto } from '../dtos/stock-location-create.dto';
 import { FindOneStockLocationUseCase } from './find-one-stock-location.use-case';
 import { StockLocationDomainService } from '../../domain/services/stock-location-domain.service';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
+import { StockLocationName } from '../../domain/value-objects/stock-location-name.vo';
+import { StockLocationCode } from '../../domain/value-objects/stock-location-code.vo';
 
 @Injectable()
 export class CreateStockLocationUseCase {
@@ -15,16 +17,19 @@ export class CreateStockLocationUseCase {
   ) {}
 
   async execute(dto: StockLocationCreateDto, userId: number): Promise<void> {
+    const name = StockLocationName.create(dto.name);
+    const code = StockLocationCode.create(dto.code);
     const user = await this.findOneUserUseCase.findById(userId);
     const existingStockLocation =
-      await this.findOneStockLocationUseCase.findByCode(dto.code);
+      await this.findOneStockLocationUseCase.findByCode(code.getValue());
 
     if (existingStockLocation) {
       this.stockLocationDomainService.validateStockLocationSameCode();
     }
 
     await this.stockLocationRepository.create({
-      ...dto,
+      name: name.getValue(),
+      code: code.getValue(),
       userCreated: user,
     });
   }

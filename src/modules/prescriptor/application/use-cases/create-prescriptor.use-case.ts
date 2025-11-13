@@ -5,6 +5,9 @@ import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-
 import { FindOneAdviceUseCase } from './find-one-advice.use-case';
 import { FindOnePrescriptorUseCase } from './find-one-prescriptor.use-case';
 import { PrescriptorDomainService } from '../../domain/services/prescriptor-domain.service';
+import { PrescriptorName } from '../../domain/value-objects/prescriptor-name.vo';
+import { RegistrationNumber } from '../../domain/value-objects/registration-number.vo';
+import { State } from '../../domain/value-objects/state.vo';
 
 @Injectable()
 export class CreatePrescriptorUseCase {
@@ -17,11 +20,17 @@ export class CreatePrescriptorUseCase {
   ) {}
 
   async execute(dto: PrescriptorCreateDto, userId: number): Promise<void> {
+    const name = PrescriptorName.create(dto.name);
+    const registrationNumber = RegistrationNumber.create(
+      dto.registrationNumber,
+    );
+    const state = State.create(dto.state);
+
     const user = await this.findOneUserUseCase.findById(userId);
     const advice = await this.findOneAdviceUseCase.findByAcronym(dto.advice);
     const existingPrescriptor =
       await this.findOnePrescriptorUseCase.findByRegistrationNumberAndAdvice(
-        dto.registrationNumber,
+        registrationNumber.getValue(),
         advice.id,
       );
 
@@ -30,7 +39,10 @@ export class CreatePrescriptorUseCase {
     }
 
     await this.prescriptorRepository.create({
-      ...dto,
+      name: name.getValue(),
+      registrationNumber: registrationNumber.getValue(),
+      state: state.getValue(),
+      specialty: dto.specialty,
       userCreated: user,
       advice: advice,
     });

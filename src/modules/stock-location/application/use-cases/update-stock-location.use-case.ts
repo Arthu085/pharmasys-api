@@ -7,6 +7,8 @@ import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-
 import { FindOneStockLocationUseCase } from './find-one-stock-location.use-case';
 import { StockLocationDomainService } from '../../domain/services/stock-location-domain.service';
 import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
+import { StockLocationName } from '../../domain/value-objects/stock-location-name.vo';
+import { StockLocationCode } from '../../domain/value-objects/stock-location-code.vo';
 
 @Injectable()
 export class UpdateStockLocationUseCase {
@@ -31,8 +33,9 @@ export class UpdateStockLocationUseCase {
     );
 
     if (dto.code && dto.code !== stockLocation.code) {
+      const code = StockLocationCode.create(dto.code);
       const existingStockLocation =
-        await this.findOneStockLocationUseCase.findByCode(dto.code);
+        await this.findOneStockLocationUseCase.findByCode(code.getValue());
 
       if (
         existingStockLocation &&
@@ -40,9 +43,14 @@ export class UpdateStockLocationUseCase {
       ) {
         this.stockLocationDomainService.validateStockLocationSameCode();
       }
+
+      stockLocation.code = code.getValue();
     }
 
-    Object.assign(stockLocation, dto);
+    if (dto.name) {
+      const name = StockLocationName.create(dto.name);
+      stockLocation.name = name.getValue();
+    }
 
     stockLocation.userUpdated = user;
     stockLocation.updatedAt = new Date();
