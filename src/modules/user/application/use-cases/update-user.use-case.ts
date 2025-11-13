@@ -29,11 +29,8 @@ export class UpdateUserUseCase {
       const existingUserWithEmail =
         await this.findOneUserUseCase.findByEmailWithoutValidation(dto.email);
 
-      if (existingUserWithEmail) {
-        this.userDomainService.validateUserEmailUpdate(
-          user,
-          existingUserWithEmail,
-        );
+      if (existingUserWithEmail && existingUserWithEmail.id !== user.id) {
+        this.userDomainService.validateUserExists();
       }
     }
 

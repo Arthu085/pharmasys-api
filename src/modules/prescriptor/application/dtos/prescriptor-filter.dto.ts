@@ -1,10 +1,10 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { FilterDto } from 'src/shared/dtos/filter.dto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
-import { AdviceEnum } from '../enums/advice.enum';
-import { UfEnum } from '../enums/uf.enum';
+import { AdviceEnum } from '../../domain/enums/advice.enum';
+import { UfEnum } from '../../domain/enums/uf.enum';
 
-export class FilterPrescriptorDto extends FilterDto {
+export class PrescriptorFilterDto extends FilterDto {
   @IsOptional()
   @IsString({ message: 'O nome deve ser uma string' })
   name?: string;

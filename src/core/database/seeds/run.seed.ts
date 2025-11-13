@@ -21,7 +21,7 @@ import { DosageEntity } from '../../../modules/item/entities/dosage.entity';
 import { PresentationEntity } from '../../../modules/item/entities/presentation.entity';
 import { StockLocationEntity } from '../../../modules/stock-location/domain/entities/stock-location.entity';
 import { SubtypeEntity } from '../../../modules/item/entities/subtype.entity';
-import { AdviceEntity } from '../../../modules/prescriptor/entities/advice.entity';
+import { AdviceEntity } from '../../../modules/prescriptor/domain/entities/advice.entity';
 import { EntryItemTypeEntity } from '../../../modules/inventory-entry/domain/entities/entry-item-type.entity';
 import { ExitItemTypeEntity } from '../../../modules/inventory-exit/domain/entities/exit-item-type.entity';
 import { UserEntity } from '../../../modules/user/domain/entities/user.entity';

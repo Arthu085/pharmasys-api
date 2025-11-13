@@ -6,10 +6,10 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { UfEnum } from '../enums/uf.enum';
-import { AdviceEnum } from '../enums/advice.enum';
+import { UfEnum } from '../../domain/enums/uf.enum';
+import { AdviceEnum } from '../../domain/enums/advice.enum';
 
-export class CreatePrescriptorDto {
+export class PrescriptorCreateDto {
   @IsString({ message: 'O nome deve ser uma string' })
   @IsNotEmpty({ message: 'O nome é obrigatório' })
   @MinLength(3, { message: 'O nome deve ter no mínimo 3 caracteres' })

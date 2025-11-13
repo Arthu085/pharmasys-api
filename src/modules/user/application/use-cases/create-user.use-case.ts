@@ -26,7 +26,9 @@ export class CreateUserUseCase {
     const existingUser =
       await this.findOneUserUseCase.findByEmailWithoutValidation(dto.email);
 
-    this.userDomainService.validateUserExists(existingUser);
+    if (existingUser) {
+      this.userDomainService.validateUserExists();
+    }
 
     const hashedPassword = await this.userDomainService.hashPassword(
       dto.password,

@@ -3,3 +3,9 @@ export enum RoleEnum {
   OPERADOR = 'OPERADOR',
   FARMACEUTICO = 'FARMACEUTICO',
 }
+
+export enum RoleEnumTranslated {
+  ADMIN = 'Administrador',
+  OPERADOR = 'Operador',
+  FARMACEUTICO = 'Farmacêutico',
+}

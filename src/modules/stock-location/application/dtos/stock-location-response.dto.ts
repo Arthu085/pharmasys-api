@@ -1,5 +1,5 @@
 import { Expose, Transform } from 'class-transformer';
-import { StatusEnum } from 'src/shared/enums/status.enum';
+import { StatusEnum, StatusEnumTranslated } from 'src/shared/enums/status.enum';
 
 export class StockLocationResponseDto {
   @Expose()
@@ -18,7 +18,12 @@ export class StockLocationResponseDto {
   isCentralStock: boolean;
 
   @Expose()
-  status: StatusEnum;
+  @Transform(({ obj }) => ({
+    value: obj.status,
+    label:
+      StatusEnumTranslated[obj.status as keyof typeof StatusEnumTranslated],
+  }))
+  status: { value: string; label: string };
 
   @Expose()
   @Transform(({ obj }) => obj.userCreated?.name || null)

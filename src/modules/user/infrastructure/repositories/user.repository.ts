@@ -25,17 +25,18 @@ export class UserRepository {
       where.name = ILike(`%${filters.name}%`);
     }
 
-    if (filters.status) {
-      const status = StatusEnum[filters.status];
-      where.status = status;
-    }
-
     if (filters.role) {
       const roleName = RoleEnum[filters.role];
 
       where.role = {
         name: roleName,
       };
+    }
+
+    if (filters.status) {
+      const status = StatusEnum[filters.status];
+
+      where.status = status;
     }
 
     return this.repo.findAndCount({

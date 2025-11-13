@@ -1,0 +1,102 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PrescriptorEntity } from '../../domain/entities/prescriptor.entity';
+import {
+  DeepPartial,
+  FindOptionsWhere,
+  ILike,
+  Repository,
+  UpdateResult,
+} from 'typeorm';
+import { PrescriptorFilterDto } from '../../application/dtos/prescriptor-filter.dto';
+import { AdviceEnum } from '../../domain/enums/advice.enum';
+import { UfEnum } from '../../domain/enums/uf.enum';
+import { StatusEnum } from 'src/shared/enums/status.enum';
+
+@Injectable()
+export class PrescriptorRepository {
+  constructor(
+    @InjectRepository(PrescriptorEntity)
+    private readonly repo: Repository<PrescriptorEntity>,
+  ) {}
+
+  findAll(
+    filters: PrescriptorFilterDto,
+    take: number,
+    skip: number,
+  ): Promise<[PrescriptorEntity[], number]> {
+    const where: FindOptionsWhere<PrescriptorEntity> = {};
+
+    if (filters.name) {
+      where.name = ILike(`%${filters.name}%`);
+    }
+
+    if (filters.registrationNumber) {
+      where.registrationNumber = ILike(`%${filters.registrationNumber}%`);
+    }
+
+    if (filters.advice) {
+      const adviceAcronym = AdviceEnum[filters.advice];
+
+      where.advice = {
+        acronym: adviceAcronym,
+      };
+    }
+
+    if (filters.state) {
+      const state = UfEnum[filters.state];
+
+      where.state = state;
+    }
+
+    if (filters.status) {
+      const status = StatusEnum[filters.status];
+
+      where.status = status;
+    }
+
+    return this.repo.findAndCount({
+      where,
+      relations: ['advice'],
+      take,
+      skip,
+      order: { id: 'DESC' },
+      withDeleted: false,
+    });
+  }
+
+  findOne(uuid: string): Promise<PrescriptorEntity | null> {
+    return this.repo.findOne({
+      where: { uuid },
+      relations: ['advice', 'userCreated', 'userUpdated'],
+      withDeleted: false,
+    });
+  }
+
+  findByRegistrationNumberAndAdvice(
+    registrationNumber: string,
+    adviceId: number,
+  ): Promise<PrescriptorEntity | null> {
+    return this.repo.findOne({
+      where: {
+        registrationNumber: registrationNumber,
+        advice: { id: adviceId },
+      },
+      relations: ['advice'],
+      withDeleted: false,
+    });
+  }
+
+  create(prescriptor: Partial<PrescriptorEntity>): Promise<PrescriptorEntity> {
+    const newPrescriptor = this.repo.create(prescriptor);
+    return this.repo.save(newPrescriptor);
+  }
+
+  update(prescriptor: PrescriptorEntity): Promise<UpdateResult> {
+    return this.repo.update({ uuid: prescriptor.uuid }, prescriptor);
+  }
+
+  softDelete(uuid: string): Promise<UpdateResult> {
+    return this.repo.softDelete({ uuid });
+  }
+}

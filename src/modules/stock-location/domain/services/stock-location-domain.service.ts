@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { StockLocationEntity } from '../entities/stock-location.entity';
-import { SameCodeStockLocationException } from '../exceptions/same-code-stock-location.exception';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { isCentralStockStockLocationException } from '../exceptions/is-central-stock-stock-location.exception';
 import { BaseDomainService } from 'src/shared/domain/services/base-domain.service';
+import { ExistingGenericException } from 'src/shared/exceptions/existing.exception';
 
 @Injectable()
 export class StockLocationDomainService {
@@ -29,6 +29,13 @@ export class StockLocationDomainService {
     );
   }
 
+  validateStockLocationSameStatus(
+    stockLocation: StockLocationEntity,
+    status: StatusEnum,
+  ): void {
+    this.baseDomainService.validateDifferentStatus(stockLocation, status);
+  }
+
   validateStockLocationCentralStock(stockLocation: StockLocationEntity): void {
     if (stockLocation.isCentralStock) {
       throw new isCentralStockStockLocationException();
@@ -36,22 +43,6 @@ export class StockLocationDomainService {
   }
 
   validateStockLocationSameCode(): void {
-    throw new SameCodeStockLocationException();
-  }
-
-  validateStockLocationSameCodeUpdate(
-    currentStockLocation: StockLocationEntity,
-    existingStockLocation: StockLocationEntity,
-  ): void {
-    if (existingStockLocation.id !== currentStockLocation.id) {
-      throw new SameCodeStockLocationException();
-    }
-  }
-
-  validateStockLocationSameStatus(
-    stockLocation: StockLocationEntity,
-    status: StatusEnum,
-  ): void {
-    this.baseDomainService.validateDifferentStatus(stockLocation, status);
+    throw new ExistingGenericException('local de estoque', 'o');
   }
 }

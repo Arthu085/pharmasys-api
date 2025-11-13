@@ -5,12 +5,20 @@ import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
 
 @Entity('prescriptor', { comment: 'Tabela para cadastro de prescritores' })
 @Index(['name', 'registrationNumber', 'advice'])
+@Index(
+  'IDX_prescriptor_registration_advice_unique_when_not_deleted',
+  ['registrationNumber', 'advice'],
+  {
+    unique: true,
+    where: '"deleted_at" IS NULL',
+  },
+)
 export class PrescriptorEntity extends BaseEntity {
-  @ManyToOne(() => UserEntity, { eager: true })
+  @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'user_created_id' })
   userCreated: UserEntity;
 
-  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
   userUpdated?: UserEntity | null;
 
@@ -26,7 +34,7 @@ export class PrescriptorEntity extends BaseEntity {
   @Index()
   registrationNumber: string;
 
-  @ManyToOne(() => AdviceEntity, { eager: true })
+  @ManyToOne(() => AdviceEntity)
   @JoinColumn({ name: 'advice_id' })
   @Index()
   advice: AdviceEntity;

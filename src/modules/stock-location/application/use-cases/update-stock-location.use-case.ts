@@ -34,11 +34,11 @@ export class UpdateStockLocationUseCase {
       const existingStockLocation =
         await this.findOneStockLocationUseCase.findByCode(dto.code);
 
-      if (existingStockLocation) {
-        this.stockLocationDomainService.validateStockLocationSameCodeUpdate(
-          stockLocation,
-          existingStockLocation,
-        );
+      if (
+        existingStockLocation &&
+        existingStockLocation.id !== stockLocation.id
+      ) {
+        this.stockLocationDomainService.validateStockLocationSameCode();
       }
     }
 

@@ -1,7 +1,7 @@
 import { Expose, Transform } from 'class-transformer';
 
-import { RoleEnum } from 'src/shared/enums/role.enum';
-import { StatusEnum } from 'src/shared/enums/status.enum';
+import { RoleEnum, RoleEnumTranslated } from 'src/shared/enums/role.enum';
+import { StatusEnum, StatusEnumTranslated } from 'src/shared/enums/status.enum';
 
 export class UserResponseDto {
   @Expose()
@@ -17,11 +17,19 @@ export class UserResponseDto {
   email: string;
 
   @Expose()
-  @Transform(({ obj }) => obj.role?.name)
-  role: RoleEnum;
+  @Transform(({ obj }) => ({
+    value: obj.role?.name,
+    label: RoleEnumTranslated[obj.role?.name as RoleEnum] || obj.role?.name,
+  }))
+  role: { value: string; label: string };
 
   @Expose()
-  status: StatusEnum;
+  @Transform(({ obj }) => ({
+    value: obj.status,
+    label:
+      StatusEnumTranslated[obj.status as keyof typeof StatusEnumTranslated],
+  }))
+  status: { value: string; label: string };
 
   @Expose()
   createdAt: Date;

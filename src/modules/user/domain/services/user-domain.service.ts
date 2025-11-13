@@ -4,8 +4,8 @@ import * as bcrypt from 'bcrypt';
 import { RoleEntity } from '../entities/role.entity';
 import { UserEntity } from '../entities/user.entity';
 import { StatusEnum } from 'src/shared/enums/status.enum';
-import { ExistingUserException } from '../exceptions/existing-user.exception';
 import { BaseDomainService } from 'src/shared/domain/services/base-domain.service';
+import { ExistingGenericException } from 'src/shared/exceptions/existing.exception';
 
 @Injectable()
 export class UserDomainService {
@@ -19,24 +19,16 @@ export class UserDomainService {
     return this.baseDomainService.validateEntityActive(user, 'Usuário', 'o');
   }
 
+  validateUserSameStatus(user: UserEntity, status: StatusEnum): void {
+    this.baseDomainService.validateDifferentStatus(user, status);
+  }
+
   validateRole(role: RoleEntity | null): RoleEntity {
     return this.baseDomainService.validateEntityExists(role, 'Função', 'a');
   }
 
-  validateUserExists(user: UserEntity | null): void {
-    if (user) {
-      throw new ExistingUserException();
-    }
-  }
-
-  validateUserEmailUpdate(user: UserEntity, userEmail: UserEntity): void {
-    if (userEmail.id !== user.id) {
-      throw new ExistingUserException();
-    }
-  }
-
-  validateUserSameStatus(user: UserEntity, status: StatusEnum): void {
-    this.baseDomainService.validateDifferentStatus(user, status);
+  validateUserExists(): void {
+    throw new ExistingGenericException('usuário', 'o');
   }
 
   async hashPassword(password: string): Promise<string> {
