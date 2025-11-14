@@ -3,7 +3,9 @@ import { StockLocationEntity } from '../entities/stock-location.entity';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { isCentralStockStockLocationException } from '../exceptions/is-central-stock-stock-location.exception';
 import { BaseDomainService } from 'src/shared/domain/services/base-domain.service';
-import { ExistingGenericException } from 'src/shared/exceptions/existing.exception';
+import { StockLocationNotFoundException } from '../exceptions/stock-location-not-found.exception';
+import { StockLocationInactiveException } from '../exceptions/stock-location-inactive.exception';
+import { StockLocationCodeAlreadyExistsException } from '../exceptions/stock-location-code-already-exists.exception';
 
 @Injectable()
 export class StockLocationDomainService {
@@ -12,21 +14,21 @@ export class StockLocationDomainService {
   validateStockLocation(
     stockLocation: StockLocationEntity | null,
   ): StockLocationEntity {
-    return this.baseDomainService.validateEntityExists(
-      stockLocation,
-      'Local de Estoque',
-      'o',
-    );
+    if (!stockLocation) {
+      throw new StockLocationNotFoundException();
+    }
+
+    return stockLocation;
   }
 
   validateStockLocationStatus(
     stockLocation: StockLocationEntity,
   ): StockLocationEntity {
-    return this.baseDomainService.validateEntityActive(
-      stockLocation,
-      'Local de Estoque',
-      'o',
-    );
+    if (stockLocation.status === StatusEnum.INATIVO) {
+      throw new StockLocationInactiveException();
+    }
+
+    return stockLocation;
   }
 
   validateStockLocationSameStatus(
@@ -43,6 +45,6 @@ export class StockLocationDomainService {
   }
 
   validateStockLocationSameCode(): void {
-    throw new ExistingGenericException('local de estoque', 'o');
+    throw new StockLocationCodeAlreadyExistsException();
   }
 }

@@ -1,3 +1,5 @@
+import { InvalidPasswordException } from '../exceptions/invalid-password.exception';
+
 export class Password {
   private constructor(
     private readonly value: string,
@@ -6,15 +8,19 @@ export class Password {
 
   static create(plainPassword: string): Password {
     if (!plainPassword) {
-      throw new Error('Senha é obrigatória');
+      throw new InvalidPasswordException('Senha é obrigatória');
     }
 
     if (plainPassword.length < 6) {
-      throw new Error('Senha deve ter no mínimo 6 caracteres');
+      throw new InvalidPasswordException(
+        'Senha deve ter no mínimo 6 caracteres',
+      );
     }
 
     if (plainPassword.length > 100) {
-      throw new Error('Senha deve ter no máximo 100 caracteres');
+      throw new InvalidPasswordException(
+        'Senha deve ter no máximo 100 caracteres',
+      );
     }
 
     return new Password(plainPassword, false);
@@ -22,7 +28,7 @@ export class Password {
 
   static createFromHash(hashedPassword: string): Password {
     if (!hashedPassword) {
-      throw new Error('Hash da senha é obrigatório');
+      throw new InvalidPasswordException('Hash da senha é obrigatório');
     }
 
     return new Password(hashedPassword, true);

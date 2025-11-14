@@ -1,3 +1,5 @@
+import { InvalidRegistrationNumberException } from '../exceptions/invalid-registration-number.exception';
+
 export class RegistrationNumber {
   private constructor(private readonly value: string) {}
 
@@ -5,11 +7,15 @@ export class RegistrationNumber {
     const trimmedNumber = registrationNumber.trim();
 
     if (!trimmedNumber) {
-      throw new Error('Número de registro é obrigatório');
+      throw new InvalidRegistrationNumberException(
+        'Número de registro é obrigatório',
+      );
     }
 
     if (trimmedNumber.length > 30) {
-      throw new Error('Número de registro deve ter no máximo 30 caracteres');
+      throw new InvalidRegistrationNumberException(
+        'Número de registro deve ter no máximo 30 caracteres',
+      );
     }
 
     return new RegistrationNumber(trimmedNumber);

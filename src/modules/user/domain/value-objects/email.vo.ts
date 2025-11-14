@@ -1,3 +1,5 @@
+import { InvalidEmailException } from '../exceptions/invalid-email.exception';
+
 export class Email {
   private constructor(private readonly value: string) {}
 
@@ -5,16 +7,18 @@ export class Email {
     const trimmedEmail = email.trim().toLowerCase();
 
     if (!trimmedEmail) {
-      throw new Error('Email é obrigatório');
+      throw new InvalidEmailException('Email é obrigatório');
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(trimmedEmail)) {
-      throw new Error('Email inválido');
+      throw new InvalidEmailException('Email inválido');
     }
 
     if (trimmedEmail.length > 200) {
-      throw new Error('Email deve ter no máximo 200 caracteres');
+      throw new InvalidEmailException(
+        'Email deve ter no máximo 200 caracteres',
+      );
     }
 
     return new Email(trimmedEmail);

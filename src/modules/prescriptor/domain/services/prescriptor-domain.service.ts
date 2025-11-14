@@ -3,7 +3,10 @@ import { BaseDomainService } from 'src/shared/domain/services/base-domain.servic
 import { PrescriptorEntity } from '../entities/prescriptor.entity';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { AdviceEntity } from '../entities/advice.entity';
-import { ExistingGenericException } from 'src/shared/exceptions/existing.exception';
+import { PrescriptorNotFoundException } from '../exceptions/prescriptor-not-found.exception';
+import { PrescriptorInactiveException } from '../exceptions/prescriptor-inactive.exception';
+import { PrescriptorAlreadyExistsException } from '../exceptions/prescriptor-already-exists.exception';
+import { AdviceNotFoundException } from '../exceptions/advice-not-found.exception';
 
 @Injectable()
 export class PrescriptorDomainService {
@@ -12,19 +15,19 @@ export class PrescriptorDomainService {
   validatePrescriptor(
     prescriptor: PrescriptorEntity | null,
   ): PrescriptorEntity {
-    return this.baseDomainService.validateEntityExists(
-      prescriptor,
-      'Prescritor',
-      'o',
-    );
+    if (!prescriptor) {
+      throw new PrescriptorNotFoundException();
+    }
+
+    return prescriptor;
   }
 
   validatePrescriptorStatus(prescriptor: PrescriptorEntity): PrescriptorEntity {
-    return this.baseDomainService.validateEntityActive(
-      prescriptor,
-      'Prescritor',
-      'o',
-    );
+    if (prescriptor.status === StatusEnum.INATIVO) {
+      throw new PrescriptorInactiveException();
+    }
+
+    return prescriptor;
   }
 
   validatePrescriptorSameStatus(
@@ -35,10 +38,13 @@ export class PrescriptorDomainService {
   }
 
   validateAdvice(advice: AdviceEntity | null): AdviceEntity {
-    return this.baseDomainService.validateEntityExists(advice, 'Conselho', 'o');
+    if (!advice) {
+      throw new AdviceNotFoundException();
+    }
+    return advice;
   }
 
   validatePrescriptorSameRegistrationNumber(): void {
-    throw new ExistingGenericException('prescritor', 'o');
+    throw new PrescriptorAlreadyExistsException();
   }
 }

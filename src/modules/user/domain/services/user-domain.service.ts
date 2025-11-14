@@ -5,18 +5,29 @@ import { RoleEntity } from '../entities/role.entity';
 import { UserEntity } from '../entities/user.entity';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { BaseDomainService } from 'src/shared/domain/services/base-domain.service';
-import { ExistingGenericException } from 'src/shared/exceptions/existing.exception';
+import { UserNotFoundException } from '../exceptions/user-not-found.exception';
+import { UserInactiveException } from '../exceptions/user-inactive.exception';
+import { UserAlreadyExistsException } from '../exceptions/user-already-exists.exception';
+import { RoleNotFoundException } from '../exceptions/role-not-found.exception';
 
 @Injectable()
 export class UserDomainService {
   constructor(private readonly baseDomainService: BaseDomainService) {}
 
   validateUser(user: UserEntity | null): UserEntity {
-    return this.baseDomainService.validateEntityExists(user, 'Usuário', 'o');
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+
+    return user;
   }
 
   validateUserStatus(user: UserEntity): UserEntity {
-    return this.baseDomainService.validateEntityActive(user, 'Usuário', 'o');
+    if (user.status === StatusEnum.INATIVO) {
+      throw new UserInactiveException();
+    }
+
+    return user;
   }
 
   validateUserSameStatus(user: UserEntity, status: StatusEnum): void {
@@ -24,11 +35,15 @@ export class UserDomainService {
   }
 
   validateRole(role: RoleEntity | null): RoleEntity {
-    return this.baseDomainService.validateEntityExists(role, 'Função', 'a');
+    if (!role) {
+      throw new RoleNotFoundException();
+    }
+
+    return role;
   }
 
   validateUserExists(): void {
-    throw new ExistingGenericException('usuário', 'o');
+    throw new UserAlreadyExistsException();
   }
 
   async hashPassword(password: string): Promise<string> {

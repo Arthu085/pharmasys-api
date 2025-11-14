@@ -1,3 +1,5 @@
+import { InvalidUserNameException } from '../exceptions/invalid-user-name.exception';
+
 export class UserName {
   private constructor(private readonly value: string) {}
 
@@ -5,11 +7,15 @@ export class UserName {
     const trimmedName = name.trim();
 
     if (!trimmedName || trimmedName.length < 3) {
-      throw new Error('Nome deve ter no mínimo 3 caracteres');
+      throw new InvalidUserNameException(
+        'Nome deve ter no mínimo 3 caracteres',
+      );
     }
 
     if (trimmedName.length > 100) {
-      throw new Error('Nome deve ter no máximo 100 caracteres');
+      throw new InvalidUserNameException(
+        'Nome deve ter no máximo 100 caracteres',
+      );
     }
 
     return new UserName(trimmedName);

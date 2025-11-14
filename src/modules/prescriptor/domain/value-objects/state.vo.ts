@@ -1,4 +1,5 @@
 import { UfEnum } from '../enums/uf.enum';
+import { InvalidStateException } from '../exceptions/invalid-state.exception';
 
 export class State {
   private constructor(private readonly value: string) {}
@@ -7,15 +8,15 @@ export class State {
     const upperState = state.toUpperCase().trim();
 
     if (!upperState) {
-      throw new Error('UF é obrigatória');
+      throw new InvalidStateException('UF é obrigatória');
     }
 
     if (!Object.values(UfEnum).includes(upperState as UfEnum)) {
-      throw new Error('UF inválida');
+      throw new InvalidStateException('UF inválida');
     }
 
     if (upperState.length !== 2) {
-      throw new Error('UF deve ter 2 caracteres');
+      throw new InvalidStateException('UF deve ter 2 caracteres');
     }
 
     return new State(upperState);
