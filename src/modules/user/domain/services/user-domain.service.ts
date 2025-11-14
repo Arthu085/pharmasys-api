@@ -6,8 +6,6 @@ import { UserEntity } from '../entities/user.entity';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { BaseDomainService } from 'src/shared/domain/services/base-domain.service';
 import { UserNotFoundException } from '../exceptions/user-not-found.exception';
-import { UserInactiveException } from '../exceptions/user-inactive.exception';
-import { UserAlreadyExistsException } from '../exceptions/user-already-exists.exception';
 import { RoleNotFoundException } from '../exceptions/role-not-found.exception';
 
 @Injectable()
@@ -22,12 +20,11 @@ export class UserDomainService {
     return user;
   }
 
-  validateUserStatus(user: UserEntity): UserEntity {
-    if (user.status === StatusEnum.INATIVO) {
-      throw new UserInactiveException();
-    }
+  validateUserAndEnsureActive(user: UserEntity | null): UserEntity {
+    const validatedUser = this.validateUser(user);
+    validatedUser.ensureIsActive();
 
-    return user;
+    return validatedUser;
   }
 
   validateUserSameStatus(user: UserEntity, status: StatusEnum): void {
@@ -40,10 +37,6 @@ export class UserDomainService {
     }
 
     return role;
-  }
-
-  validateUserExists(): void {
-    throw new UserAlreadyExistsException();
   }
 
   async hashPassword(password: string): Promise<string> {

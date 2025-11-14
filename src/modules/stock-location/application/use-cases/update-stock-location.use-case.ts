@@ -10,6 +10,7 @@ import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { StockLocationName } from '../../domain/value-objects/stock-location-name.vo';
 import { StockLocationCode } from '../../domain/value-objects/stock-location-code.vo';
+import { StockLocationCodeAlreadyExistsException } from '../../domain/exceptions/stock-location-code-already-exists.exception';
 
 @Injectable()
 export class UpdateStockLocationUseCase {
@@ -42,7 +43,7 @@ export class UpdateStockLocationUseCase {
         existingStockLocation &&
         existingStockLocation.id !== stockLocation.id
       ) {
-        this.stockLocationDomainService.validateStockLocationSameCode();
+        throw new StockLocationCodeAlreadyExistsException();
       }
 
       stockLocation.changeCode(code);

@@ -10,6 +10,7 @@ import { UserEntity } from '../../domain/entities/user.entity';
 import { Email } from '../../domain/value-objects/email.vo';
 import { Password } from '../../domain/value-objects/password.vo';
 import { UserName } from '../../domain/value-objects/user-name.vo';
+import { UserAlreadyExistsException } from '../../domain/exceptions/user-already-exists.exception';
 
 @Injectable()
 export class CreateUserUseCase {
@@ -36,7 +37,7 @@ export class CreateUserUseCase {
       );
 
     if (existingUser) {
-      this.userDomainService.validateUserExists();
+      throw new UserAlreadyExistsException();
     }
 
     const hashedPassword = await this.userDomainService.hashPassword(

@@ -16,10 +16,10 @@ export class FindOneUserUseCase {
 
   async execute(uuid: string): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne(uuid);
-    const validatedUser = this.userDomainService.validateUser(user);
-    const activeUser = this.userDomainService.validateUserStatus(validatedUser);
+    const validatedUser =
+      this.userDomainService.validateUserAndEnsureActive(user);
 
-    return plainToInstance(UserResponseDto, activeUser, {
+    return plainToInstance(UserResponseDto, validatedUser, {
       excludeExtraneousValues: true,
     });
   }
@@ -29,13 +29,12 @@ export class FindOneUserUseCase {
     validateActive = true,
   ): Promise<UserEntity> {
     const user = await this.userRepository.findOne(uuid);
-    const validatedUser = this.userDomainService.validateUser(user);
 
     if (validateActive) {
-      return this.userDomainService.validateUserStatus(validatedUser);
+      return this.userDomainService.validateUserAndEnsureActive(user);
     }
 
-    return validatedUser;
+    return this.userDomainService.validateUser(user);
   }
 
   async findByEmail(email: string): Promise<UserEntity> {

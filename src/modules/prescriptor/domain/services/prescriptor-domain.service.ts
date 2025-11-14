@@ -4,8 +4,6 @@ import { PrescriptorEntity } from '../entities/prescriptor.entity';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { AdviceEntity } from '../entities/advice.entity';
 import { PrescriptorNotFoundException } from '../exceptions/prescriptor-not-found.exception';
-import { PrescriptorInactiveException } from '../exceptions/prescriptor-inactive.exception';
-import { PrescriptorAlreadyExistsException } from '../exceptions/prescriptor-already-exists.exception';
 import { AdviceNotFoundException } from '../exceptions/advice-not-found.exception';
 
 @Injectable()
@@ -22,12 +20,13 @@ export class PrescriptorDomainService {
     return prescriptor;
   }
 
-  validatePrescriptorStatus(prescriptor: PrescriptorEntity): PrescriptorEntity {
-    if (prescriptor.status === StatusEnum.INATIVO) {
-      throw new PrescriptorInactiveException();
-    }
+  validatePrescriptorAndEnsureActive(
+    prescriptor: PrescriptorEntity | null,
+  ): PrescriptorEntity {
+    const validated = this.validatePrescriptor(prescriptor);
+    validated.ensureIsActive();
 
-    return prescriptor;
+    return validated;
   }
 
   validatePrescriptorSameStatus(
@@ -41,10 +40,7 @@ export class PrescriptorDomainService {
     if (!advice) {
       throw new AdviceNotFoundException();
     }
-    return advice;
-  }
 
-  validatePrescriptorSameRegistrationNumber(): void {
-    throw new PrescriptorAlreadyExistsException();
+    return advice;
   }
 }

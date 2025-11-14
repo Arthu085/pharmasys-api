@@ -15,13 +15,11 @@ export class FindOnePrescriptorUseCase {
   async execute(uuid: string): Promise<PrescriptorResponseDto> {
     const prescriptor = await this.prescriptorRepository.findOne(uuid);
     const validatedPrescriptor =
-      this.prescriptorDomainService.validatePrescriptor(prescriptor);
-    const activePrescriptor =
-      this.prescriptorDomainService.validatePrescriptorStatus(
-        validatedPrescriptor,
+      this.prescriptorDomainService.validatePrescriptorAndEnsureActive(
+        prescriptor,
       );
 
-    return plainToInstance(PrescriptorResponseDto, activePrescriptor, {
+    return plainToInstance(PrescriptorResponseDto, validatedPrescriptor, {
       excludeExtraneousValues: true,
     });
   }
@@ -31,16 +29,14 @@ export class FindOnePrescriptorUseCase {
     validateActive = true,
   ): Promise<PrescriptorEntity> {
     const prescriptor = await this.prescriptorRepository.findOne(uuid);
-    const validatedPrescriptor =
-      this.prescriptorDomainService.validatePrescriptor(prescriptor);
 
     if (validateActive) {
-      return this.prescriptorDomainService.validatePrescriptorStatus(
-        validatedPrescriptor,
+      return this.prescriptorDomainService.validatePrescriptorAndEnsureActive(
+        prescriptor,
       );
     }
 
-    return validatedPrescriptor;
+    return this.prescriptorDomainService.validatePrescriptor(prescriptor);
   }
 
   async findByRegistrationNumberAndAdvice(

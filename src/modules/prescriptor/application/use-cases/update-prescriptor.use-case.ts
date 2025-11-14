@@ -10,6 +10,7 @@ import { StatusEnum } from 'src/shared/enums/status.enum';
 import { PrescriptorName } from '../../domain/value-objects/prescriptor-name.vo';
 import { RegistrationNumber } from '../../domain/value-objects/registration-number.vo';
 import { State } from '../../domain/value-objects/state.vo';
+import { PrescriptorAlreadyExistsException } from '../../domain/exceptions/prescriptor-already-exists.exception';
 
 @Injectable()
 export class UpdatePrescriptorUseCase {
@@ -51,7 +52,7 @@ export class UpdatePrescriptorUseCase {
         );
 
       if (existingPrescriptor && existingPrescriptor.id !== prescriptor.id) {
-        this.prescriptorDomainService.validatePrescriptorSameRegistrationNumber();
+        throw new PrescriptorAlreadyExistsException();
       }
     }
 

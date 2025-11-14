@@ -11,6 +11,7 @@ import { StatusEnum } from 'src/shared/enums/status.enum';
 import { Email } from '../../domain/value-objects/email.vo';
 import { Password } from '../../domain/value-objects/password.vo';
 import { UserName } from '../../domain/value-objects/user-name.vo';
+import { UserAlreadyExistsException } from '../../domain/exceptions/user-already-exists.exception';
 
 @Injectable()
 export class UpdateUserUseCase {
@@ -37,7 +38,7 @@ export class UpdateUserUseCase {
         );
 
       if (existingUserWithEmail && existingUserWithEmail.id !== user.id) {
-        this.userDomainService.validateUserExists();
+        throw new UserAlreadyExistsException();
       }
 
       user.changeEmail(email);

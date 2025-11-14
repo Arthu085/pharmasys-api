@@ -4,8 +4,6 @@ import { StatusEnum } from 'src/shared/enums/status.enum';
 import { isCentralStockStockLocationException } from '../exceptions/is-central-stock-stock-location.exception';
 import { BaseDomainService } from 'src/shared/domain/services/base-domain.service';
 import { StockLocationNotFoundException } from '../exceptions/stock-location-not-found.exception';
-import { StockLocationInactiveException } from '../exceptions/stock-location-inactive.exception';
-import { StockLocationCodeAlreadyExistsException } from '../exceptions/stock-location-code-already-exists.exception';
 
 @Injectable()
 export class StockLocationDomainService {
@@ -21,14 +19,13 @@ export class StockLocationDomainService {
     return stockLocation;
   }
 
-  validateStockLocationStatus(
-    stockLocation: StockLocationEntity,
+  validateStockLocationAndEnsureActive(
+    stockLocation: StockLocationEntity | null,
   ): StockLocationEntity {
-    if (stockLocation.status === StatusEnum.INATIVO) {
-      throw new StockLocationInactiveException();
-    }
+    const validated = this.validateStockLocation(stockLocation);
+    validated.ensureIsActive();
 
-    return stockLocation;
+    return validated;
   }
 
   validateStockLocationSameStatus(
@@ -42,9 +39,5 @@ export class StockLocationDomainService {
     if (stockLocation.isCentralStock) {
       throw new isCentralStockStockLocationException();
     }
-  }
-
-  validateStockLocationSameCode(): void {
-    throw new StockLocationCodeAlreadyExistsException();
   }
 }
