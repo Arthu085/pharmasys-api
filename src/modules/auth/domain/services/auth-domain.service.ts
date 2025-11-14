@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from '../../../user/domain/entities/user.entity';
-import { StatusEnum } from '../../../../shared/enums/status.enum';
 import { RoleEnum } from '../../../../shared/enums/role.enum';
 import { InvalidCredentialsException } from '../exceptions/invalid-credentials.exception';
-import { InactiveUserException } from '../exceptions/inactive-user.exception';
 import { RoleException } from '../exceptions/role.exception';
 import { UserDomainService } from '../../../user/domain/services/user-domain.service';
 
@@ -19,9 +17,7 @@ export class AuthDomainService {
       throw new InvalidCredentialsException();
     }
 
-    if (user.status === StatusEnum.INATIVO) {
-      throw new InactiveUserException();
-    }
+    user.ensureIsActive();
 
     const isPasswordValid = await this.userDomainService.comparePasswords(
       password,
