@@ -7,6 +7,7 @@ import { FindOneRoleUseCase } from './find-one-role.use-case';
 import { FindOneUserUseCase } from './find-one-user.use-case';
 import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
 import { RoleEnum } from 'src/shared/enums/role.enum';
+import { StatusEnum } from 'src/shared/enums/status.enum';
 import { Email } from '../../domain/value-objects/email.vo';
 import { Password } from '../../domain/value-objects/password.vo';
 import { UserName } from '../../domain/value-objects/user-name.vo';
@@ -39,28 +40,29 @@ export class UpdateUserUseCase {
         this.userDomainService.validateUserExists();
       }
 
-      user.email = email.getValue();
+      user.changeEmail(email);
     }
 
     if (dto.role) {
       const role = await this.findOneRoleUseCase.findByName(RoleEnum[dto.role]);
-      user.role = role;
+      user.changeRole(role);
     }
 
     if (dto.name) {
       const name = UserName.create(dto.name);
-      user.name = name.getValue();
+      user.changeName(name);
     }
 
     if (dto.password) {
       const password = Password.create(dto.password);
-      user.password = await this.userDomainService.hashPassword(
+      const hashedPassword = await this.userDomainService.hashPassword(
         password.getValue(),
       );
+      const hashedPasswordVO = Password.createFromHash(hashedPassword);
+      user.changePassword(hashedPasswordVO);
     }
 
     user.userUpdated = updatingUser;
-    user.updatedAt = new Date();
 
     await this.userRepository.update(user);
   }
@@ -75,9 +77,13 @@ export class UpdateUserUseCase {
 
     this.userDomainService.validateUserSameStatus(user, dto.status);
 
-    user.status = dto.status;
+    if (dto.status === StatusEnum.ATIVO) {
+      user.activate();
+    } else {
+      user.deactivate();
+    }
+
     user.userUpdated = updatingUser;
-    user.updatedAt = new Date();
 
     await this.userRepository.update(user);
   }

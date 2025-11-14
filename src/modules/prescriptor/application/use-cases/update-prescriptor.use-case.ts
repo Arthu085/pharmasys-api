@@ -6,6 +6,7 @@ import { FindOnePrescriptorUseCase } from './find-one-prescriptor.use-case';
 import { FindOneAdviceUseCase } from './find-one-advice.use-case';
 import { PrescriptorDomainService } from '../../domain/services/prescriptor-domain.service';
 import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
+import { StatusEnum } from 'src/shared/enums/status.enum';
 import { PrescriptorName } from '../../domain/value-objects/prescriptor-name.vo';
 import { RegistrationNumber } from '../../domain/value-objects/registration-number.vo';
 import { State } from '../../domain/value-objects/state.vo';
@@ -56,28 +57,30 @@ export class UpdatePrescriptorUseCase {
 
     if (dto.name) {
       const name = PrescriptorName.create(dto.name);
-      prescriptor.name = name.getValue();
+      prescriptor.changeName(name);
     }
 
     if (dto.registrationNumber) {
-      prescriptor.registrationNumber = newRegistrationNumber;
+      const registrationNumberVO = RegistrationNumber.create(
+        newRegistrationNumber,
+      );
+      prescriptor.changeRegistrationNumber(registrationNumberVO);
     }
 
     if (dto.state) {
       const state = State.create(dto.state);
-      prescriptor.state = state.getValue();
+      prescriptor.changeState(state);
     }
 
     if (dto.specialty !== undefined) {
-      prescriptor.specialty = dto.specialty;
+      prescriptor.changeSpecialty(dto.specialty);
     }
 
     if (dto.advice) {
-      prescriptor.advice = newAdvice;
+      prescriptor.changeAdvice(newAdvice);
     }
 
     prescriptor.userUpdated = user;
-    prescriptor.updatedAt = new Date();
 
     await this.prescriptorRepository.update(prescriptor);
   }
@@ -98,9 +101,13 @@ export class UpdatePrescriptorUseCase {
       dto.status,
     );
 
-    prescriptor.status = dto.status;
+    if (dto.status === StatusEnum.ATIVO) {
+      prescriptor.activate();
+    } else {
+      prescriptor.deactivate();
+    }
+
     prescriptor.userUpdated = user;
-    prescriptor.updatedAt = new Date();
 
     await this.prescriptorRepository.update(prescriptor);
   }

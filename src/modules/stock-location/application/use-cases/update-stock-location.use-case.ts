@@ -7,6 +7,7 @@ import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-
 import { FindOneStockLocationUseCase } from './find-one-stock-location.use-case';
 import { StockLocationDomainService } from '../../domain/services/stock-location-domain.service';
 import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
+import { StatusEnum } from 'src/shared/enums/status.enum';
 import { StockLocationName } from '../../domain/value-objects/stock-location-name.vo';
 import { StockLocationCode } from '../../domain/value-objects/stock-location-code.vo';
 
@@ -44,16 +45,15 @@ export class UpdateStockLocationUseCase {
         this.stockLocationDomainService.validateStockLocationSameCode();
       }
 
-      stockLocation.code = code.getValue();
+      stockLocation.changeCode(code);
     }
 
     if (dto.name) {
       const name = StockLocationName.create(dto.name);
-      stockLocation.name = name.getValue();
+      stockLocation.changeName(name);
     }
 
     stockLocation.userUpdated = user;
-    stockLocation.updatedAt = new Date();
 
     await this.stockLocationRepository.update(stockLocation);
   }
@@ -76,9 +76,13 @@ export class UpdateStockLocationUseCase {
       dto.status,
     );
 
-    stockLocation.status = dto.status;
+    if (dto.status === StatusEnum.ATIVO) {
+      stockLocation.activate();
+    } else {
+      stockLocation.deactivate();
+    }
+
     stockLocation.userUpdated = user;
-    stockLocation.updatedAt = new Date();
 
     await this.stockLocationRepository.update(stockLocation);
   }

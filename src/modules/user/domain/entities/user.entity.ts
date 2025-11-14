@@ -13,6 +13,10 @@ import {
 
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { RoleEntity } from './role.entity';
+import { Email } from '../value-objects/email.vo';
+import { Password } from '../value-objects/password.vo';
+import { UserName } from '../value-objects/user-name.vo';
+import { UserInactiveException } from '../exceptions/user-inactive.exception';
 
 @Entity('user', { comment: 'Tabela para cadastro de usuários' })
 @Index(['name', 'email', 'role'])
@@ -75,4 +79,48 @@ export class UserEntity {
   @JoinColumn({ name: 'role_id' })
   @Index()
   role: RoleEntity;
+
+  changeEmail(newEmail: Email): void {
+    this.email = newEmail.getValue();
+    this.updatedAt = new Date();
+  }
+
+  changeName(newName: UserName): void {
+    this.name = newName.getValue();
+    this.updatedAt = new Date();
+  }
+
+  changePassword(newPassword: Password): void {
+    this.password = newPassword.getValue();
+    this.updatedAt = new Date();
+  }
+
+  changeRole(newRole: RoleEntity): void {
+    this.role = newRole;
+    this.updatedAt = new Date();
+  }
+
+  activate(): void {
+    this.status = StatusEnum.ATIVO;
+    this.updatedAt = new Date();
+  }
+
+  deactivate(): void {
+    this.status = StatusEnum.INATIVO;
+    this.updatedAt = new Date();
+  }
+
+  isActive(): boolean {
+    return this.status === StatusEnum.ATIVO;
+  }
+
+  ensureIsActive(): void {
+    if (!this.isActive()) {
+      throw new UserInactiveException();
+    }
+  }
+
+  hasRole(roleName: string): boolean {
+    return this.role.name === roleName;
+  }
 }

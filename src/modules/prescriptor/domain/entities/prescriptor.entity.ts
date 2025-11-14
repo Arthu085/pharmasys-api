@@ -2,6 +2,11 @@ import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { AdviceEntity } from './advice.entity';
 import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
+import { PrescriptorName } from '../value-objects/prescriptor-name.vo';
+import { RegistrationNumber } from '../value-objects/registration-number.vo';
+import { State } from '../value-objects/state.vo';
+import { PrescriptorInactiveException } from '../exceptions/prescriptor-inactive.exception';
+import { StatusEnum } from 'src/shared/enums/status.enum';
 
 @Entity('prescriptor', { comment: 'Tabela para cadastro de prescritores' })
 @Index(['name', 'registrationNumber', 'advice'])
@@ -53,4 +58,53 @@ export class PrescriptorEntity extends BaseEntity {
     comment: 'UF do conselho profissional',
   })
   state: string;
+
+  changeName(newName: PrescriptorName): void {
+    this.name = newName.getValue();
+    this.updatedAt = new Date();
+  }
+
+  changeRegistrationNumber(newRegistrationNumber: RegistrationNumber): void {
+    this.registrationNumber = newRegistrationNumber.getValue();
+    this.updatedAt = new Date();
+  }
+
+  changeState(newState: State): void {
+    this.state = newState.getValue();
+    this.updatedAt = new Date();
+  }
+
+  changeAdvice(newAdvice: AdviceEntity): void {
+    this.advice = newAdvice;
+    this.updatedAt = new Date();
+  }
+
+  changeSpecialty(newSpecialty: string | null): void {
+    this.specialty = newSpecialty;
+    this.updatedAt = new Date();
+  }
+
+  activate(): void {
+    this.status = StatusEnum.ATIVO;
+    this.updatedAt = new Date();
+  }
+
+  deactivate(): void {
+    this.status = StatusEnum.INATIVO;
+    this.updatedAt = new Date();
+  }
+
+  isActive(): boolean {
+    return this.status === StatusEnum.ATIVO;
+  }
+
+  ensureIsActive(): void {
+    if (!this.isActive()) {
+      throw new PrescriptorInactiveException();
+    }
+  }
+
+  hasAdvice(adviceAcronym: string): boolean {
+    return this.advice.acronym === adviceAcronym;
+  }
 }
