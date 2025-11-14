@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
-import { UserRepository } from '../../infrastructure/repositories/user.repository';
+import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 import { UserDomainService } from '../../domain/services/user-domain.service';
 import { UserUpdateDto } from '../dtos/user-update.dto';
 import { FindOneRoleUseCase } from './find-one-role.use-case';
@@ -16,7 +16,8 @@ import { UserAlreadyExistsException } from '../../domain/exceptions/user-already
 @Injectable()
 export class UpdateUserUseCase {
   constructor(
-    private readonly userRepository: UserRepository,
+    @Inject(IUserRepository)
+    private readonly userRepository: IUserRepository,
     private readonly findOneUserUseCase: FindOneUserUseCase,
     private readonly userDomainService: UserDomainService,
     private readonly findOneRoleUseCase: FindOneRoleUseCase,

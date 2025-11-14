@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 
-import { UserRepository } from '../../infrastructure/repositories/user.repository';
+import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 import { UserDomainService } from '../../domain/services/user-domain.service';
 import { UserCreateDto } from '../dtos/user-create.dto';
 import { FindOneRoleUseCase } from './find-one-role.use-case';
@@ -15,7 +15,8 @@ import { UserAlreadyExistsException } from '../../domain/exceptions/user-already
 @Injectable()
 export class CreateUserUseCase {
   constructor(
-    private readonly userRepository: UserRepository,
+    @Inject(IUserRepository)
+    private readonly userRepository: IUserRepository,
     private readonly findOneRoleUseCase: FindOneRoleUseCase,
     @Inject(forwardRef(() => FindOneUserUseCase))
     private readonly findOneUserUseCase: FindOneUserUseCase,

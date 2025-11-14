@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
-import { StockLocationRepository } from '../../infrastructure/repositories/stock-location.repository';
+import { IStockLocationRepository } from '../../domain/repositories/stock-location.repository.interface';
 import { StockLocationFilterDto } from '../dtos/stock-location-filter.dto';
 import { plainToInstance } from 'class-transformer';
 import { StockLocationResponseDto } from '../dtos/stock-location-response.dto';
@@ -8,7 +8,8 @@ import { StockLocationResponseDto } from '../dtos/stock-location-response.dto';
 @Injectable()
 export class FindAllStockLocationUseCase {
   constructor(
-    private readonly stockLocationRepository: StockLocationRepository,
+    @Inject(IStockLocationRepository)
+    private readonly stockLocationRepository: IStockLocationRepository,
   ) {}
 
   async execute(

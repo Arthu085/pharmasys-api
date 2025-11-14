@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
-import { UserRepository } from '../../infrastructure/repositories/user.repository';
+import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 import { FindOneUserUseCase } from './find-one-user.use-case';
 
 @Injectable()
 export class DeleteUserUseCase {
   constructor(
-    private readonly userRepository: UserRepository,
+    @Inject(IUserRepository)
+    private readonly userRepository: IUserRepository,
     private readonly findOneUserUseCase: FindOneUserUseCase,
   ) {}
 

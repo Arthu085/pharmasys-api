@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { IStockLocationRepository } from './domain/repositories/stock-location.repository.interface';
 import { StockLocationEntity } from './domain/entities/stock-location.entity';
 import { StockLocationProtectedController } from './infrastructure/controllers/stock-location-protected.controller';
 import { StockLocationPublicController } from './infrastructure/controllers/stock-location-public.controller';
@@ -24,7 +25,10 @@ import { SharedModule } from 'src/shared/shared.module';
     StockLocationPublicController,
   ],
   providers: [
-    StockLocationRepository,
+    {
+      provide: IStockLocationRepository,
+      useClass: StockLocationRepository,
+    },
     StockLocationDomainService,
     CreateStockLocationUseCase,
     UpdateStockLocationUseCase,

@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { RoleEntity } from '../../domain/entities/role.entity';
+import { IRoleRepository } from '../../domain/repositories/role.repository.interface';
 
 @Injectable()
-export class RoleRepository {
+export class RoleRepository implements IRoleRepository {
   constructor(
     @InjectRepository(RoleEntity)
     private readonly repo: Repository<RoleEntity>,

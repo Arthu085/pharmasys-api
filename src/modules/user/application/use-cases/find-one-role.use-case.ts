@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
-import { RoleRepository } from '../../infrastructure/repositories/role.repository';
+import { IRoleRepository } from '../../domain/repositories/role.repository.interface';
 import { UserDomainService } from '../../domain/services/user-domain.service';
 import { RoleEntity } from '../../domain/entities/role.entity';
 
 @Injectable()
 export class FindOneRoleUseCase {
   constructor(
-    private readonly roleRepository: RoleRepository,
+    @Inject(IRoleRepository)
+    private readonly roleRepository: IRoleRepository,
     private readonly userDomainService: UserDomainService,
   ) {}
 

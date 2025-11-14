@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { PrescriptorRepository } from '../../infraestructure/repositories/prescriptor.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { IPrescriptorRepository } from '../../domain/repositories/prescriptor.repository.interface';
 import { FindOnePrescriptorUseCase } from './find-one-prescriptor.use-case';
 
 @Injectable()
 export class DeletePrescriptorUseCase {
   constructor(
-    private readonly prescriptorRepository: PrescriptorRepository,
+    @Inject(IPrescriptorRepository)
+    private readonly prescriptorRepository: IPrescriptorRepository,
     private readonly findOnePrescriptorUseCase: FindOnePrescriptorUseCase,
   ) {}
 

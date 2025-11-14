@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { PrescriptorRepository } from '../../infraestructure/repositories/prescriptor.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { IPrescriptorRepository } from '../../domain/repositories/prescriptor.repository.interface';
 import { PrescriptorCreateDto } from '../dtos/prescriptor-create.dto';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
 import { FindOneAdviceUseCase } from './find-one-advice.use-case';
@@ -12,7 +12,8 @@ import { PrescriptorAlreadyExistsException } from '../../domain/exceptions/presc
 @Injectable()
 export class CreatePrescriptorUseCase {
   constructor(
-    private readonly prescriptorRepository: PrescriptorRepository,
+    @Inject(IPrescriptorRepository)
+    private readonly prescriptorRepository: IPrescriptorRepository,
     private readonly findOneUserUseCase: FindOneUserUseCase,
     private readonly findOneAdviceUseCase: FindOneAdviceUseCase,
     private readonly findOnePrescriptorUseCase: FindOnePrescriptorUseCase,

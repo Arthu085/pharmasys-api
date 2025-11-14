@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { StockLocationRepository } from '../../infrastructure/repositories/stock-location.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { IStockLocationRepository } from '../../domain/repositories/stock-location.repository.interface';
 import { StockLocationCreateDto } from '../dtos/stock-location-create.dto';
 import { FindOneStockLocationUseCase } from './find-one-stock-location.use-case';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
@@ -10,7 +10,8 @@ import { StockLocationCodeAlreadyExistsException } from '../../domain/exceptions
 @Injectable()
 export class CreateStockLocationUseCase {
   constructor(
-    private readonly stockLocationRepository: StockLocationRepository,
+    @Inject(IStockLocationRepository)
+    private readonly stockLocationRepository: IStockLocationRepository,
     private readonly findOneStockLocationUseCase: FindOneStockLocationUseCase,
     private readonly findOneUserUseCase: FindOneUserUseCase,
   ) {}

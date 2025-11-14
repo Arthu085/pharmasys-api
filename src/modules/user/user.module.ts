@@ -1,6 +1,8 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { IUserRepository } from './domain/repositories/user.repository.interface';
+import { IRoleRepository } from './domain/repositories/role.repository.interface';
 import { RoleEntity } from './domain/entities/role.entity';
 import { UserEntity } from './domain/entities/user.entity';
 import { UserDomainService } from './domain/services/user-domain.service';
@@ -25,8 +27,14 @@ import { SharedModule } from 'src/shared/shared.module';
   ],
   controllers: [UserPublicController, UserProtectedController],
   providers: [
-    UserRepository,
-    RoleRepository,
+    {
+      provide: IUserRepository,
+      useClass: UserRepository,
+    },
+    {
+      provide: IRoleRepository,
+      useClass: RoleRepository,
+    },
     UserDomainService,
     CreateUserUseCase,
     FindOneUserUseCase,
@@ -36,7 +44,7 @@ import { SharedModule } from 'src/shared/shared.module';
     FindAllUserUseCase,
   ],
   exports: [
-    UserRepository,
+    IUserRepository,
     FindOneUserUseCase,
     FindOneRoleUseCase,
     UserDomainService,

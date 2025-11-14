@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { IPrescriptorRepository } from './domain/repositories/prescriptor.repository.interface';
+import { IAdviceRepository } from './domain/repositories/advice.repository.interface';
 import { AdviceEntity } from './domain/entities/advice.entity';
 import { PrescriptorEntity } from './domain/entities/prescriptor.entity';
 import { PrescriptorProtectedController } from './infraestructure/controllers/prescriptor-protected.controller';
@@ -24,8 +26,14 @@ import { SharedModule } from 'src/shared/shared.module';
   ],
   controllers: [PrescriptorProtectedController, PrescriptorPublicController],
   providers: [
-    PrescriptorRepository,
-    AdviceRepository,
+    {
+      provide: IPrescriptorRepository,
+      useClass: PrescriptorRepository,
+    },
+    {
+      provide: IAdviceRepository,
+      useClass: AdviceRepository,
+    },
     PrescriptorDomainService,
     CreatePrescriptorUseCase,
     UpdatePrescriptorUseCase,

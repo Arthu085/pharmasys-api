@@ -1,14 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 
-import { UserRepository } from '../../infrastructure/repositories/user.repository';
+import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 import { UserFilterDto } from '../dtos/user-filter.dto';
 import { UserResponseDto } from '../dtos/user-response.dto';
 import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
 
 @Injectable()
 export class FindAllUserUseCase {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    @Inject(IUserRepository)
+    private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute(
     filters: UserFilterDto,

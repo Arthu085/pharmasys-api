@@ -12,9 +12,10 @@ import { PrescriptorFilterDto } from '../../application/dtos/prescriptor-filter.
 import { AdviceEnum } from '../../domain/enums/advice.enum';
 import { UfEnum } from '../../domain/enums/uf.enum';
 import { StatusEnum } from 'src/shared/enums/status.enum';
+import { IPrescriptorRepository } from '../../domain/repositories/prescriptor.repository.interface';
 
 @Injectable()
-export class PrescriptorRepository {
+export class PrescriptorRepository implements IPrescriptorRepository {
   constructor(
     @InjectRepository(PrescriptorEntity)
     private readonly repo: Repository<PrescriptorEntity>,

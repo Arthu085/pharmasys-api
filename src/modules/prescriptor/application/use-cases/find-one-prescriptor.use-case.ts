@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { PrescriptorRepository } from '../../infraestructure/repositories/prescriptor.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { IPrescriptorRepository } from '../../domain/repositories/prescriptor.repository.interface';
 import { PrescriptorResponseDto } from '../dtos/prescriptor-response.dto';
 import { PrescriptorDomainService } from '../../domain/services/prescriptor-domain.service';
 import { plainToInstance } from 'class-transformer';
@@ -8,7 +8,8 @@ import { PrescriptorEntity } from '../../domain/entities/prescriptor.entity';
 @Injectable()
 export class FindOnePrescriptorUseCase {
   constructor(
-    private readonly prescriptorRepository: PrescriptorRepository,
+    @Inject(IPrescriptorRepository)
+    private readonly prescriptorRepository: IPrescriptorRepository,
     private readonly prescriptorDomainService: PrescriptorDomainService,
   ) {}
 

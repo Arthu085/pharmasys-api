@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { AdviceRepository } from '../../infraestructure/repositories/advice.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { IAdviceRepository } from '../../domain/repositories/advice.repository.interface';
 import { PrescriptorDomainService } from '../../domain/services/prescriptor-domain.service';
 import { AdviceEntity } from '../../domain/entities/advice.entity';
 
 @Injectable()
 export class FindOneAdviceUseCase {
   constructor(
-    private readonly adviceRepository: AdviceRepository,
+    @Inject(IAdviceRepository)
+    private readonly adviceRepository: IAdviceRepository,
     private readonly prescriptorDomainService: PrescriptorDomainService,
   ) {}
 

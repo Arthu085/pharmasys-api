@@ -6,9 +6,10 @@ import { UserEntity } from '../../domain/entities/user.entity';
 import { UserFilterDto } from '../../application/dtos/user-filter.dto';
 import { RoleEnum } from 'src/shared/enums/role.enum';
 import { StatusEnum } from 'src/shared/enums/status.enum';
+import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 
 @Injectable()
-export class UserRepository {
+export class UserRepository implements IUserRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly repo: Repository<UserEntity>,

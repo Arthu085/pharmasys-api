@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
-import { UserRepository } from '../../infrastructure/repositories/user.repository';
+import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 import { UserDomainService } from '../../domain/services/user-domain.service';
 import { UserResponseDto } from '../dtos/user-response.dto';
 import { plainToInstance } from 'class-transformer';
@@ -10,7 +10,8 @@ import { Email } from '../../domain/value-objects/email.vo';
 @Injectable()
 export class FindOneUserUseCase {
   constructor(
-    private readonly userRepository: UserRepository,
+    @Inject(IUserRepository)
+    private readonly userRepository: IUserRepository,
     private readonly userDomainService: UserDomainService,
   ) {}
 

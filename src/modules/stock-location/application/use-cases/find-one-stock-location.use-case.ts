@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { StockLocationRepository } from '../../infrastructure/repositories/stock-location.repository';
+import { IStockLocationRepository } from '../../domain/repositories/stock-location.repository.interface';
 import { StockLocationResponseDto } from '../dtos/stock-location-response.dto';
 import { StockLocationDomainService } from '../../domain/services/stock-location-domain.service';
 import { StockLocationEntity } from '../../domain/entities/stock-location.entity';
@@ -8,7 +8,8 @@ import { StockLocationEntity } from '../../domain/entities/stock-location.entity
 @Injectable()
 export class FindOneStockLocationUseCase {
   constructor(
-    private readonly stockLocationRepository: StockLocationRepository,
+    @Inject(IStockLocationRepository)
+    private readonly stockLocationRepository: IStockLocationRepository,
     private readonly stockLocationDomainService: StockLocationDomainService,
   ) {}
 

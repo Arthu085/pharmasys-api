@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { PrescriptorRepository } from '../../infraestructure/repositories/prescriptor.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { IPrescriptorRepository } from '../../domain/repositories/prescriptor.repository.interface';
 import { PrescriptorFilterDto } from '../dtos/prescriptor-filter.dto';
 import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
 import { PrescriptorResponseDto } from '../dtos/prescriptor-response.dto';
@@ -7,7 +7,10 @@ import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class FindAllPrescriptorUseCase {
-  constructor(private readonly prescriptorRepository: PrescriptorRepository) {}
+  constructor(
+    @Inject(IPrescriptorRepository)
+    private readonly prescriptorRepository: IPrescriptorRepository,
+  ) {}
 
   async execute(
     filters: PrescriptorFilterDto,
