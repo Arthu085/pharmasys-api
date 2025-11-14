@@ -32,6 +32,14 @@ export class UserResponseDto {
   status: { value: string; label: string };
 
   @Expose()
+  @Transform(({ obj }) => obj.userCreated?.name || null)
+  userCreated: string | null;
+
+  @Expose()
+  @Transform(({ obj }) => obj.userUpdated?.name || null)
+  userUpdated: string | null;
+
+  @Expose()
   createdAt: Date;
 
   @Expose()

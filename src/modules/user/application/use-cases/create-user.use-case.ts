@@ -23,11 +23,19 @@ export class CreateUserUseCase {
     private readonly userDomainService: UserDomainService,
   ) {}
 
-  async execute(dto: UserCreateDto): Promise<void> {
-    await this.createEntity(dto);
+  async execute(dto: UserCreateDto, userId?: number | null): Promise<void> {
+    await this.createEntity(dto, userId);
   }
 
-  async createEntity(dto: UserCreateDto): Promise<UserEntity> {
+  async createEntity(
+    dto: UserCreateDto,
+    userId?: number | null,
+  ): Promise<UserEntity> {
+    let user: UserEntity | undefined;
+    if (userId) {
+      user = await this.findOneUserUseCase.findById(userId);
+    }
+
     const name = UserName.create(dto.name);
     const email = Email.create(dto.email);
     const password = Password.create(dto.password);
@@ -50,6 +58,7 @@ export class CreateUserUseCase {
       email: email.getValue(),
       password: hashedPassword,
       role,
+      userCreated: user,
     });
 
     return newUser;

@@ -62,6 +62,10 @@ export class UserEntity {
   deletedAt: Date | null;
 
   @ManyToOne(() => UserEntity, { nullable: true })
+  @JoinColumn({ name: 'user_created_id' })
+  userCreated?: UserEntity | null;
+
+  @ManyToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
   userUpdated?: UserEntity | null;
 

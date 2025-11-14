@@ -42,7 +42,7 @@ export class UserRepository implements IUserRepository {
 
     return this.repo.findAndCount({
       where,
-      relations: ['role'],
+      relations: ['role', 'userCreated', 'userUpdated'],
       take,
       skip,
       order: { id: 'DESC' },
@@ -53,7 +53,7 @@ export class UserRepository implements IUserRepository {
   findOne(uuid: string): Promise<UserEntity | null> {
     return this.repo.findOne({
       where: { uuid },
-      relations: ['role'],
+      relations: ['role', 'userCreated', 'userUpdated'],
       withDeleted: false,
     });
   }

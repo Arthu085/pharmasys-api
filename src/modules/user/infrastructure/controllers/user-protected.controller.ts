@@ -54,8 +54,8 @@ export class UserProtectedController {
 
   @Post()
   @ResponseMessage('Usuário criado com sucesso')
-  create(@Body() dto: UserCreateDto) {
-    return this.createUserUseCase.execute(dto);
+  create(@Body() dto: UserCreateDto, @CurrentUser('id') userId: number) {
+    return this.createUserUseCase.execute(dto, userId);
   }
 
   @Patch(':uuid')
