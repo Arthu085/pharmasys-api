@@ -1,5 +1,5 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
-import { CompanyEntity } from 'src/modules/company/entities/company.entity';
+import { CompanyEntity } from 'src/modules/company/domain/entities/company.entity';
 import { StockLocationEntity } from 'src/modules/stock-location/domain/entities/stock-location.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { EntryItemTypeEntity } from './entry-item-type.entity';

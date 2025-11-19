@@ -1,7 +1,7 @@
 import { Expose, Transform } from 'class-transformer';
 
 import { RoleEnum, RoleEnumTranslated } from 'src/shared/enums/role.enum';
-import { StatusEnum, StatusEnumTranslated } from 'src/shared/enums/status.enum';
+import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
 
 export class UserResponseDto {
   @Expose()

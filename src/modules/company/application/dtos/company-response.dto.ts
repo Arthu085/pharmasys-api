@@ -1,7 +1,9 @@
-import { Expose, Transform } from 'class-transformer';
-import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
+import { Expose, Transform, Type } from 'class-transformer';
 
-export class StockLocationResponseDto {
+import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
+import { CompanyTypeResponseDto } from './company-type-response.dto';
+
+export class CompanyResponseDto {
   @Expose()
   id: number;
 
@@ -12,10 +14,7 @@ export class StockLocationResponseDto {
   name: string;
 
   @Expose()
-  code: string;
-
-  @Expose()
-  isCentralStock: boolean;
+  cnpj: string;
 
   @Expose()
   @Transform(({ obj }) => ({
@@ -26,12 +25,16 @@ export class StockLocationResponseDto {
   status: { value: string; label: string };
 
   @Expose()
-  @Transform(({ obj }) => obj.userCreated?.name || null)
-  userCreated: string | null;
+  @Transform(({ obj }) => obj.userCreated?.name)
+  userCreated: string;
 
   @Expose()
   @Transform(({ obj }) => obj.userUpdated?.name || null)
   userUpdated: string | null;
+
+  @Expose()
+  @Type(() => CompanyTypeResponseDto)
+  companyTypes: CompanyTypeResponseDto[];
 
   @Expose()
   createdAt: Date;

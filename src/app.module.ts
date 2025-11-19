@@ -6,7 +6,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { StockLocationModule } from './modules/stock-location/stock-location.module';
 import { PrescriptorModule } from './modules/prescriptor/prescriptor.module';
 // import { ItemModule } from './modules/item/item.module';
-// import { CompanyModule } from './modules/company/company.module';
+import { CompanyModule } from './modules/company/company.module';
 // import { PatientModule } from './modules/patient/patient.module';
 // import { StockBalanceModule } from './modules/stock-balance/stock-balance.module';
 // import { BatchModule } from './modules/batch/batch.module';
@@ -23,7 +23,7 @@ import { PrescriptorModule } from './modules/prescriptor/prescriptor.module';
     StockLocationModule,
     PrescriptorModule,
     // ItemModule,
-    // CompanyModule,
+    CompanyModule,
     // PatientModule,
     // StockBalanceModule,
     // BatchModule,

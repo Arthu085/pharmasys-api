@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { In, Repository } from 'typeorm';
-import { CompanyTypeEntity } from '../entities/company-type.entity';
+import { CompanyTypeEntity } from '../../domain/entities/company-type.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ICompanyTypeRepository } from '../../domain/repositories/company-type.repository.interface';
 
 @Injectable()
-export class CompanyTypeRepository {
+export class CompanyTypeRepository implements ICompanyTypeRepository {
   constructor(
     @InjectRepository(CompanyTypeEntity)
     private readonly repo: Repository<CompanyTypeEntity>,

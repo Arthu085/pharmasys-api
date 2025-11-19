@@ -1,5 +1,5 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
-import { CompanyEntity } from 'src/modules/company/entities/company.entity';
+import { CompanyEntity } from 'src/modules/company/domain/entities/company.entity';
 import { ItemEntity } from 'src/modules/item/entities/item.entity';
 import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';

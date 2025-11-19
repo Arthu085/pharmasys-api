@@ -16,7 +16,7 @@ import { TRANSFER_REASONS_SEED } from './data/transfer-reason.seed';
 
 import { RoleEntity } from '../../../modules/user/domain/entities/role.entity';
 import { TypeEntity } from '../../../modules/item/entities/type.entity';
-import { CompanyTypeEntity } from '../../../modules/company/entities/company-type.entity';
+import { CompanyTypeEntity } from '../../../modules/company/domain/entities/company-type.entity';
 import { DosageEntity } from '../../../modules/item/entities/dosage.entity';
 import { PresentationEntity } from '../../../modules/item/entities/presentation.entity';
 import { StockLocationEntity } from '../../../modules/stock-location/domain/entities/stock-location.entity';

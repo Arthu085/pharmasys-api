@@ -6,9 +6,9 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { CompanyTypeEnum } from '../enums/company-type.enum';
+import { CompanyTypeEnum } from '../../domain/enums/company-type.enum';
 
-export class CreateCompanyDto {
+export class CompanyCreateDto {
   @IsNotEmpty({ message: 'O nome é obrigatório' })
   @IsString({ message: 'O nome deve ser uma string' })
   @MinLength(3, { message: 'O nome deve ter no mínimo 3 caracteres' })

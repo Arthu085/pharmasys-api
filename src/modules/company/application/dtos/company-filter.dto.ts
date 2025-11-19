@@ -1,9 +1,9 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { StatusEnum } from 'src/shared/enums/status.enum';
-import { CompanyTypeEnum } from '../enums/company-type.enum';
+import { CompanyTypeEnum } from '../../domain/enums/company-type.enum';
 import { FilterDto } from 'src/shared/dtos/filter.dto';
 
-export class FilterCompanyDto extends FilterDto {
+export class CompanyFilterDto extends FilterDto {
   @IsOptional()
   @IsString({ message: 'O nome deve ser uma string' })
   name?: string;
