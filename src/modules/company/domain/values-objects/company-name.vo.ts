@@ -24,4 +24,8 @@ export class CompanyName {
   getValue(): string {
     return this.value;
   }
+
+  equals(other: CompanyName): boolean {
+    return this.value === other.value;
+  }
 }

@@ -52,11 +52,23 @@ export class CompanyEntity extends BaseEntity {
   companyTypes: CompanyTypeEntity[];
 
   changeName(newName: CompanyName): void {
+    const currentName = CompanyName.create(this.name);
+
+    if (newName.equals(currentName)) {
+      return;
+    }
+
     this.name = newName.getValue();
     this.updatedAt = new Date();
   }
 
   changeCnpj(newCnpj: CompanyCnpj): void {
+    const currentCnpj = CompanyCnpj.create(this.cnpj);
+
+    if (newCnpj.equals(currentCnpj)) {
+      return;
+    }
+
     this.cnpj = newCnpj.getValue();
     this.updatedAt = new Date();
   }

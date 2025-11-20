@@ -33,19 +33,31 @@ export class UpdatePrescriptorUseCase {
       await this.findOnePrescriptorUseCase.findEntityByUuid(uuid);
 
     let newAdvice = prescriptor.advice;
+    let adviceChanged = false;
+
     if (dto.advice) {
       newAdvice = await this.findOneAdviceUseCase.findByAcronym(dto.advice);
+      adviceChanged = newAdvice.id !== prescriptor.advice.id;
     }
 
     let newRegistrationNumber = prescriptor.registrationNumber;
+    let registrationNumberChanged = false;
+
     if (dto.registrationNumber) {
       const registrationNumberVO = RegistrationNumber.create(
         dto.registrationNumber,
       );
+      const currentRegistrationNumberVO = RegistrationNumber.create(
+        prescriptor.registrationNumber,
+      );
+
+      registrationNumberChanged = !registrationNumberVO.equals(
+        currentRegistrationNumberVO,
+      );
       newRegistrationNumber = registrationNumberVO.getValue();
     }
 
-    if (dto.registrationNumber || dto.advice) {
+    if (adviceChanged || registrationNumberChanged) {
       const existingPrescriptor =
         await this.findOnePrescriptorUseCase.findByRegistrationNumberAndAdvice(
           newRegistrationNumber,
@@ -64,7 +76,7 @@ export class UpdatePrescriptorUseCase {
 
     if (dto.registrationNumber) {
       const registrationNumberVO = RegistrationNumber.create(
-        newRegistrationNumber,
+        dto.registrationNumber,
       );
       prescriptor.changeRegistrationNumber(registrationNumberVO);
     }

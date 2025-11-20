@@ -3,12 +3,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { IUserRepository } from './domain/repositories/user.repository.interface';
 import { IRoleRepository } from './domain/repositories/role.repository.interface';
+import { IPasswordHasher } from './domain/services/password-hasher.interface';
 import { RoleEntity } from './domain/entities/role.entity';
 import { UserEntity } from './domain/entities/user.entity';
 import { UserDomainService } from './domain/services/user-domain.service';
 import { AuthModule } from '../auth/auth.module';
 import { RoleRepository } from './infrastructure/repositories/role.repository';
 import { UserRepository } from './infrastructure/repositories/user.repository';
+import { PasswordHasherService } from './infrastructure/services/password-hasher.service';
 import { UserProtectedController } from './infrastructure/controllers/user-protected.controller';
 import { UserPublicController } from './infrastructure/controllers/user-public.controller';
 import { CreateUserUseCase } from './application/use-cases/create-user.use-case';
@@ -35,6 +37,10 @@ import { SharedModule } from 'src/shared/shared.module';
       provide: IRoleRepository,
       useClass: RoleRepository,
     },
+    {
+      provide: IPasswordHasher,
+      useClass: PasswordHasherService,
+    },
     UserDomainService,
     CreateUserUseCase,
     FindOneUserUseCase,
@@ -45,6 +51,7 @@ import { SharedModule } from 'src/shared/shared.module';
   ],
   exports: [
     IUserRepository,
+    IPasswordHasher,
     FindOneUserUseCase,
     FindOneRoleUseCase,
     UserDomainService,

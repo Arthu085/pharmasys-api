@@ -39,11 +39,23 @@ export class StockLocationEntity extends BaseEntity {
   isCentralStock: boolean;
 
   changeName(newName: StockLocationName): void {
+    const currentName = StockLocationName.create(this.name);
+
+    if (newName.equals(currentName)) {
+      return;
+    }
+
     this.name = newName.getValue();
     this.updatedAt = new Date();
   }
 
   changeCode(newCode: StockLocationCode): void {
+    const currentCode = StockLocationCode.create(this.code);
+
+    if (newCode.equals(currentCode)) {
+      return;
+    }
+
     this.code = newCode.getValue();
     this.updatedAt = new Date();
   }

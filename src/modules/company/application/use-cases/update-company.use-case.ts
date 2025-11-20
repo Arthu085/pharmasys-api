@@ -31,14 +31,18 @@ export class UpdateCompanyUseCase {
     const user = await this.findOneUserUseCase.findById(userId);
     const company = await this.findOneCompanyUseCase.findEntityByUuid(uuid);
 
-    if (dto.cnpj && dto.cnpj !== company.cnpj) {
+    if (dto.cnpj) {
       const cnpj = CompanyCnpj.create(dto.cnpj);
-      const existingCompany = await this.findOneCompanyUseCase.findByCnpj(
-        cnpj.getValue(),
-      );
+      const currentCnpj = CompanyCnpj.create(company.cnpj);
 
-      if (existingCompany && existingCompany.id !== company.id) {
-        throw new CompanyAlreadyExistsException();
+      if (!cnpj.equals(currentCnpj)) {
+        const existingCompany = await this.findOneCompanyUseCase.findByCnpj(
+          cnpj.getValue(),
+        );
+
+        if (existingCompany && existingCompany.id !== company.id) {
+          throw new CompanyAlreadyExistsException();
+        }
       }
 
       company.changeCnpj(cnpj);
@@ -49,8 +53,6 @@ export class UpdateCompanyUseCase {
       company.changeName(name);
     }
 
-    company.userUpdated = user;
-
     if (dto.companyTypes && dto.companyTypes.length > 0) {
       const companyTypeNames = dto.companyTypes.map(
         (key) => CompanyTypeEnum[key],
@@ -58,7 +60,11 @@ export class UpdateCompanyUseCase {
       const companyTypes =
         await this.findOneCompanyTypeUseCase.findByNames(companyTypeNames);
       company.changeCompanyTypes(companyTypes);
+    }
 
+    company.userUpdated = user;
+
+    if (dto.companyTypes && dto.companyTypes.length > 0) {
       await this.companyRepository.updateRelations(company);
     } else {
       await this.companyRepository.update(company);

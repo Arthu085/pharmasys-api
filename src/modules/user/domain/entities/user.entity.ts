@@ -85,16 +85,34 @@ export class UserEntity {
   role: RoleEntity;
 
   changeEmail(newEmail: Email): void {
+    const currentEmail = Email.create(this.email);
+
+    if (newEmail.equals(currentEmail)) {
+      return;
+    }
+
     this.email = newEmail.getValue();
     this.updatedAt = new Date();
   }
 
   changeName(newName: UserName): void {
+    const currentName = UserName.create(this.name);
+
+    if (newName.equals(currentName)) {
+      return;
+    }
+
     this.name = newName.getValue();
     this.updatedAt = new Date();
   }
 
   changePassword(newPassword: Password): void {
+    const currentPassword = Password.createFromHash(this.password);
+
+    if (newPassword.equals(currentPassword)) {
+      return;
+    }
+
     this.password = newPassword.getValue();
     this.updatedAt = new Date();
   }

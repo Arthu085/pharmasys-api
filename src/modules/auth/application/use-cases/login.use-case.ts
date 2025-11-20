@@ -19,7 +19,9 @@ export class LoginUseCase {
     const email = Email.create(dto.email);
     const password = Password.create(dto.password);
 
-    const user = await this.findOneUserUseCase.findByEmail(email.getValue());
+    const user = await this.findOneUserUseCase.findByEmailWithoutValidation(
+      email.getValue(),
+    );
 
     const validatedUser = await this.authDomainService.validateCredentialsLogin(
       user,

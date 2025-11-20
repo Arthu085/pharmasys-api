@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 
 import { RoleEntity } from '../entities/role.entity';
 import { UserEntity } from '../entities/user.entity';
@@ -37,16 +36,5 @@ export class UserDomainService {
     }
 
     return role;
-  }
-
-  async hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, 10);
-  }
-
-  async comparePasswords(
-    plainPassword: string,
-    hashedPassword: string,
-  ): Promise<boolean> {
-    return bcrypt.compare(plainPassword, hashedPassword);
   }
 }

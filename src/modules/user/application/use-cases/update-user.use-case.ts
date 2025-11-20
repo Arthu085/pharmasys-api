@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
+import { IPasswordHasher } from '../../domain/services/password-hasher.interface';
 import { UserDomainService } from '../../domain/services/user-domain.service';
 import { UserUpdateDto } from '../dtos/user-update.dto';
 import { FindOneRoleUseCase } from './find-one-role.use-case';
@@ -18,6 +19,8 @@ export class UpdateUserUseCase {
   constructor(
     @Inject(IUserRepository)
     private readonly userRepository: IUserRepository,
+    @Inject(IPasswordHasher)
+    private readonly passwordHasher: IPasswordHasher,
     private readonly findOneUserUseCase: FindOneUserUseCase,
     private readonly userDomainService: UserDomainService,
     private readonly findOneRoleUseCase: FindOneRoleUseCase,
@@ -31,15 +34,19 @@ export class UpdateUserUseCase {
     const updatingUser = await this.findOneUserUseCase.findById(userId);
     const user = await this.findOneUserUseCase.findEntityByUuid(uuid);
 
-    if (dto.email && dto.email !== user.email) {
+    if (dto.email) {
       const email = Email.create(dto.email);
-      const existingUserWithEmail =
-        await this.findOneUserUseCase.findByEmailWithoutValidation(
-          email.getValue(),
-        );
+      const currentEmail = Email.create(user.email);
 
-      if (existingUserWithEmail && existingUserWithEmail.id !== user.id) {
-        throw new UserAlreadyExistsException();
+      if (!email.equals(currentEmail)) {
+        const existingUserWithEmail =
+          await this.findOneUserUseCase.findByEmailWithoutValidation(
+            email.getValue(),
+          );
+
+        if (existingUserWithEmail && existingUserWithEmail.id !== user.id) {
+          throw new UserAlreadyExistsException();
+        }
       }
 
       user.changeEmail(email);
@@ -57,7 +64,7 @@ export class UpdateUserUseCase {
 
     if (dto.password) {
       const password = Password.create(dto.password);
-      const hashedPassword = await this.userDomainService.hashPassword(
+      const hashedPassword = await this.passwordHasher.hash(
         password.getValue(),
       );
       const hashedPasswordVO = Password.createFromHash(hashedPassword);

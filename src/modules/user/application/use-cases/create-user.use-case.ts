@@ -1,6 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
+import { IPasswordHasher } from '../../domain/services/password-hasher.interface';
 import { UserDomainService } from '../../domain/services/user-domain.service';
 import { UserCreateDto } from '../dtos/user-create.dto';
 import { FindOneRoleUseCase } from './find-one-role.use-case';
@@ -17,6 +18,8 @@ export class CreateUserUseCase {
   constructor(
     @Inject(IUserRepository)
     private readonly userRepository: IUserRepository,
+    @Inject(IPasswordHasher)
+    private readonly passwordHasher: IPasswordHasher,
     private readonly findOneRoleUseCase: FindOneRoleUseCase,
     @Inject(forwardRef(() => FindOneUserUseCase))
     private readonly findOneUserUseCase: FindOneUserUseCase,
@@ -49,9 +52,7 @@ export class CreateUserUseCase {
       throw new UserAlreadyExistsException();
     }
 
-    const hashedPassword = await this.userDomainService.hashPassword(
-      password.getValue(),
-    );
+    const hashedPassword = await this.passwordHasher.hash(password.getValue());
 
     const newUser = await this.userRepository.create({
       name: name.getValue(),

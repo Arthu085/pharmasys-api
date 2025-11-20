@@ -18,4 +18,8 @@ export class CompanyCnpj {
   getValue(): string {
     return this.value;
   }
+
+  equals(other: CompanyCnpj): boolean {
+    return this.value === other.value;
+  }
 }

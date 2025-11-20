@@ -60,16 +60,36 @@ export class PrescriptorEntity extends BaseEntity {
   state: string;
 
   changeName(newName: PrescriptorName): void {
+    const currentName = PrescriptorName.create(this.name);
+
+    if (newName.equals(currentName)) {
+      return;
+    }
+
     this.name = newName.getValue();
     this.updatedAt = new Date();
   }
 
   changeRegistrationNumber(newRegistrationNumber: RegistrationNumber): void {
+    const currentRegistrationNumber = RegistrationNumber.create(
+      this.registrationNumber,
+    );
+
+    if (newRegistrationNumber.equals(currentRegistrationNumber)) {
+      return;
+    }
+
     this.registrationNumber = newRegistrationNumber.getValue();
     this.updatedAt = new Date();
   }
 
   changeState(newState: State): void {
+    const currentState = State.create(this.state);
+
+    if (newState.equals(currentState)) {
+      return;
+    }
+
     this.state = newState.getValue();
     this.updatedAt = new Date();
   }

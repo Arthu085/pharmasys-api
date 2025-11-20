@@ -35,16 +35,20 @@ export class UpdateStockLocationUseCase {
       stockLocation,
     );
 
-    if (dto.code && dto.code !== stockLocation.code) {
+    if (dto.code) {
       const code = StockLocationCode.create(dto.code);
-      const existingStockLocation =
-        await this.findOneStockLocationUseCase.findByCode(code.getValue());
+      const currentCode = StockLocationCode.create(stockLocation.code);
 
-      if (
-        existingStockLocation &&
-        existingStockLocation.id !== stockLocation.id
-      ) {
-        throw new StockLocationCodeAlreadyExistsException();
+      if (!code.equals(currentCode)) {
+        const existingStockLocation =
+          await this.findOneStockLocationUseCase.findByCode(code.getValue());
+
+        if (
+          existingStockLocation &&
+          existingStockLocation.id !== stockLocation.id
+        ) {
+          throw new StockLocationCodeAlreadyExistsException();
+        }
       }
 
       stockLocation.changeCode(code);
