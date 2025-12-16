@@ -38,18 +38,21 @@ export class UpdateItemUseCase {
 
     if (dto.name) {
       const name = ItemName.create(dto.name);
+
       item.changeName(name);
     }
 
     if (dto.dosage) {
       const dosage = await this.findOneDosageUseCase.findByFormat(dto.dosage);
       this.itemDomainService.validateDosage(dosage);
+
       item.changeDosage(dosage);
     }
 
     if (dto.type) {
       const type = await this.findOneTypeUseCase.findByName(dto.type);
       this.itemDomainService.validateType(type);
+
       item.changeType(type);
     }
 
@@ -58,6 +61,7 @@ export class UpdateItemUseCase {
         dto.presentation,
       );
       this.itemDomainService.validatePresentation(presentation);
+
       item.changePresentation(presentation);
     }
 
@@ -65,6 +69,11 @@ export class UpdateItemUseCase {
       const subtype = this.itemDomainService.validateSubtype(
         await this.findOneSubtypeUseCase.findByName(dto.subtype),
       );
+      this.itemDomainService.validateTypeAndSubtypeCompatibility(
+        item.type,
+        subtype,
+      );
+
       item.changeSubtype(subtype);
     }
 
