@@ -1,6 +1,6 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { BatchEntity } from 'src/modules/batch/domain/entities/batch.entity';
-import { ItemEntity } from 'src/modules/item/entities/item.entity';
+import { ItemEntity } from 'src/modules/item/domain/entities/item.entity';
 import { StockLocationEntity } from 'src/modules/stock-location/domain/entities/stock-location.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 

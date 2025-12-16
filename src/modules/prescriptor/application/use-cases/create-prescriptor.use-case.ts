@@ -38,10 +38,10 @@ export class CreatePrescriptorUseCase {
     }
 
     await this.prescriptorRepository.create({
+      ...dto,
       name: name.getValue(),
       registrationNumber: registrationNumber.getValue(),
       state: state.getValue(),
-      specialty: dto.specialty,
       userCreated: user,
       advice: advice,
     });

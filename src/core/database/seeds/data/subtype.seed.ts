@@ -1,4 +1,4 @@
-import { TypeEntity } from 'src/modules/item/entities/type.entity';
+import { TypeEntity } from 'src/modules/item/domain/entities/type.entity';
 
 export function getSubtypesSeed(medicamentoType: TypeEntity) {
   return [

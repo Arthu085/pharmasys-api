@@ -15,12 +15,12 @@ import { EXIT_TYPES_SEED } from './data/exit-type.seed';
 import { TRANSFER_REASONS_SEED } from './data/transfer-reason.seed';
 
 import { RoleEntity } from '../../../modules/user/domain/entities/role.entity';
-import { TypeEntity } from '../../../modules/item/entities/type.entity';
+import { TypeEntity } from '../../../modules/item/domain/entities/type.entity';
 import { CompanyTypeEntity } from '../../../modules/company/domain/entities/company-type.entity';
-import { DosageEntity } from '../../../modules/item/entities/dosage.entity';
-import { PresentationEntity } from '../../../modules/item/entities/presentation.entity';
+import { DosageEntity } from '../../../modules/item/domain/entities/dosage.entity';
+import { PresentationEntity } from '../../../modules/item/domain/entities/presentation.entity';
 import { StockLocationEntity } from '../../../modules/stock-location/domain/entities/stock-location.entity';
-import { SubtypeEntity } from '../../../modules/item/entities/subtype.entity';
+import { SubtypeEntity } from '../../../modules/item/domain/entities/subtype.entity';
 import { AdviceEntity } from '../../../modules/prescriptor/domain/entities/advice.entity';
 import { EntryItemTypeEntity } from '../../../modules/inventory-entry/domain/entities/entry-item-type.entity';
 import { ExitItemTypeEntity } from '../../../modules/inventory-exit/domain/entities/exit-item-type.entity';

@@ -1,6 +1,6 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { ItemEntity } from 'src/modules/item/entities/item.entity';
+import { ItemEntity } from 'src/modules/item/domain/entities/item.entity';
 import { ItemDispensationEntity } from './item-dispensation.entity';
 import { BatchEntity } from 'src/modules/batch/domain/entities/batch.entity';
 
