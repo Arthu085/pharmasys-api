@@ -1,9 +1,11 @@
+import { PresentationEnum } from 'src/modules/item/domain/enums/presentation.enum';
+
 export const PRESENTATIONS_SEED = [
-  { name: 'Comprimido/Cápsula' },
-  { name: 'Frasco' },
-  { name: 'Bisnaga' },
-  { name: 'Unidade' },
-  { name: 'Lata' },
-  { name: 'Ampola' },
-  { name: 'Caneta' },
+  { name: PresentationEnum.COMPRIMIDO_CAPSULA },
+  { name: PresentationEnum.FRASCO },
+  { name: PresentationEnum.BISNAGA },
+  { name: PresentationEnum.UNIDADE },
+  { name: PresentationEnum.LATA },
+  { name: PresentationEnum.AMPOLA },
+  { name: PresentationEnum.CANETA },
 ];

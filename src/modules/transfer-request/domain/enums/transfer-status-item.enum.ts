@@ -1,6 +1,13 @@
 export enum TransferStatusItemEnum {
-  ABERTO = 'O',
+  ABERTO = 'A',
   SEPARACAO = 'S',
   FINALIZADO = 'F',
   CANCELADO = 'C',
+}
+
+export enum TransferStatusItemEnumTranslated {
+  ABERTO = 'Aberto',
+  SEPARACAO = 'Em Separação',
+  FINALIZADO = 'Finalizado',
+  CANCELADO = 'Cancelado',
 }

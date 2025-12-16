@@ -1,11 +1,19 @@
+import { AdviceEnum } from 'src/modules/prescriptor/domain/enums/advice.enum';
+
 export const ADVICES_SEED = [
-  { acronym: 'CRM', fullName: 'Conselho Regional de Medicina' },
-  { acronym: 'CRO', fullName: 'Conselho Regional de Odontologia' },
+  { acronym: AdviceEnum.CRM, fullName: AdviceEnum.CONSELHO_REGIONAL_MEDICINA },
   {
-    acronym: 'COREM',
-    fullName: 'Conselho Regional de Técnicos em Radiologia',
+    acronym: AdviceEnum.CRO,
+    fullName: AdviceEnum.CONSELHO_REGIONAL_ODONTOLOGIA,
   },
-  { acronym: 'CRMV', fullName: 'Conselho Regional de Medicina Veterinária' },
-  { acronym: 'CRF', fullName: 'Conselho Regional de Farmácia' },
-  { acronym: 'CRN', fullName: 'Conselho Regional de Nutrição' },
+  {
+    acronym: AdviceEnum.COREM,
+    fullName: AdviceEnum.CONSELHO_REGIONAL_TECNICOS_RADIOLOGIA,
+  },
+  {
+    acronym: AdviceEnum.CRMV,
+    fullName: AdviceEnum.CONSELHO_REGIONAL_MEDICINA_VETERINARIA,
+  },
+  { acronym: AdviceEnum.CRF, fullName: AdviceEnum.CONSELHO_REGIONAL_FARMACIA },
+  { acronym: AdviceEnum.CRN, fullName: AdviceEnum.CONSELHO_REGIONAL_NUTRICAO },
 ];

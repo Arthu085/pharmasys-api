@@ -1,8 +1,10 @@
+import { DosageEnum } from 'src/modules/item/domain/enums/dosage.enum';
+
 export const DOSAGES_SEED = [
-  { format: 'mg' },
-  { format: 'mcg' },
-  { format: 'mg/ml' },
-  { format: 'mg/g' },
-  { format: 'ui/ml' },
-  { format: 'g' },
+  { format: DosageEnum.MG },
+  { format: DosageEnum.MCG },
+  { format: DosageEnum.MG_ML },
+  { format: DosageEnum.MG_G },
+  { format: DosageEnum.UI_ML },
+  { format: DosageEnum.G },
 ];

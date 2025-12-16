@@ -33,16 +33,72 @@ async function upsertGeneric<T extends ObjectLiteral>(
   conflictColumns: (keyof T)[],
   entityName: string,
 ): Promise<T[]> {
-  const result = await repository.upsert(
-    data as any[],
-    conflictColumns as string[],
-  );
+  const insertedEntities: T[] = [];
+  const conflictColumn = conflictColumns[0] as string;
+
+  for (const item of data) {
+    // Try to find existing entity by conflict column
+    const existingEntity = await repository.findOne({
+      where: { [conflictColumn]: item[conflictColumn] } as any,
+    });
+
+    let entity: T;
+
+    if (existingEntity) {
+      // Update existing entity
+      await repository.update(existingEntity.id, item);
+      entity = await repository.findOneOrFail({
+        where: { id: existingEntity.id } as any,
+      });
+    } else {
+      // Create new entity
+      entity = repository.create(item as T);
+      await repository.save(entity);
+    }
+
+    insertedEntities.push(entity);
+  }
+
   console.log(`${entityName} seeded`);
-
-  const ids = result.identifiers.map((identifier) => identifier.id);
-  const insertedEntities = await repository.findBy({ id: In(ids) } as any);
-
   return insertedEntities;
+}
+
+async function upsertUsers(
+  repository: Repository<UserEntity>,
+  data: Partial<UserEntity>[],
+): Promise<UserEntity[]> {
+  const insertedUsers: UserEntity[] = [];
+
+  for (const userData of data) {
+    // Try to find existing user by email
+    const existingUser = await repository.findOne({
+      where: { email: userData.email },
+    });
+
+    let user: UserEntity;
+
+    if (existingUser) {
+      // Update existing user
+      await repository.update(existingUser.id, {
+        name: userData.name,
+        password: userData.password,
+        role: userData.role,
+      });
+      user = await repository.findOneOrFail({
+        where: { id: existingUser.id },
+        relations: ['role'],
+      });
+    } else {
+      // Create new user
+      user = repository.create(userData as UserEntity);
+      await repository.save(user);
+    }
+
+    insertedUsers.push(user);
+  }
+
+  console.log('Users seeded');
+  return insertedUsers;
 }
 
 async function runSeeds(dataSource: DataSource): Promise<void> {
@@ -62,12 +118,7 @@ async function runSeeds(dataSource: DataSource): Promise<void> {
 
   const rolesWithIds = getRolesSeed(roleId);
 
-  await upsertGeneric(
-    dataSource.getRepository(UserEntity),
-    rolesWithIds,
-    ['email'],
-    'Users',
-  );
+  await upsertUsers(dataSource.getRepository(UserEntity), rolesWithIds);
 
   const typeResults = await upsertGeneric(
     dataSource.getRepository(TypeEntity),
@@ -76,7 +127,7 @@ async function runSeeds(dataSource: DataSource): Promise<void> {
     'Types',
   );
   const medicamentoType = typeResults.find(
-    (type) => type.name === 'Medicamento',
+    (type) => type.name === 'MEDICAMENTO',
   );
 
   if (!medicamentoType) {
