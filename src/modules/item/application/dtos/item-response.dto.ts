@@ -1,4 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
+import { UUID } from 'crypto';
+
 import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
 import { TypeEnum, TypeEnumTranslated } from '../../domain/enums/type.enum';
 import {
@@ -16,7 +18,7 @@ import {
 
 export class ItemResponseDto {
   @Expose()
-  uuid: string;
+  uuid: UUID;
 
   @Expose()
   id: number;

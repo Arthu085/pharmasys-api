@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
+
 import { ICompanyRepository } from '../../domain/repositories/company.repository.interface';
 import { CompanyUpdateDto } from '../dtos/company-update.dto';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
@@ -24,7 +26,7 @@ export class UpdateCompanyUseCase {
   ) {}
 
   async execute(
-    uuid: string,
+    uuid: UUID,
     dto: CompanyUpdateDto,
     userId: number,
   ): Promise<void> {
@@ -72,7 +74,7 @@ export class UpdateCompanyUseCase {
   }
 
   async updateStatus(
-    uuid: string,
+    uuid: UUID,
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {

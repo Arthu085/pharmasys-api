@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
+
 import { ICompanyRepository } from '../../domain/repositories/company.repository.interface';
 import { FindOneCompanyUseCase } from './find-one-company.use-case';
 
@@ -10,7 +12,7 @@ export class DeleteCompanyUseCase {
     private readonly findOneCompanyUseCase: FindOneCompanyUseCase,
   ) {}
 
-  async execute(uuid: string): Promise<void> {
+  async execute(uuid: UUID): Promise<void> {
     await this.findOneCompanyUseCase.findEntityByUuid(uuid, false);
     await this.companyRepository.softDelete(uuid);
   }

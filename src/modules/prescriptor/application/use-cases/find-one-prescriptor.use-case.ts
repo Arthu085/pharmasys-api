@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
+
 import { IPrescriptorRepository } from '../../domain/repositories/prescriptor.repository.interface';
 import { PrescriptorResponseDto } from '../dtos/prescriptor-response.dto';
 import { PrescriptorDomainService } from '../../domain/services/prescriptor-domain.service';
@@ -13,7 +15,7 @@ export class FindOnePrescriptorUseCase {
     private readonly prescriptorDomainService: PrescriptorDomainService,
   ) {}
 
-  async execute(uuid: string): Promise<PrescriptorResponseDto> {
+  async execute(uuid: UUID): Promise<PrescriptorResponseDto> {
     const prescriptor = await this.prescriptorRepository.findOne(uuid);
     const validatedPrescriptor =
       this.prescriptorDomainService.validatePrescriptorAndEnsureActive(
@@ -26,7 +28,7 @@ export class FindOnePrescriptorUseCase {
   }
 
   async findEntityByUuid(
-    uuid: string,
+    uuid: UUID,
     validateActive = true,
   ): Promise<PrescriptorEntity> {
     const prescriptor = await this.prescriptorRepository.findOne(uuid);

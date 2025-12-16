@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, ILike, Repository, UpdateResult } from 'typeorm';
+import { UUID } from 'crypto';
+
 import { ItemFilterDto } from '../../application/dtos/item-filter.dto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { ItemEntity } from '../../domain/entities/item.entity';
@@ -68,7 +70,7 @@ export class ItemRepository implements IItemRepository {
     });
   }
 
-  findOne(uuid: string): Promise<ItemEntity | null> {
+  findOne(uuid: UUID): Promise<ItemEntity | null> {
     return this.repo.findOne({
       where: { uuid },
       relations: [
@@ -92,7 +94,7 @@ export class ItemRepository implements IItemRepository {
     return this.repo.update({ uuid: item.uuid }, item);
   }
 
-  softDelete(uuid: string): Promise<UpdateResult> {
+  softDelete(uuid: UUID): Promise<UpdateResult> {
     return this.repo.softDelete({ uuid });
   }
 }

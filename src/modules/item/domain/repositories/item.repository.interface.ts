@@ -1,4 +1,6 @@
 import { UpdateResult } from 'typeorm';
+import { UUID } from 'crypto';
+
 import { ItemFilterDto } from '../../application/dtos/item-filter.dto';
 import { ItemEntity } from '../entities/item.entity';
 
@@ -11,11 +13,11 @@ export interface IItemRepository {
     skip: number,
   ): Promise<[ItemEntity[], number]>;
 
-  findOne(uuid: string): Promise<ItemEntity | null>;
+  findOne(uuid: UUID): Promise<ItemEntity | null>;
 
   create(item: Partial<ItemEntity>): Promise<ItemEntity>;
 
   update(item: ItemEntity): Promise<UpdateResult>;
 
-  softDelete(uuid: string): Promise<UpdateResult>;
+  softDelete(uuid: UUID): Promise<UpdateResult>;
 }

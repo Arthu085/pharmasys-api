@@ -1,13 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UUID } from 'crypto';
+
 import { PrescriptorEntity } from '../../domain/entities/prescriptor.entity';
-import {
-  DeepPartial,
-  FindOptionsWhere,
-  ILike,
-  Repository,
-  UpdateResult,
-} from 'typeorm';
+import { FindOptionsWhere, ILike, Repository, UpdateResult } from 'typeorm';
 import { PrescriptorFilterDto } from '../../application/dtos/prescriptor-filter.dto';
 import { AdviceEnum } from '../../domain/enums/advice.enum';
 import { UfEnum } from '../../domain/enums/uf.enum';
@@ -66,7 +62,7 @@ export class PrescriptorRepository implements IPrescriptorRepository {
     });
   }
 
-  findOne(uuid: string): Promise<PrescriptorEntity | null> {
+  findOne(uuid: UUID): Promise<PrescriptorEntity | null> {
     return this.repo.findOne({
       where: { uuid },
       relations: ['advice', 'userCreated', 'userUpdated'],
@@ -97,7 +93,7 @@ export class PrescriptorRepository implements IPrescriptorRepository {
     return this.repo.update({ uuid: prescriptor.uuid }, prescriptor);
   }
 
-  softDelete(uuid: string): Promise<UpdateResult> {
+  softDelete(uuid: UUID): Promise<UpdateResult> {
     return this.repo.softDelete({ uuid });
   }
 }

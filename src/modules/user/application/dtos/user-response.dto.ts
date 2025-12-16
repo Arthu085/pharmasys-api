@@ -1,4 +1,5 @@
 import { Expose, Transform } from 'class-transformer';
+import { UUID } from 'crypto';
 
 import { RoleEnum, RoleEnumTranslated } from 'src/shared/enums/role.enum';
 import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
@@ -8,7 +9,7 @@ export class UserResponseDto {
   id: number;
 
   @Expose()
-  uuid: string;
+  uuid: UUID;
 
   @Expose()
   name: string;

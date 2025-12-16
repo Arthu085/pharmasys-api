@@ -10,6 +10,7 @@ import {
   Generated,
   DeleteDateColumn,
 } from 'typeorm';
+import { UUID } from 'crypto';
 
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { RoleEntity } from './role.entity';
@@ -35,7 +36,7 @@ export class UserEntity {
     nullable: false,
     comment: 'Identificador único universal',
   })
-  uuid: string;
+  uuid: UUID;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;

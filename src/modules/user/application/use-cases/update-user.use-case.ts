@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
 
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 import { IPasswordHasher } from '../../domain/services/password-hasher.interface';
@@ -26,11 +27,7 @@ export class UpdateUserUseCase {
     private readonly findOneRoleUseCase: FindOneRoleUseCase,
   ) {}
 
-  async execute(
-    uuid: string,
-    dto: UserUpdateDto,
-    userId: number,
-  ): Promise<void> {
+  async execute(uuid: UUID, dto: UserUpdateDto, userId: number): Promise<void> {
     const updatingUser = await this.findOneUserUseCase.findById(userId);
     const user = await this.findOneUserUseCase.findEntityByUuid(uuid);
 
@@ -77,7 +74,7 @@ export class UpdateUserUseCase {
   }
 
   async updateStatus(
-    uuid: string,
+    uuid: UUID,
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {

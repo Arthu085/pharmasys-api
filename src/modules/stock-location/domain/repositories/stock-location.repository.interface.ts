@@ -1,4 +1,6 @@
 import { UpdateResult } from 'typeorm';
+import { UUID } from 'crypto';
+
 import { StockLocationEntity } from '../entities/stock-location.entity';
 import { StockLocationFilterDto } from '../../application/dtos/stock-location-filter.dto';
 
@@ -11,7 +13,7 @@ export interface IStockLocationRepository {
     skip: number,
   ): Promise<[StockLocationEntity[], number]>;
 
-  findOne(uuid: string): Promise<StockLocationEntity | null>;
+  findOne(uuid: UUID): Promise<StockLocationEntity | null>;
 
   findByCode(code: string): Promise<StockLocationEntity | null>;
 
@@ -21,5 +23,5 @@ export interface IStockLocationRepository {
 
   update(stockLocation: StockLocationEntity): Promise<UpdateResult>;
 
-  softDelete(uuid: string): Promise<UpdateResult>;
+  softDelete(uuid: UUID): Promise<UpdateResult>;
 }

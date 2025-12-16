@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import {
   PrimaryGeneratedColumn,
@@ -22,7 +23,7 @@ export abstract class BaseEntity {
     comment: 'Identificador único universal',
   })
   @Index()
-  uuid: string;
+  uuid: UUID;
 
   @CreateDateColumn({
     name: 'created_at',

@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
+
 import { IItemRepository } from '../../domain/repositories/item.repository.interface';
 import { ItemDomainService } from '../../domain/services/item-domain.service';
 import { ItemResponseDto } from '../dtos/item-response.dto';
@@ -13,7 +15,7 @@ export class FindOneItemUseCase {
     private readonly itemDomainService: ItemDomainService,
   ) {}
 
-  async execute(uuid: string): Promise<ItemResponseDto> {
+  async execute(uuid: UUID): Promise<ItemResponseDto> {
     const item = await this.itemRepository.findOne(uuid);
     const validatedItem = this.itemDomainService.validateItem(item);
 
@@ -23,7 +25,7 @@ export class FindOneItemUseCase {
   }
 
   async findEntityByUuid(
-    uuid: string,
+    uuid: UUID,
     validateActive = true,
   ): Promise<ItemEntity> {
     const item = await this.itemRepository.findOne(uuid);

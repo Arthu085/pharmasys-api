@@ -10,6 +10,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { UUID } from 'crypto';
 import { Roles } from 'src/modules/auth/infrastructure/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/modules/auth/infrastructure/guards/roles.guard';
@@ -48,7 +49,7 @@ export class StockLocationProtectedController {
 
   @Get(':uuid')
   @ResponseMessage('Local de estoque encontrado com sucesso')
-  findOne(@Param('uuid', UuidValidationPipe) uuid: string) {
+  findOne(@Param('uuid', UuidValidationPipe) uuid: UUID) {
     return this.findOneStockLocationUseCase.execute(uuid);
   }
 
@@ -64,7 +65,7 @@ export class StockLocationProtectedController {
   @Patch(':uuid')
   @ResponseMessage('Local de estoque atualizado com sucesso')
   update(
-    @Param('uuid', UuidValidationPipe) uuid: string,
+    @Param('uuid', UuidValidationPipe) uuid: UUID,
     @Body() dto: StockLocationUpdateDto,
     @CurrentUser('id') userId: number,
   ) {
@@ -74,7 +75,7 @@ export class StockLocationProtectedController {
   @Put(':uuid')
   @ResponseMessage('Status do local de estoque atualizado com sucesso')
   updateStatus(
-    @Param('uuid', UuidValidationPipe) uuid: string,
+    @Param('uuid', UuidValidationPipe) uuid: UUID,
     @Body() dto: ChangeStatusDto,
     @CurrentUser('id') userId: number,
   ) {
@@ -83,7 +84,7 @@ export class StockLocationProtectedController {
 
   @Delete(':uuid')
   @ResponseMessage('Local de estoque deletado com sucesso')
-  delete(@Param('uuid', UuidValidationPipe) uuid: string) {
+  delete(@Param('uuid', UuidValidationPipe) uuid: UUID) {
     return this.deleteStockLocationUseCase.execute(uuid);
   }
 }

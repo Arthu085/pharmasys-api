@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+import { UUID } from 'crypto';
+
 import { IStockLocationRepository } from '../../domain/repositories/stock-location.repository.interface';
 import { StockLocationResponseDto } from '../dtos/stock-location-response.dto';
 import { StockLocationDomainService } from '../../domain/services/stock-location-domain.service';
@@ -13,7 +15,7 @@ export class FindOneStockLocationUseCase {
     private readonly stockLocationDomainService: StockLocationDomainService,
   ) {}
 
-  async execute(uuid: string): Promise<StockLocationResponseDto> {
+  async execute(uuid: UUID): Promise<StockLocationResponseDto> {
     const stockLocation = await this.stockLocationRepository.findOne(uuid);
     const validatedStockLocation =
       this.stockLocationDomainService.validateStockLocationAndEnsureActive(
@@ -26,7 +28,7 @@ export class FindOneStockLocationUseCase {
   }
 
   async findEntityByUuid(
-    uuid: string,
+    uuid: UUID,
     validateActive = true,
   ): Promise<StockLocationEntity> {
     const stockLocation = await this.stockLocationRepository.findOne(uuid);

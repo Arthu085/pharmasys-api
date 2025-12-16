@@ -1,4 +1,6 @@
 import { UpdateResult } from 'typeorm';
+import { UUID } from 'crypto';
+
 import { CompanyFilterDto } from '../../application/dtos/company-filter.dto';
 import { CompanyEntity } from '../entities/company.entity';
 
@@ -11,7 +13,7 @@ export interface ICompanyRepository {
     skip: number,
   ): Promise<[CompanyEntity[], number]>;
 
-  findOne(uuid: string): Promise<CompanyEntity | null>;
+  findOne(uuid: UUID): Promise<CompanyEntity | null>;
 
   findByCnpj(cnpj: string): Promise<CompanyEntity | null>;
 
@@ -21,5 +23,5 @@ export interface ICompanyRepository {
 
   updateRelations(company: CompanyEntity): Promise<CompanyEntity>;
 
-  softDelete(uuid: string): Promise<UpdateResult>;
+  softDelete(uuid: UUID): Promise<UpdateResult>;
 }

@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
+
 import { IItemRepository } from '../../domain/repositories/item.repository.interface';
 import { ItemUpdateDto } from '../dtos/item-update.dto';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
@@ -26,11 +28,7 @@ export class UpdateItemUseCase {
     private readonly findOneDosageUseCase: FindOneDosageUseCase,
   ) {}
 
-  async execute(
-    uuid: string,
-    dto: ItemUpdateDto,
-    userId: number,
-  ): Promise<void> {
+  async execute(uuid: UUID, dto: ItemUpdateDto, userId: number): Promise<void> {
     const user = await this.findOneUserUseCase.findById(userId);
     const item = await this.findOneItemUseCase.findEntityByUuid(uuid);
 
@@ -83,7 +81,7 @@ export class UpdateItemUseCase {
   }
 
   async updateStatus(
-    uuid: string,
+    uuid: UUID,
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {

@@ -1,4 +1,6 @@
 import { UpdateResult } from 'typeorm';
+import { UUID } from 'crypto';
+
 import { UserEntity } from '../entities/user.entity';
 import { UserFilterDto } from '../../application/dtos/user-filter.dto';
 
@@ -11,7 +13,7 @@ export interface IUserRepository {
     skip: number,
   ): Promise<[UserEntity[], number]>;
 
-  findOne(uuid: string): Promise<UserEntity | null>;
+  findOne(uuid: UUID): Promise<UserEntity | null>;
 
   findByEmail(email: string): Promise<UserEntity | null>;
 
@@ -21,5 +23,5 @@ export interface IUserRepository {
 
   update(user: UserEntity): Promise<UpdateResult>;
 
-  softDelete(uuid: string): Promise<UpdateResult>;
+  softDelete(uuid: UUID): Promise<UpdateResult>;
 }

@@ -1,4 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
+import { UUID } from 'crypto';
+
 import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
 import {
   AdviceEnum,
@@ -8,7 +10,7 @@ import { UfEnumTranslated } from '../../domain/enums/uf.enum';
 
 export class PrescriptorResponseDto {
   @Expose()
-  uuid: string;
+  uuid: UUID;
 
   @Expose()
   id: number;

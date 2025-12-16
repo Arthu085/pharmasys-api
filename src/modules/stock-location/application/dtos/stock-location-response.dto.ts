@@ -1,4 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
+import { UUID } from 'crypto';
+
 import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
 
 export class StockLocationResponseDto {
@@ -6,7 +8,7 @@ export class StockLocationResponseDto {
   id: number;
 
   @Expose()
-  uuid: string;
+  uuid: UUID;
 
   @Expose()
   name: string;

@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
+
 import { IPrescriptorRepository } from '../../domain/repositories/prescriptor.repository.interface';
 import { FindOnePrescriptorUseCase } from './find-one-prescriptor.use-case';
 
@@ -10,7 +12,7 @@ export class DeletePrescriptorUseCase {
     private readonly findOnePrescriptorUseCase: FindOnePrescriptorUseCase,
   ) {}
 
-  async execute(uuid: string): Promise<void> {
+  async execute(uuid: UUID): Promise<void> {
     await this.findOnePrescriptorUseCase.findEntityByUuid(uuid, false);
     await this.prescriptorRepository.softDelete(uuid);
   }

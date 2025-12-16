@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, ILike, Repository, UpdateResult } from 'typeorm';
+import { UUID } from 'crypto';
 
 import { UserEntity } from '../../domain/entities/user.entity';
 import { UserFilterDto } from '../../application/dtos/user-filter.dto';
@@ -50,7 +51,7 @@ export class UserRepository implements IUserRepository {
     });
   }
 
-  findOne(uuid: string): Promise<UserEntity | null> {
+  findOne(uuid: UUID): Promise<UserEntity | null> {
     return this.repo.findOne({
       where: { uuid },
       relations: ['role', 'userCreated', 'userUpdated'],
@@ -83,7 +84,7 @@ export class UserRepository implements IUserRepository {
     return this.repo.update({ uuid: user.uuid }, user);
   }
 
-  softDelete(uuid: string): Promise<UpdateResult> {
+  softDelete(uuid: UUID): Promise<UpdateResult> {
     return this.repo.softDelete({ uuid });
   }
 }

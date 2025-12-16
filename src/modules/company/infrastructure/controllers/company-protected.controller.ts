@@ -10,6 +10,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { UUID } from 'crypto';
 import { Roles } from 'src/modules/auth/infrastructure/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/modules/auth/infrastructure/guards/roles.guard';
@@ -48,7 +49,7 @@ export class CompanyProtectedController {
 
   @Get(':uuid')
   @ResponseMessage('Empresa encontrada com sucesso')
-  findOne(@Param('uuid', UuidValidationPipe) uuid: string) {
+  findOne(@Param('uuid', UuidValidationPipe) uuid: UUID) {
     return this.findOneCompanyUseCase.execute(uuid);
   }
 
@@ -61,7 +62,7 @@ export class CompanyProtectedController {
   @Patch(':uuid')
   @ResponseMessage('Empresa atualizada com sucesso')
   update(
-    @Param('uuid', UuidValidationPipe) uuid: string,
+    @Param('uuid', UuidValidationPipe) uuid: UUID,
     @Body() dto: CompanyUpdateDto,
     @CurrentUser('id') userId: number,
   ) {
@@ -71,7 +72,7 @@ export class CompanyProtectedController {
   @Put(':uuid')
   @ResponseMessage('Status da empresa atualizado com sucesso')
   updateStatus(
-    @Param('uuid', UuidValidationPipe) uuid: string,
+    @Param('uuid', UuidValidationPipe) uuid: UUID,
     @Body() dto: ChangeStatusDto,
     @CurrentUser('id') userId: number,
   ) {
@@ -80,7 +81,7 @@ export class CompanyProtectedController {
 
   @Delete(':uuid')
   @ResponseMessage('Empresa deletada com sucesso')
-  delete(@Param('uuid', UuidValidationPipe) uuid: string) {
+  delete(@Param('uuid', UuidValidationPipe) uuid: UUID) {
     return this.deleteCompanyUseCase.execute(uuid);
   }
 }

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
+import { UUID } from 'crypto';
+
 import { IStockLocationRepository } from '../../domain/repositories/stock-location.repository.interface';
-import { StockLocationResponseDto } from '../dtos/stock-location-response.dto';
 import { StockLocationUpdateDto } from '../dtos/stock-location-update.dto';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
 import { FindOneStockLocationUseCase } from './find-one-stock-location.use-case';
@@ -23,7 +23,7 @@ export class UpdateStockLocationUseCase {
   ) {}
 
   async execute(
-    uuid: string,
+    uuid: UUID,
     dto: StockLocationUpdateDto,
     userId: number,
   ): Promise<void> {
@@ -65,7 +65,7 @@ export class UpdateStockLocationUseCase {
   }
 
   async updateStatus(
-    uuid: string,
+    uuid: UUID,
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {

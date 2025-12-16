@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
+
 import { IStockLocationRepository } from '../../domain/repositories/stock-location.repository.interface';
 import { FindOneStockLocationUseCase } from './find-one-stock-location.use-case';
 import { StockLocationDomainService } from '../../domain/services/stock-location-domain.service';
@@ -12,7 +14,7 @@ export class DeleteStockLocationUseCase {
     private readonly stockLocationDomainService: StockLocationDomainService,
   ) {}
 
-  async execute(uuid: string): Promise<void> {
+  async execute(uuid: UUID): Promise<void> {
     const stockLocation =
       await this.findOneStockLocationUseCase.findEntityByUuid(uuid, false);
 

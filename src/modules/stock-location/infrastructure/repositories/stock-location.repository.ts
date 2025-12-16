@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UUID } from 'crypto';
+
 import { StockLocationEntity } from '../../domain/entities/stock-location.entity';
 import { FindOptionsWhere, ILike, Repository, UpdateResult } from 'typeorm';
 import { StatusEnum } from 'src/shared/enums/status.enum';
@@ -42,7 +44,7 @@ export class StockLocationRepository implements IStockLocationRepository {
     });
   }
 
-  findOne(uuid: string): Promise<StockLocationEntity | null> {
+  findOne(uuid: UUID): Promise<StockLocationEntity | null> {
     return this.repo.findOne({
       where: { uuid },
       relations: ['userCreated', 'userUpdated'],
@@ -68,7 +70,7 @@ export class StockLocationRepository implements IStockLocationRepository {
     return this.repo.update({ uuid: stockLocation.uuid }, stockLocation);
   }
 
-  softDelete(uuid: string): Promise<UpdateResult> {
+  softDelete(uuid: UUID): Promise<UpdateResult> {
     return this.repo.softDelete({ uuid });
   }
 }

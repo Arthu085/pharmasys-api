@@ -1,4 +1,6 @@
 import { UpdateResult } from 'typeorm';
+import { UUID } from 'crypto';
+
 import { PrescriptorEntity } from '../entities/prescriptor.entity';
 import { PrescriptorFilterDto } from '../../application/dtos/prescriptor-filter.dto';
 
@@ -11,7 +13,7 @@ export interface IPrescriptorRepository {
     skip: number,
   ): Promise<[PrescriptorEntity[], number]>;
 
-  findOne(uuid: string): Promise<PrescriptorEntity | null>;
+  findOne(uuid: UUID): Promise<PrescriptorEntity | null>;
 
   findByRegistrationNumberAndAdvice(
     registrationNumber: string,
@@ -22,5 +24,5 @@ export interface IPrescriptorRepository {
 
   update(prescriptor: PrescriptorEntity): Promise<UpdateResult>;
 
-  softDelete(uuid: string): Promise<UpdateResult>;
+  softDelete(uuid: UUID): Promise<UpdateResult>;
 }

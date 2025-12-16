@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
+
 import { IPrescriptorRepository } from '../../domain/repositories/prescriptor.repository.interface';
 import { PrescriptorUpdateDto } from '../dtos/prescriptor-update.dto';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
@@ -24,7 +26,7 @@ export class UpdatePrescriptorUseCase {
   ) {}
 
   async execute(
-    uuid: string,
+    uuid: UUID,
     dto: PrescriptorUpdateDto,
     userId: number,
   ): Promise<void> {
@@ -100,7 +102,7 @@ export class UpdatePrescriptorUseCase {
   }
 
   async updateStatus(
-    uuid: string,
+    uuid: UUID,
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {

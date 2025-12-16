@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { UUID } from 'crypto';
+
 import { ICompanyRepository } from '../../domain/repositories/company.repository.interface';
 import { CompanyResponseDto } from '../dtos/company-response.dto';
 import { plainToInstance } from 'class-transformer';
@@ -13,7 +15,7 @@ export class FindOneCompanyUseCase {
     private readonly companyDomainService: CompanyDomainService,
   ) {}
 
-  async execute(uuid: string): Promise<CompanyResponseDto> {
+  async execute(uuid: UUID): Promise<CompanyResponseDto> {
     const company = await this.companyRepository.findOne(uuid);
     const validatedCompany = this.companyDomainService.validateCompany(company);
 
@@ -23,7 +25,7 @@ export class FindOneCompanyUseCase {
   }
 
   async findEntityByUuid(
-    uuid: string,
+    uuid: UUID,
     validateActive = true,
   ): Promise<CompanyEntity> {
     const company = await this.companyRepository.findOne(uuid);

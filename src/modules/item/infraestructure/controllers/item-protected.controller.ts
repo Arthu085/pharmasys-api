@@ -6,9 +6,11 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { UUID } from 'crypto';
 import { Roles } from 'src/modules/auth/infrastructure/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/modules/auth/infrastructure/guards/roles.guard';
@@ -25,6 +27,7 @@ import { UuidValidationPipe } from 'src/shared/pipes/uuid-validation.pipe';
 import { ItemCreateDto } from '../../application/dtos/item-create.dto';
 import { CurrentUser } from 'src/modules/auth/infrastructure/decorators/current-user.decorator';
 import { ItemUpdateDto } from '../../application/dtos/item-update.dto';
+import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
 
 @Controller('item')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -46,7 +49,7 @@ export class ItemProtectedController {
 
   @Get(':uuid')
   @ResponseMessage('Item encontrado com sucesso')
-  findOne(@Param('uuid', UuidValidationPipe) uuid: string) {
+  findOne(@Param('uuid', UuidValidationPipe) uuid: UUID) {
     return this.findOneItemUseCase.execute(uuid);
   }
 
@@ -59,16 +62,26 @@ export class ItemProtectedController {
   @Patch(':uuid')
   @ResponseMessage('Item atualizado com sucesso')
   update(
-    @Param('uuid', UuidValidationPipe) uuid: string,
+    @Param('uuid', UuidValidationPipe) uuid: UUID,
     @Body() dto: ItemUpdateDto,
     @CurrentUser('id') userId: number,
   ) {
     return this.updateItemUseCase.execute(uuid, dto, userId);
   }
 
+  @Put(':uuid')
+  @ResponseMessage('Status do item atualizado com sucesso')
+  updateStatus(
+    @Param('uuid', UuidValidationPipe) uuid: UUID,
+    @Body() dto: ChangeStatusDto,
+    @CurrentUser('id') userId: number,
+  ) {
+    return this.updateItemUseCase.updateStatus(uuid, dto, userId);
+  }
+
   @Delete(':uuid')
   @ResponseMessage('Item deletado com sucesso')
-  delete(@Param('uuid', UuidValidationPipe) uuid: string) {
+  delete(@Param('uuid', UuidValidationPipe) uuid: UUID) {
     return this.deleteItemUseCase.execute(uuid);
   }
 }
