@@ -37,13 +37,13 @@ export class PrescriptorCreateDto {
   specialty?: string | null;
 
   @IsNotEmpty({ message: 'O estado é obrigatório' })
-  @IsEnum(Object.keys(UfEnum), {
+  @IsEnum(UfEnum, {
     message: 'O estado deve ser um enum',
   })
   state: UfEnum;
 
   @IsNotEmpty({ message: 'O conselho é obrigatório' })
-  @IsEnum(Object.keys(AdviceEnum), {
+  @IsEnum(AdviceEnum, {
     message: 'O conselho deve ser um enum',
   })
   advice: AdviceEnum;

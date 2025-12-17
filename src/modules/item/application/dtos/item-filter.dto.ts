@@ -12,24 +12,24 @@ export class ItemFilterDto extends FilterDto {
   name?: string;
 
   @IsOptional()
-  @IsEnum(Object.keys(TypeEnum), { message: 'O tipo deve ser um enum' })
+  @IsEnum(TypeEnum, { message: 'O tipo deve ser um enum' })
   type?: TypeEnum;
 
   @IsOptional()
-  @IsEnum(Object.keys(PresentationEnum), {
+  @IsEnum(PresentationEnum, {
     message: 'A apresentação deve ser um enum',
   })
   presentation?: PresentationEnum;
 
   @IsOptional()
-  @IsEnum(Object.keys(DosageEnum), { message: 'A dosagem deve ser um enum' })
+  @IsEnum(DosageEnum, { message: 'A dosagem deve ser um enum' })
   dosage?: DosageEnum;
 
   @IsOptional()
-  @IsEnum(Object.keys(SubtypeEnum), { message: 'O subtipo deve ser um enum' })
+  @IsEnum(SubtypeEnum, { message: 'O subtipo deve ser um enum' })
   subtype?: SubtypeEnum;
 
   @IsOptional()
-  @IsEnum(Object.keys(StatusEnum), { message: 'O status deve ser um enum' })
+  @IsEnum(StatusEnum, { message: 'O status deve ser um enum' })
   status?: StatusEnum;
 }

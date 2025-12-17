@@ -27,7 +27,7 @@ export class RegisterDto {
   @MaxLength(40, { message: 'A senha deve ter no máximo 40 caracteres' })
   password: string;
 
-  @IsEnum(Object.keys(RoleEnum), {
+  @IsEnum(RoleEnum, {
     message: 'A função deve ser um enum',
   })
   role: RoleEnum;

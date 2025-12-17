@@ -19,19 +19,19 @@ export class ItemCreateDto {
   name: string;
 
   @IsNotEmpty({ message: 'O tipo é obrigatório' })
-  @IsEnum(Object.keys(TypeEnum), {
+  @IsEnum(TypeEnum, {
     message: 'O tipo deve ser um enum',
   })
   type: TypeEnum;
 
   @IsNotEmpty({ message: 'A apresentação é obrigatória' })
-  @IsEnum(Object.keys(PresentationEnum), {
+  @IsEnum(PresentationEnum, {
     message: 'A apresentação deve ser um enum',
   })
   presentation: PresentationEnum;
 
   @IsNotEmpty({ message: 'A dosagem é obrigatória' })
-  @IsEnum(Object.keys(DosageEnum), {
+  @IsEnum(DosageEnum, {
     message: 'A dosagem deve ser um enum',
   })
   dosage: DosageEnum;
@@ -40,7 +40,7 @@ export class ItemCreateDto {
   @IsNotEmpty({
     message: 'O subtipo é obrigatório quando o tipo for medicamento',
   })
-  @IsEnum(Object.keys(SubtypeEnum), {
+  @IsEnum(SubtypeEnum, {
     message: 'O subtipo deve ser um enum',
   })
   subtype?: SubtypeEnum;

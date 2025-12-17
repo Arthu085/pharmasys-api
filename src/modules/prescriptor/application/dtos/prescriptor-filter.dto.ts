@@ -14,14 +14,14 @@ export class PrescriptorFilterDto extends FilterDto {
   registrationNumber?: string;
 
   @IsOptional()
-  @IsEnum(Object.keys(AdviceEnum), { message: 'O conselho deve ser um enum' })
+  @IsEnum(AdviceEnum, { message: 'O conselho deve ser um enum' })
   advice?: AdviceEnum;
 
   @IsOptional()
-  @IsEnum(Object.keys(UfEnum), { message: 'O estado deve ser um enum' })
+  @IsEnum(UfEnum, { message: 'O estado deve ser um enum' })
   state?: UfEnum;
 
   @IsOptional()
-  @IsEnum(Object.keys(StatusEnum), { message: 'O status deve ser um enum' })
+  @IsEnum(StatusEnum, { message: 'O status deve ser um enum' })
   status?: StatusEnum;
 }

@@ -13,11 +13,11 @@ export class CompanyFilterDto extends FilterDto {
   cnpj?: string;
 
   @IsOptional()
-  @IsEnum(Object.keys(StatusEnum), { message: 'O status deve ser um enum' })
+  @IsEnum(StatusEnum, { message: 'O status deve ser um enum' })
   status?: StatusEnum;
 
   @IsOptional()
-  @IsEnum(Object.keys(CompanyTypeEnum), {
+  @IsEnum(CompanyTypeEnum, {
     message: 'O tipo de empresa deve ser um enum',
   })
   companyType?: CompanyTypeEnum;

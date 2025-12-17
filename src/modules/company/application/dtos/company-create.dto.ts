@@ -23,7 +23,7 @@ export class CompanyCreateDto {
 
   @IsArray()
   @IsNotEmpty({ message: 'O tipo de empresa é obrigatório' })
-  @IsEnum(Object.keys(CompanyTypeEnum), {
+  @IsEnum(CompanyTypeEnum, {
     each: true,
     message: 'Os tipos de empresa devem ser um enum',
   })

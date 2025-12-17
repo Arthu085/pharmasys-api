@@ -10,10 +10,10 @@ export class UserFilterDto extends FilterDto {
   name?: string;
 
   @IsOptional()
-  @IsEnum(Object.keys(StatusEnum), { message: 'O status deve ser um enum' })
+  @IsEnum(StatusEnum, { message: 'O status deve ser um enum' })
   status?: StatusEnum;
 
   @IsOptional()
-  @IsEnum(Object.keys(RoleEnum), { message: 'A função deve ser um enum' })
+  @IsEnum(RoleEnum, { message: 'A função deve ser um enum' })
   role?: RoleEnum;
 }

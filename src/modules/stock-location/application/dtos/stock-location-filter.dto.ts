@@ -12,6 +12,6 @@ export class StockLocationFilterDto extends FilterDto {
   code?: string;
 
   @IsOptional()
-  @IsEnum(Object.keys(StatusEnum), { message: 'O status deve ser um enum' })
+  @IsEnum(StatusEnum, { message: 'O status deve ser um enum' })
   status?: StatusEnum;
 }
