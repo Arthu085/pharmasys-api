@@ -2,10 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UUID } from 'crypto';
 
 import { IPrescriptorRepository } from '../../domain/repositories/prescriptor.repository.interface';
-import { PrescriptorResponseDto } from '../dtos/prescriptor-response.dto';
 import { PrescriptorDomainService } from '../../domain/services/prescriptor-domain.service';
 import { plainToInstance } from 'class-transformer';
 import { PrescriptorEntity } from '../../domain/entities/prescriptor.entity';
+import { PrescriptorResponseOneDto } from '../dtos/prescriptor-response-one.dto';
 
 @Injectable()
 export class FindOnePrescriptorUseCase {
@@ -15,14 +15,13 @@ export class FindOnePrescriptorUseCase {
     private readonly prescriptorDomainService: PrescriptorDomainService,
   ) {}
 
-  async execute(uuid: UUID): Promise<PrescriptorResponseDto> {
+  async execute(uuid: UUID): Promise<PrescriptorResponseOneDto> {
     const prescriptor = await this.prescriptorRepository.findOne(uuid);
-    const validatedPrescriptor =
-      this.prescriptorDomainService.validatePrescriptorAndEnsureActive(
-        prescriptor,
-      );
+    this.prescriptorDomainService.validatePrescriptorAndEnsureActive(
+      prescriptor,
+    );
 
-    return plainToInstance(PrescriptorResponseDto, validatedPrescriptor, {
+    return plainToInstance(PrescriptorResponseOneDto, prescriptor, {
       excludeExtraneousValues: true,
     });
   }

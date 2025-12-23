@@ -1,9 +1,9 @@
 import { InvalidEmailException } from '../exceptions/invalid-email.exception';
 
-export class Email {
+export class UserEmail {
   private constructor(private readonly value: string) {}
 
-  static create(email: string): Email {
+  static create(email: string): UserEmail {
     const trimmedEmail = email.trim().toLowerCase();
 
     if (!trimmedEmail) {
@@ -21,14 +21,14 @@ export class Email {
       );
     }
 
-    return new Email(trimmedEmail);
+    return new UserEmail(trimmedEmail);
   }
 
   getValue(): string {
     return this.value;
   }
 
-  equals(other: Email): boolean {
+  equals(other: UserEmail): boolean {
     return this.value === other.value;
   }
 }

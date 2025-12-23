@@ -2,18 +2,12 @@ import { Expose, Transform } from 'class-transformer';
 import { UUID } from 'crypto';
 
 import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
-import {
-  AdviceEnum,
-  AdviceEnumTranslated,
-} from '../../domain/enums/advice.enum';
+import { AdviceEnumTranslated } from '../../domain/enums/advice.enum';
 import { UfEnumTranslated } from '../../domain/enums/uf.enum';
 
-export class PrescriptorResponseDto {
+export class PrescriptorResponseOneDto {
   @Expose()
   uuid: UUID;
-
-  @Expose()
-  id: number;
 
   @Expose()
   name: string;
@@ -22,7 +16,7 @@ export class PrescriptorResponseDto {
   registrationNumber: string;
 
   @Expose()
-  speciality: string | null;
+  specialty: string | null;
 
   @Expose()
   @Transform(({ obj }) => ({
@@ -33,10 +27,11 @@ export class PrescriptorResponseDto {
 
   @Expose()
   @Transform(({ obj }) => ({
-    value: obj.advice?.acronym,
+    value: obj.advice.acronym,
     label:
-      AdviceEnumTranslated[obj.advice?.acronym as AdviceEnum] ||
-      obj.advice?.acronym,
+      AdviceEnumTranslated[
+        obj.advice.acronym as keyof typeof AdviceEnumTranslated
+      ] || obj.advice.acronym,
   }))
   advice: { value: string; label: string };
 
@@ -49,8 +44,8 @@ export class PrescriptorResponseDto {
   status: { value: string; label: string };
 
   @Expose()
-  @Transform(({ obj }) => obj.userCreated.name)
-  userCreated: string | null;
+  @Transform(({ obj }) => obj.userCreated?.name)
+  userCreated: string;
 
   @Expose()
   @Transform(({ obj }) => obj.userUpdated?.name || null)

@@ -1,8 +1,9 @@
+import { UUID } from 'crypto';
+
 export interface UserPayload {
-  sub: number;
+  id?: number;
+  uuid: UUID;
   name: string;
   email: string;
-  role: string;
-  iat?: number;
-  exp?: number;
+  role?: string;
 }

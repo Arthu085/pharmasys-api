@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AdviceEntity } from '../../domain/entities/advice.entity';
 import { Repository } from 'typeorm';
 import { IAdviceRepository } from '../../domain/repositories/advice.repository.interface';
+import { AdviceEnum } from '../../domain/enums/advice.enum';
 
 @Injectable()
 export class AdviceRepository implements IAdviceRepository {
@@ -11,7 +12,7 @@ export class AdviceRepository implements IAdviceRepository {
     private readonly repo: Repository<AdviceEntity>,
   ) {}
 
-  findByAcronym(acronym: string): Promise<AdviceEntity | null> {
+  findByAcronym(acronym: AdviceEnum): Promise<AdviceEntity | null> {
     return this.repo.findOne({ where: { acronym: acronym } });
   }
 }

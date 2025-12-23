@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DosageEntity } from '../../domain/entities/dosage.entity';
+import { DosageEnum } from '../../domain/enums/dosage.enum';
 
 @Injectable()
 export class DosageRepository {
@@ -10,7 +11,7 @@ export class DosageRepository {
     private readonly repo: Repository<DosageEntity>,
   ) {}
 
-  findByFormat(format: string): Promise<DosageEntity | null> {
+  findByFormat(format: DosageEnum): Promise<DosageEntity | null> {
     return this.repo.findOne({ where: { format } });
   }
 }

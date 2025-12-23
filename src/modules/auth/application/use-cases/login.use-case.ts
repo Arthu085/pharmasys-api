@@ -4,8 +4,9 @@ import { JwtTokenService } from '../../domain/services/jwt-token.service';
 import { LoginDto } from '../dtos/login.dto';
 import { LoginResponseDto } from '../dtos/login-response.dto';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
-import { Email } from 'src/modules/user/domain/value-objects/email.vo';
-import { Password } from 'src/modules/user/domain/value-objects/password.vo';
+import { UserEmail } from 'src/modules/user/domain/value-objects/user-email.vo';
+import { UserPassword } from 'src/modules/user/domain/value-objects/user-password.vo';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class LoginUseCase {
@@ -16,20 +17,28 @@ export class LoginUseCase {
   ) {}
 
   async execute(dto: LoginDto): Promise<LoginResponseDto> {
-    const email = Email.create(dto.email);
-    const password = Password.create(dto.password);
+    const binds = {
+      email: UserEmail.create(dto.email),
+      password: UserPassword.create(dto.password),
+    };
 
-    const user = await this.findOneUserUseCase.findByEmailWithoutValidation(
-      email.getValue(),
+    const user = await this.findOneUserUseCase.findByEmail(
+      binds.email.getValue(),
     );
 
     const validatedUser = await this.authDomainService.validateCredentialsLogin(
       user,
-      password.getValue(),
+      binds.password.getValue(),
     );
 
     const token = this.jwtTokenService.generateToken(validatedUser);
 
-    return { token };
+    return plainToInstance(
+      LoginResponseDto,
+      { token },
+      {
+        excludeExtraneousValues: true,
+      },
+    );
   }
 }

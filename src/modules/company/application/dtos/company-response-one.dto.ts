@@ -3,11 +3,9 @@ import { UUID } from 'crypto';
 
 import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
 import { CompanyTypeResponseDto } from './company-type-response.dto';
+import { CompanyTypeEnumTranslated } from '../../domain/enums/company-type.enum';
 
-export class CompanyResponseDto {
-  @Expose()
-  id: number;
-
+export class CompanyResponseOneDto {
   @Expose()
   uuid: UUID;
 
@@ -26,16 +24,25 @@ export class CompanyResponseDto {
   status: { value: string; label: string };
 
   @Expose()
+  @Type(() => CompanyTypeResponseDto)
+  @Transform(({ obj }) => {
+    return obj.companyTypes.map((type: { name: string }) => ({
+      value: type.name,
+      label:
+        CompanyTypeEnumTranslated[
+          type.name as keyof typeof CompanyTypeEnumTranslated
+        ],
+    })) as Array<{ value: string; label: string }>;
+  })
+  companyTypes: CompanyTypeResponseDto[];
+
+  @Expose()
   @Transform(({ obj }) => obj.userCreated?.name)
   userCreated: string;
 
   @Expose()
   @Transform(({ obj }) => obj.userUpdated?.name || null)
   userUpdated: string | null;
-
-  @Expose()
-  @Type(() => CompanyTypeResponseDto)
-  companyTypes: CompanyTypeResponseDto[];
 
   @Expose()
   createdAt: Date;

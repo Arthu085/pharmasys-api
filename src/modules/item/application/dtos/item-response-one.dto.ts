@@ -2,52 +2,44 @@ import { Expose, Transform } from 'class-transformer';
 import { UUID } from 'crypto';
 
 import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
-import { TypeEnum, TypeEnumTranslated } from '../../domain/enums/type.enum';
-import {
-  PresentationEnum,
-  PresentationEnumTranslated,
-} from '../../domain/enums/presentation.enum';
-import {
-  DosageEnum,
-  DosageEnumTranslated,
-} from '../../domain/enums/dosage.enum';
-import {
-  SubtypeEnum,
-  SubtypeEnumTranslated,
-} from '../../domain/enums/subtype.enum';
+import { TypeEnumTranslated } from '../../domain/enums/type.enum';
+import { PresentationEnumTranslated } from '../../domain/enums/presentation.enum';
+import { DosageEnumTranslated } from '../../domain/enums/dosage.enum';
+import { SubtypeEnumTranslated } from '../../domain/enums/subtype.enum';
 
-export class ItemResponseDto {
+export class ItemResponseOneDto {
   @Expose()
   uuid: UUID;
-
-  @Expose()
-  id: number;
 
   @Expose()
   name: string;
 
   @Expose()
   @Transform(({ obj }) => ({
-    value: obj.type?.name,
-    label: TypeEnumTranslated[obj.type?.name as TypeEnum] || obj.type?.name,
+    value: obj.type.name,
+    label:
+      TypeEnumTranslated[obj.type.name as keyof typeof TypeEnumTranslated] ||
+      obj.type.name,
   }))
   type: { value: string; label: string };
 
   @Expose()
   @Transform(({ obj }) => ({
-    value: obj.presentation?.name,
+    value: obj.presentation.name,
     label:
-      PresentationEnumTranslated[obj.presentation?.name as PresentationEnum] ||
-      obj.presentation?.name,
+      PresentationEnumTranslated[
+        obj.presentation.name as keyof typeof PresentationEnumTranslated
+      ] || obj.presentation.name,
   }))
   presentation: { value: string; label: string };
 
   @Expose()
   @Transform(({ obj }) => ({
-    value: obj.dosage?.format,
+    value: obj.dosage.format,
     label:
-      DosageEnumTranslated[obj.dosage?.format as DosageEnum] ||
-      obj.dosage?.format,
+      DosageEnumTranslated[
+        obj.dosage.format as keyof typeof DosageEnumTranslated
+      ] || obj.dosage.format,
   }))
   dosage: { value: string; label: string };
 
@@ -57,8 +49,9 @@ export class ItemResponseDto {
       ? {
           value: obj.subtype.name,
           label:
-            SubtypeEnumTranslated[obj.subtype.name as SubtypeEnum] ||
-            obj.subtype.name,
+            SubtypeEnumTranslated[
+              obj.subtype.name as keyof typeof SubtypeEnumTranslated
+            ] || obj.subtype.name,
         }
       : null,
   )

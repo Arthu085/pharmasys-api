@@ -89,8 +89,8 @@ export class PrescriptorRepository implements IPrescriptorRepository {
     return this.repo.save(newPrescriptor);
   }
 
-  update(prescriptor: PrescriptorEntity): Promise<UpdateResult> {
-    return this.repo.update({ uuid: prescriptor.uuid }, prescriptor);
+  update(uuid: UUID, data: Partial<PrescriptorEntity>): Promise<UpdateResult> {
+    return this.repo.update({ uuid }, data);
   }
 
   softDelete(uuid: UUID): Promise<UpdateResult> {

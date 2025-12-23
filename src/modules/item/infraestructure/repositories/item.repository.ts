@@ -90,8 +90,8 @@ export class ItemRepository implements IItemRepository {
     return this.repo.save(newitem);
   }
 
-  update(item: ItemEntity): Promise<UpdateResult> {
-    return this.repo.update({ uuid: item.uuid }, item);
+  update(uuid: UUID, data: Partial<ItemEntity>): Promise<UpdateResult> {
+    return this.repo.update({ uuid }, data);
   }
 
   softDelete(uuid: UUID): Promise<UpdateResult> {

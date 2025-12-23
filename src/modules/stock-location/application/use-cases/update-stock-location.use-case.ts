@@ -27,41 +27,48 @@ export class UpdateStockLocationUseCase {
     dto: StockLocationUpdateDto,
     userId: number,
   ): Promise<void> {
-    const user = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      name: dto.name ? StockLocationName.create(dto.name) : undefined,
+      code: dto.code ? StockLocationCode.create(dto.code) : undefined,
+    };
+
+    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const stockLocation =
       await this.findOneStockLocationUseCase.findEntityByUuid(uuid);
+
+    this.stockLocationDomainService.validateStockLocationAndEnsureActive(
+      stockLocation,
+    );
 
     this.stockLocationDomainService.validateStockLocationCentralStock(
       stockLocation,
     );
 
-    if (dto.code) {
-      const code = StockLocationCode.create(dto.code);
+    if (binds.name) {
+      stockLocation.changeName(binds.name);
+    }
+
+    if (binds.code) {
       const currentCode = StockLocationCode.create(stockLocation.code);
-
-      if (!code.equals(currentCode)) {
-        const existingStockLocation =
-          await this.findOneStockLocationUseCase.findByCode(code.getValue());
-
-        if (
-          existingStockLocation &&
-          existingStockLocation.id !== stockLocation.id
-        ) {
-          throw new StockLocationCodeAlreadyExistsException();
-        }
+      if (!binds.code.equals(currentCode)) {
+        const existingStockLocationWithCode =
+          await this.findOneStockLocationUseCase.findByCode(
+            binds.code.getValue(),
+          );
+        this.stockLocationDomainService.validateExistsStockLocationUpdate(
+          stockLocation,
+          existingStockLocationWithCode,
+        );
+        stockLocation.changeCode(binds.code);
       }
-
-      stockLocation.changeCode(code);
     }
 
-    if (dto.name) {
-      const name = StockLocationName.create(dto.name);
-      stockLocation.changeName(name);
-    }
+    stockLocation.userUpdated = userUpdating;
 
-    stockLocation.userUpdated = user;
-
-    await this.stockLocationRepository.update(stockLocation);
+    await this.stockLocationRepository.update(
+      stockLocation.uuid,
+      stockLocation,
+    );
   }
 
   async updateStatus(
@@ -69,7 +76,7 @@ export class UpdateStockLocationUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
-    const user = await this.findOneUserUseCase.findById(userId);
+    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const stockLocation =
       await this.findOneStockLocationUseCase.findEntityByUuid(uuid, false);
 
@@ -88,8 +95,11 @@ export class UpdateStockLocationUseCase {
       stockLocation.deactivate();
     }
 
-    stockLocation.userUpdated = user;
+    stockLocation.userUpdated = userUpdating;
 
-    await this.stockLocationRepository.update(stockLocation);
+    await this.stockLocationRepository.update(
+      stockLocation.uuid,
+      stockLocation,
+    );
   }
 }

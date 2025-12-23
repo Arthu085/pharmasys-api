@@ -22,7 +22,7 @@ export interface IPrescriptorRepository {
 
   create(prescriptor: Partial<PrescriptorEntity>): Promise<PrescriptorEntity>;
 
-  update(prescriptor: PrescriptorEntity): Promise<UpdateResult>;
+  update(uuid: UUID, data: Partial<PrescriptorEntity>): Promise<UpdateResult>;
 
   softDelete(uuid: UUID): Promise<UpdateResult>;
 }

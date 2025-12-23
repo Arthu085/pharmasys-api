@@ -21,7 +21,7 @@ export interface IStockLocationRepository {
     stockLocation: Partial<StockLocationEntity>,
   ): Promise<StockLocationEntity>;
 
-  update(stockLocation: StockLocationEntity): Promise<UpdateResult>;
+  update(uuid: UUID, data: Partial<StockLocationEntity>): Promise<UpdateResult>;
 
   softDelete(uuid: UUID): Promise<UpdateResult>;
 }

@@ -19,9 +19,9 @@ export interface ICompanyRepository {
 
   create(company: Partial<CompanyEntity>): Promise<CompanyEntity>;
 
-  update(company: CompanyEntity): Promise<UpdateResult>;
+  update(uuid: UUID, data: Partial<CompanyEntity>): Promise<UpdateResult>;
 
-  updateRelations(company: CompanyEntity): Promise<CompanyEntity>;
+  updateRelations(data: Partial<CompanyEntity>): Promise<CompanyEntity>;
 
   softDelete(uuid: UUID): Promise<UpdateResult>;
 }

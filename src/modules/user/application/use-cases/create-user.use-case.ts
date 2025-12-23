@@ -2,16 +2,15 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 import { IPasswordHasher } from '../../domain/services/password-hasher.interface';
-import { UserDomainService } from '../../domain/services/user-domain.service';
 import { UserCreateDto } from '../dtos/user-create.dto';
 import { FindOneRoleUseCase } from './find-one-role.use-case';
 import { FindOneUserUseCase } from './find-one-user.use-case';
-import { RoleEnum } from 'src/shared/enums/role.enum';
 import { UserEntity } from '../../domain/entities/user.entity';
-import { Email } from '../../domain/value-objects/email.vo';
-import { Password } from '../../domain/value-objects/password.vo';
+import { UserEmail } from '../../domain/value-objects/user-email.vo';
+import { UserPassword } from '../../domain/value-objects/user-password.vo';
 import { UserName } from '../../domain/value-objects/user-name.vo';
-import { UserAlreadyExistsException } from '../../domain/exceptions/user-already-exists.exception';
+import { UserDomainService } from '../../domain/services/user-domain.service';
+import { RoleEnum } from 'src/shared/enums/role.enum';
 
 @Injectable()
 export class CreateUserUseCase {
@@ -26,42 +25,56 @@ export class CreateUserUseCase {
     private readonly userDomainService: UserDomainService,
   ) {}
 
-  async execute(dto: UserCreateDto, userId?: number | null): Promise<void> {
-    await this.createEntity(dto, userId);
+  async execute(dto: UserCreateDto, userId: number): Promise<void> {
+    const binds = {
+      name: UserName.create(dto.name),
+      email: UserEmail.create(dto.email),
+      password: UserPassword.create(dto.password),
+      role: await this.findOneRoleUseCase.findByName(dto.role),
+    };
+
+    const userCreating = await this.findOneUserUseCase.findById(userId);
+    const existingUser = await this.findOneUserUseCase.findByEmail(
+      binds.email.getValue(),
+    );
+
+    this.userDomainService.validateUserExistsCreate(existingUser);
+
+    const hashedPassword = await this.passwordHasher.hash(
+      binds.password.getValue(),
+    );
+
+    await this.userRepository.create({
+      name: binds.name.getValue(),
+      email: binds.email.getValue(),
+      password: hashedPassword,
+      role: binds.role,
+      userCreated: userCreating,
+    });
   }
 
-  async createEntity(
-    dto: UserCreateDto,
-    userId?: number | null,
-  ): Promise<UserEntity> {
-    let user: UserEntity | undefined;
-    if (userId) {
-      user = await this.findOneUserUseCase.findById(userId);
-    }
+  async register(binds: {
+    name: UserName;
+    email: UserEmail;
+    password: UserPassword;
+    role: RoleEnum;
+  }): Promise<UserEntity> {
+    const existingUser = await this.findOneUserUseCase.findByEmail(
+      binds.email.getValue(),
+    );
 
-    const name = UserName.create(dto.name);
-    const email = Email.create(dto.email);
-    const password = Password.create(dto.password);
-    const role = await this.findOneRoleUseCase.findByName(RoleEnum[dto.role]);
-    const existingUser =
-      await this.findOneUserUseCase.findByEmailWithoutValidation(
-        email.getValue(),
-      );
+    this.userDomainService.validateUserExistsCreate(existingUser);
 
-    if (existingUser) {
-      throw new UserAlreadyExistsException();
-    }
+    const hashedPassword = await this.passwordHasher.hash(
+      binds.password.getValue(),
+    );
+    const roleEntity = await this.findOneRoleUseCase.findByName(binds.role);
 
-    const hashedPassword = await this.passwordHasher.hash(password.getValue());
-
-    const newUser = await this.userRepository.create({
-      name: name.getValue(),
-      email: email.getValue(),
+    return await this.userRepository.create({
+      name: binds.name.getValue(),
+      email: binds.email.getValue(),
       password: hashedPassword,
-      role,
-      userCreated: user,
+      role: roleEntity,
     });
-
-    return newUser;
   }
 }

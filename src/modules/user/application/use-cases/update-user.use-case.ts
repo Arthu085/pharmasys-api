@@ -10,8 +10,8 @@ import { FindOneUserUseCase } from './find-one-user.use-case';
 import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
 import { RoleEnum } from 'src/shared/enums/role.enum';
 import { StatusEnum } from 'src/shared/enums/status.enum';
-import { Email } from '../../domain/value-objects/email.vo';
-import { Password } from '../../domain/value-objects/password.vo';
+import { UserEmail } from '../../domain/value-objects/user-email.vo';
+import { UserPassword } from '../../domain/value-objects/user-password.vo';
 import { UserName } from '../../domain/value-objects/user-name.vo';
 import { UserAlreadyExistsException } from '../../domain/exceptions/user-already-exists.exception';
 
@@ -28,49 +28,53 @@ export class UpdateUserUseCase {
   ) {}
 
   async execute(uuid: UUID, dto: UserUpdateDto, userId: number): Promise<void> {
-    const updatingUser = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      name: dto.name ? UserName.create(dto.name) : undefined,
+      email: dto.email ? UserEmail.create(dto.email) : undefined,
+      password: dto.password ? UserPassword.create(dto.password) : undefined,
+      role: dto.role
+        ? await this.findOneRoleUseCase.findByName(dto.role)
+        : undefined,
+    };
+
+    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const user = await this.findOneUserUseCase.findEntityByUuid(uuid);
 
-    if (dto.email) {
-      const email = Email.create(dto.email);
-      const currentEmail = Email.create(user.email);
+    this.userDomainService.validateUserAndEnsureActive(user);
 
-      if (!email.equals(currentEmail)) {
-        const existingUserWithEmail =
-          await this.findOneUserUseCase.findByEmailWithoutValidation(
-            email.getValue(),
-          );
+    if (binds.name) {
+      user.changeName(binds.name);
+    }
 
-        if (existingUserWithEmail && existingUserWithEmail.id !== user.id) {
-          throw new UserAlreadyExistsException();
-        }
+    if (binds.email) {
+      const currentEmail = UserEmail.create(user.email);
+      if (!binds.email.equals(currentEmail)) {
+        const existingUserWithEmail = await this.findOneUserUseCase.findByEmail(
+          binds.email.getValue(),
+        );
+        this.userDomainService.validateUserExistisUpdate(
+          user,
+          existingUserWithEmail,
+        );
+        user.changeEmail(binds.email);
       }
-
-      user.changeEmail(email);
     }
 
-    if (dto.role) {
-      const role = await this.findOneRoleUseCase.findByName(RoleEnum[dto.role]);
-      user.changeRole(role);
+    if (binds.role) {
+      user.changeRole(binds.role);
     }
 
-    if (dto.name) {
-      const name = UserName.create(dto.name);
-      user.changeName(name);
-    }
-
-    if (dto.password) {
-      const password = Password.create(dto.password);
+    if (binds.password) {
       const hashedPassword = await this.passwordHasher.hash(
-        password.getValue(),
+        binds.password.getValue(),
       );
-      const hashedPasswordVO = Password.createFromHash(hashedPassword);
+      const hashedPasswordVO = UserPassword.createFromHash(hashedPassword);
       user.changePassword(hashedPasswordVO);
     }
 
-    user.userUpdated = updatingUser;
+    user.userUpdated = userUpdating;
 
-    await this.userRepository.update(user);
+    await this.userRepository.update(user.uuid, user);
   }
 
   async updateStatus(
@@ -78,7 +82,7 @@ export class UpdateUserUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
-    const updatingUser = await this.findOneUserUseCase.findById(userId);
+    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const user = await this.findOneUserUseCase.findEntityByUuid(uuid, false);
 
     this.userDomainService.validateUserSameStatus(user, dto.status);
@@ -89,8 +93,8 @@ export class UpdateUserUseCase {
       user.deactivate();
     }
 
-    user.userUpdated = updatingUser;
+    user.userUpdated = userUpdating;
 
-    await this.userRepository.update(user);
+    await this.userRepository.update(user.uuid, user);
   }
 }

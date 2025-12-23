@@ -6,6 +6,7 @@ import { StatusEnum } from 'src/shared/enums/status.enum';
 import { BaseDomainService } from 'src/shared/domain/services/base-domain.service';
 import { UserNotFoundException } from '../exceptions/user-not-found.exception';
 import { RoleNotFoundException } from '../exceptions/role-not-found.exception';
+import { UserAlreadyExistsException } from '../exceptions/user-already-exists.exception';
 
 @Injectable()
 export class UserDomainService {
@@ -36,5 +37,20 @@ export class UserDomainService {
     }
 
     return role;
+  }
+
+  validateUserExistsCreate(user: UserEntity | null): void {
+    if (user) {
+      throw new UserAlreadyExistsException();
+    }
+  }
+
+  validateUserExistisUpdate(
+    updateUser: UserEntity | null,
+    existingUser: UserEntity | null,
+  ): void {
+    if (updateUser && existingUser && updateUser.id !== existingUser.id) {
+      throw new UserAlreadyExistsException();
+    }
   }
 }

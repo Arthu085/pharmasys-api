@@ -6,6 +6,7 @@ import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-
 import { StockLocationName } from '../../domain/value-objects/stock-location-name.vo';
 import { StockLocationCode } from '../../domain/value-objects/stock-location-code.vo';
 import { StockLocationCodeAlreadyExistsException } from '../../domain/exceptions/stock-location-code-already-exists.exception';
+import { StockLocationDomainService } from '../../domain/services/stock-location-domain.service';
 
 @Injectable()
 export class CreateStockLocationUseCase {
@@ -14,23 +15,27 @@ export class CreateStockLocationUseCase {
     private readonly stockLocationRepository: IStockLocationRepository,
     private readonly findOneStockLocationUseCase: FindOneStockLocationUseCase,
     private readonly findOneUserUseCase: FindOneUserUseCase,
+    private readonly stockLocationDomainService: StockLocationDomainService,
   ) {}
 
   async execute(dto: StockLocationCreateDto, userId: number): Promise<void> {
-    const name = StockLocationName.create(dto.name);
-    const code = StockLocationCode.create(dto.code);
-    const user = await this.findOneUserUseCase.findById(userId);
-    const existingStockLocation =
-      await this.findOneStockLocationUseCase.findByCode(code.getValue());
+    const binds = {
+      name: StockLocationName.create(dto.name),
+      code: StockLocationCode.create(dto.code),
+    };
 
-    if (existingStockLocation) {
-      throw new StockLocationCodeAlreadyExistsException();
-    }
+    const userCreating = await this.findOneUserUseCase.findById(userId);
+    const existingStockLocation =
+      await this.findOneStockLocationUseCase.findByCode(binds.code.getValue());
+
+    this.stockLocationDomainService.validateExistsStockLocationCreate(
+      existingStockLocation,
+    );
 
     await this.stockLocationRepository.create({
-      name: name.getValue(),
-      code: code.getValue(),
-      userCreated: user,
+      name: binds.name.getValue(),
+      code: binds.code.getValue(),
+      userCreated: userCreating,
     });
   }
 }

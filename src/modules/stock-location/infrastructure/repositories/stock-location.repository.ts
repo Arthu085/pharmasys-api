@@ -66,8 +66,11 @@ export class StockLocationRepository implements IStockLocationRepository {
     return this.repo.save(newStockLocation);
   }
 
-  update(stockLocation: StockLocationEntity): Promise<UpdateResult> {
-    return this.repo.update({ uuid: stockLocation.uuid }, stockLocation);
+  update(
+    uuid: UUID,
+    data: Partial<StockLocationEntity>,
+  ): Promise<UpdateResult> {
+    return this.repo.update({ uuid }, data);
   }
 
   softDelete(uuid: UUID): Promise<UpdateResult> {

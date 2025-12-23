@@ -2,10 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UUID } from 'crypto';
 
 import { ICompanyRepository } from '../../domain/repositories/company.repository.interface';
-import { CompanyResponseDto } from '../dtos/company-response.dto';
 import { plainToInstance } from 'class-transformer';
 import { CompanyDomainService } from '../../domain/services/company-domain.service';
 import { CompanyEntity } from '../../domain/entities/company.entity';
+import { CompanyResponseOneDto } from '../dtos/company-response-one.dto';
 
 @Injectable()
 export class FindOneCompanyUseCase {
@@ -15,11 +15,11 @@ export class FindOneCompanyUseCase {
     private readonly companyDomainService: CompanyDomainService,
   ) {}
 
-  async execute(uuid: UUID): Promise<CompanyResponseDto> {
+  async execute(uuid: UUID): Promise<CompanyResponseOneDto> {
     const company = await this.companyRepository.findOne(uuid);
-    const validatedCompany = this.companyDomainService.validateCompany(company);
+    this.companyDomainService.validateCompanyAndEnsureActive(company);
 
-    return plainToInstance(CompanyResponseDto, validatedCompany, {
+    return plainToInstance(CompanyResponseOneDto, company, {
       excludeExtraneousValues: true,
     });
   }

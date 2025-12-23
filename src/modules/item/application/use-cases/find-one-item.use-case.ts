@@ -3,9 +3,9 @@ import { UUID } from 'crypto';
 
 import { IItemRepository } from '../../domain/repositories/item.repository.interface';
 import { ItemDomainService } from '../../domain/services/item-domain.service';
-import { ItemResponseDto } from '../dtos/item-response.dto';
 import { plainToInstance } from 'class-transformer';
 import { ItemEntity } from '../../domain/entities/item.entity';
+import { ItemResponseOneDto } from '../dtos/item-response-one.dto';
 
 @Injectable()
 export class FindOneItemUseCase {
@@ -15,11 +15,11 @@ export class FindOneItemUseCase {
     private readonly itemDomainService: ItemDomainService,
   ) {}
 
-  async execute(uuid: UUID): Promise<ItemResponseDto> {
+  async execute(uuid: UUID): Promise<ItemResponseOneDto> {
     const item = await this.itemRepository.findOne(uuid);
-    const validatedItem = this.itemDomainService.validateItem(item);
+    this.itemDomainService.validateItemAndEnsureActive(item);
 
-    return plainToInstance(ItemResponseDto, validatedItem, {
+    return plainToInstance(ItemResponseOneDto, item, {
       excludeExtraneousValues: true,
     });
   }

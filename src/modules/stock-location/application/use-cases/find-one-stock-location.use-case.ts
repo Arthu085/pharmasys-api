@@ -3,9 +3,9 @@ import { plainToInstance } from 'class-transformer';
 import { UUID } from 'crypto';
 
 import { IStockLocationRepository } from '../../domain/repositories/stock-location.repository.interface';
-import { StockLocationResponseDto } from '../dtos/stock-location-response.dto';
 import { StockLocationDomainService } from '../../domain/services/stock-location-domain.service';
 import { StockLocationEntity } from '../../domain/entities/stock-location.entity';
+import { StockLocationResponseOneDto } from '../dtos/stock-location-response-one.dto';
 
 @Injectable()
 export class FindOneStockLocationUseCase {
@@ -15,14 +15,13 @@ export class FindOneStockLocationUseCase {
     private readonly stockLocationDomainService: StockLocationDomainService,
   ) {}
 
-  async execute(uuid: UUID): Promise<StockLocationResponseDto> {
+  async execute(uuid: UUID): Promise<StockLocationResponseOneDto> {
     const stockLocation = await this.stockLocationRepository.findOne(uuid);
-    const validatedStockLocation =
-      this.stockLocationDomainService.validateStockLocationAndEnsureActive(
-        stockLocation,
-      );
+    this.stockLocationDomainService.validateStockLocationAndEnsureActive(
+      stockLocation,
+    );
 
-    return plainToInstance(StockLocationResponseDto, validatedStockLocation, {
+    return plainToInstance(StockLocationResponseOneDto, stockLocation, {
       excludeExtraneousValues: true,
     });
   }

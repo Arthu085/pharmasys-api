@@ -2,8 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IItemRepository } from '../../domain/repositories/item.repository.interface';
 import { ItemFilterDto } from '../dtos/item-filter.dto';
 import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
-import { ItemResponseDto } from '../dtos/item-response.dto';
 import { plainToInstance } from 'class-transformer';
+import { PaginatedResponseDto } from 'src/shared/dtos/paginated-response.dto';
+import { ItemResponseAllDto } from '../dtos/item-response-all.dto';
 
 @Injectable()
 export class FindAllItemUseCase {
@@ -14,7 +15,7 @@ export class FindAllItemUseCase {
 
   async execute(
     filters: ItemFilterDto,
-  ): Promise<IPaginatedResponse<ItemResponseDto | null>> {
+  ): Promise<IPaginatedResponse<ItemResponseAllDto | null>> {
     const page = filters.page || 1;
     const limit = filters.limit || 10;
     const skip = (page - 1) * limit;
@@ -25,20 +26,20 @@ export class FindAllItemUseCase {
       skip,
     );
 
-    const data = plainToInstance(ItemResponseDto, items, {
-      excludeExtraneousValues: true,
-    });
-
     const lastPage = Math.ceil(total / limit);
 
-    return {
-      data,
-      meta: {
-        total,
-        page,
-        limit,
-        lastPage,
-      },
+    const response = new PaginatedResponseDto<ItemResponseAllDto>();
+
+    response.data = plainToInstance(ItemResponseAllDto, items, {
+      excludeExtraneousValues: true,
+    });
+    response.meta = {
+      total,
+      page,
+      limit,
+      lastPage,
     };
+
+    return response;
   }
 }

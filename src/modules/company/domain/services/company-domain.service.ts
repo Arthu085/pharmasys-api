@@ -5,6 +5,8 @@ import { CompanyTypeNotFoundException } from '../exceptions/company-type-not-fou
 import { CompanyEntity } from '../entities/company.entity';
 import { CompanyNotFoundException } from '../exceptions/company-not-found.exception';
 import { StatusEnum } from 'src/shared/enums/status.enum';
+import { CompanyAlreadyExistsException } from '../exceptions/company-already-exists.exception';
+import { CompanyTypeEnum } from '../enums/company-type.enum';
 
 @Injectable()
 export class CompanyDomainService {
@@ -37,5 +39,24 @@ export class CompanyDomainService {
     }
 
     return companyType;
+  }
+
+  validateCompanyExistsCreate(company: CompanyEntity | null): void {
+    if (company) {
+      throw new CompanyAlreadyExistsException();
+    }
+  }
+
+  validateCompanyExistsUpdate(
+    updateCompany: CompanyEntity | null,
+    existingCompany: CompanyEntity | null,
+  ): void {
+    if (
+      updateCompany &&
+      existingCompany &&
+      updateCompany.id !== existingCompany.id
+    ) {
+      throw new CompanyAlreadyExistsException();
+    }
   }
 }

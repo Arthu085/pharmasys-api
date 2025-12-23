@@ -2,5 +2,8 @@ import { Expose } from 'class-transformer';
 
 export class CompanyTypeResponseDto {
   @Expose()
-  name: string;
+  value: string;
+
+  @Expose()
+  label: string;
 }

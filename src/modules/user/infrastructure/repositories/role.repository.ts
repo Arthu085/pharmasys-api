@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 
 import { RoleEntity } from '../../domain/entities/role.entity';
 import { IRoleRepository } from '../../domain/repositories/role.repository.interface';
+import { RoleEnum } from 'src/shared/enums/role.enum';
 
 @Injectable()
 export class RoleRepository implements IRoleRepository {
@@ -12,7 +13,7 @@ export class RoleRepository implements IRoleRepository {
     private readonly repo: Repository<RoleEntity>,
   ) {}
 
-  findByName(name: string): Promise<RoleEntity | null> {
+  findByName(name: RoleEnum): Promise<RoleEntity | null> {
     return this.repo.findOne({ where: { name } });
   }
 }

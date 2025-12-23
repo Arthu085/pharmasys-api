@@ -2,8 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IPrescriptorRepository } from '../../domain/repositories/prescriptor.repository.interface';
 import { PrescriptorFilterDto } from '../dtos/prescriptor-filter.dto';
 import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
-import { PrescriptorResponseDto } from '../dtos/prescriptor-response.dto';
 import { plainToInstance } from 'class-transformer';
+import { PaginatedResponseDto } from 'src/shared/dtos/paginated-response.dto';
+import { PrescriptorResponseAllDto } from '../dtos/prescriptor-response-all.dto';
 
 @Injectable()
 export class FindAllPrescriptorUseCase {
@@ -14,7 +15,7 @@ export class FindAllPrescriptorUseCase {
 
   async execute(
     filters: PrescriptorFilterDto,
-  ): Promise<IPaginatedResponse<PrescriptorResponseDto | null>> {
+  ): Promise<IPaginatedResponse<PrescriptorResponseAllDto | null>> {
     const page = filters.page || 1;
     const limit = filters.limit || 10;
     const skip = (page - 1) * limit;
@@ -25,20 +26,20 @@ export class FindAllPrescriptorUseCase {
       skip,
     );
 
-    const data = plainToInstance(PrescriptorResponseDto, prescriptors, {
-      excludeExtraneousValues: true,
-    });
-
     const lastPage = Math.ceil(total / limit);
 
-    return {
-      data,
-      meta: {
-        total,
-        page,
-        limit,
-        lastPage,
-      },
+    const response = new PaginatedResponseDto<PrescriptorResponseAllDto>();
+
+    response.data = plainToInstance(PrescriptorResponseAllDto, prescriptors, {
+      excludeExtraneousValues: true,
+    });
+    response.meta = {
+      total,
+      page,
+      limit,
+      lastPage,
     };
+
+    return response;
   }
 }

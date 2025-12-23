@@ -5,8 +5,6 @@ import { UUID } from 'crypto';
 
 import { UserEntity } from '../../domain/entities/user.entity';
 import { UserFilterDto } from '../../application/dtos/user-filter.dto';
-import { RoleEnum } from 'src/shared/enums/role.enum';
-import { StatusEnum } from 'src/shared/enums/status.enum';
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 
 @Injectable()
@@ -28,17 +26,13 @@ export class UserRepository implements IUserRepository {
     }
 
     if (filters.role) {
-      const roleName = RoleEnum[filters.role];
-
       where.role = {
-        name: roleName,
+        name: filters.role,
       };
     }
 
     if (filters.status) {
-      const status = StatusEnum[filters.status];
-
-      where.status = status;
+      where.status = filters.status;
     }
 
     return this.repo.findAndCount({
@@ -80,8 +74,8 @@ export class UserRepository implements IUserRepository {
     return this.repo.save(newUser);
   }
 
-  update(user: UserEntity): Promise<UpdateResult> {
-    return this.repo.update({ uuid: user.uuid }, user);
+  update(uuid: UUID, data: Partial<UserEntity>): Promise<UpdateResult> {
+    return this.repo.update({ uuid }, data);
   }
 
   softDelete(uuid: UUID): Promise<UpdateResult> {

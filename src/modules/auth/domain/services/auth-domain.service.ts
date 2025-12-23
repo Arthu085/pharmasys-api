@@ -3,13 +3,11 @@ import { UserEntity } from '../../../user/domain/entities/user.entity';
 import { RoleEnum } from '../../../../shared/enums/role.enum';
 import { InvalidCredentialsException } from '../exceptions/invalid-credentials.exception';
 import { RoleException } from '../exceptions/role.exception';
-import { UserDomainService } from '../../../user/domain/services/user-domain.service';
 import { IPasswordHasher } from '../../../user/domain/services/password-hasher.interface';
 
 @Injectable()
 export class AuthDomainService {
   constructor(
-    private readonly userDomainService: UserDomainService,
     @Inject(IPasswordHasher)
     private readonly passwordHasher: IPasswordHasher,
   ) {}
@@ -36,11 +34,13 @@ export class AuthDomainService {
     return user;
   }
 
-  validateRoleForRegister(role: RoleEnum): void {
+  validateRoleForRegister(role: RoleEnum): RoleEnum {
     const allowedRoles = [RoleEnum.FARMACEUTICO, RoleEnum.OPERADOR];
 
     if (!role || !allowedRoles.includes(role)) {
       throw new RoleException();
     }
+
+    return role;
   }
 }

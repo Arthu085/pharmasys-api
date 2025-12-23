@@ -10,9 +10,10 @@ import { PrescriptorDomainService } from '../../domain/services/prescriptor-doma
 import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { PrescriptorName } from '../../domain/value-objects/prescriptor-name.vo';
-import { RegistrationNumber } from '../../domain/value-objects/registration-number.vo';
-import { State } from '../../domain/value-objects/state.vo';
+import { PrescriptorRegistration } from '../../domain/value-objects/prescriptor-registration.vo';
+import { PrescriptorState } from '../../domain/value-objects/prescriptor-state.vo';
 import { PrescriptorAlreadyExistsException } from '../../domain/exceptions/prescriptor-already-exists.exception';
+import { PrescriptorSpecialty } from '../../domain/value-objects/prescriptor-specialty';
 
 @Injectable()
 export class UpdatePrescriptorUseCase {
@@ -30,75 +31,75 @@ export class UpdatePrescriptorUseCase {
     dto: PrescriptorUpdateDto,
     userId: number,
   ): Promise<void> {
-    const user = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      name: dto.name ? PrescriptorName.create(dto.name) : undefined,
+      registrationNumber: dto.registrationNumber
+        ? PrescriptorRegistration.create(dto.registrationNumber)
+        : undefined,
+      state: dto.state ? PrescriptorState.create(dto.state) : undefined,
+      specialty: dto.specialty
+        ? PrescriptorSpecialty.create(dto.specialty)
+        : null,
+      advice: dto.advice
+        ? await this.findOneAdviceUseCase.findByAcronym(dto.advice)
+        : undefined,
+    };
+
+    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const prescriptor =
       await this.findOnePrescriptorUseCase.findEntityByUuid(uuid);
 
-    let newAdvice = prescriptor.advice;
-    let adviceChanged = false;
+    this.prescriptorDomainService.validatePrescriptorAndEnsureActive(
+      prescriptor,
+    );
 
-    if (dto.advice) {
-      newAdvice = await this.findOneAdviceUseCase.findByAcronym(dto.advice);
-      adviceChanged = newAdvice.id !== prescriptor.advice.id;
+    if (binds.name) {
+      prescriptor.changeName(binds.name);
     }
 
-    let newRegistrationNumber = prescriptor.registrationNumber;
-    let registrationNumberChanged = false;
-
-    if (dto.registrationNumber) {
-      const registrationNumberVO = RegistrationNumber.create(
-        dto.registrationNumber,
-      );
-      const currentRegistrationNumberVO = RegistrationNumber.create(
+    if (binds.registrationNumber) {
+      const currentRegistrationNumber = PrescriptorRegistration.create(
         prescriptor.registrationNumber,
       );
-
-      registrationNumberChanged = !registrationNumberVO.equals(
-        currentRegistrationNumberVO,
-      );
-      newRegistrationNumber = registrationNumberVO.getValue();
-    }
-
-    if (adviceChanged || registrationNumberChanged) {
-      const existingPrescriptor =
-        await this.findOnePrescriptorUseCase.findByRegistrationNumberAndAdvice(
-          newRegistrationNumber,
-          newAdvice.id,
+      if (!binds.registrationNumber.equals(currentRegistrationNumber)) {
+        const existingPrescriptorWithRegistrationNumber =
+          await this.findOnePrescriptorUseCase.findByRegistrationNumberAndAdvice(
+            binds.registrationNumber.getValue(),
+            prescriptor.advice.id,
+          );
+        this.prescriptorDomainService.validatePrescriptorExistsUpdate(
+          prescriptor,
+          existingPrescriptorWithRegistrationNumber,
         );
-
-      if (existingPrescriptor && existingPrescriptor.id !== prescriptor.id) {
-        throw new PrescriptorAlreadyExistsException();
+        prescriptor.changeRegistrationNumber(binds.registrationNumber);
       }
     }
 
-    if (dto.name) {
-      const name = PrescriptorName.create(dto.name);
-      prescriptor.changeName(name);
+    if (binds.advice) {
+      const currentAdvice = prescriptor.advice;
+      if (binds.advice.id !== currentAdvice.id) {
+        const existingPrescriptorWithAdvice =
+          await this.findOnePrescriptorUseCase.findByRegistrationNumberAndAdvice(
+            prescriptor.registrationNumber,
+            binds.advice.id,
+          );
+        this.prescriptorDomainService.validatePrescriptorExistsUpdate(
+          prescriptor,
+          existingPrescriptorWithAdvice,
+        );
+        prescriptor.changeAdvice(binds.advice);
+      }
     }
 
-    if (dto.registrationNumber) {
-      const registrationNumberVO = RegistrationNumber.create(
-        dto.registrationNumber,
-      );
-      prescriptor.changeRegistrationNumber(registrationNumberVO);
+    if (binds.state) {
+      prescriptor.changeState(binds.state);
     }
 
-    if (dto.state) {
-      const state = State.create(dto.state);
-      prescriptor.changeState(state);
-    }
+    prescriptor.changeSpecialty(binds.specialty);
 
-    if (dto.specialty !== undefined) {
-      prescriptor.changeSpecialty(dto.specialty);
-    }
+    prescriptor.userUpdated = userUpdating;
 
-    if (dto.advice) {
-      prescriptor.changeAdvice(newAdvice);
-    }
-
-    prescriptor.userUpdated = user;
-
-    await this.prescriptorRepository.update(prescriptor);
+    await this.prescriptorRepository.update(prescriptor.uuid, prescriptor);
   }
 
   async updateStatus(
@@ -106,7 +107,7 @@ export class UpdatePrescriptorUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
-    const user = await this.findOneUserUseCase.findById(userId);
+    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const prescriptor = await this.findOnePrescriptorUseCase.findEntityByUuid(
       uuid,
       false,
@@ -123,8 +124,8 @@ export class UpdatePrescriptorUseCase {
       prescriptor.deactivate();
     }
 
-    prescriptor.userUpdated = user;
+    prescriptor.userUpdated = userUpdating;
 
-    await this.prescriptorRepository.update(prescriptor);
+    await this.prescriptorRepository.update(prescriptor.uuid, prescriptor);
   }
 }

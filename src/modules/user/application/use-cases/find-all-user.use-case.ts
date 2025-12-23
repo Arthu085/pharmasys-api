@@ -3,8 +3,9 @@ import { plainToInstance } from 'class-transformer';
 
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 import { UserFilterDto } from '../dtos/user-filter.dto';
-import { UserResponseDto } from '../dtos/user-response.dto';
 import { IPaginatedResponse } from 'src/shared/interfaces/paginated-response.interface';
+import { PaginatedResponseDto } from 'src/shared/dtos/paginated-response.dto';
+import { UserResponseAllDto } from '../dtos/user-response-all.dto';
 
 @Injectable()
 export class FindAllUserUseCase {
@@ -15,7 +16,7 @@ export class FindAllUserUseCase {
 
   async execute(
     filters: UserFilterDto,
-  ): Promise<IPaginatedResponse<UserResponseDto | null>> {
+  ): Promise<IPaginatedResponse<UserResponseAllDto>> {
     const page = filters.page || 1;
     const limit = filters.limit || 10;
     const skip = (page - 1) * limit;
@@ -26,20 +27,20 @@ export class FindAllUserUseCase {
       skip,
     );
 
-    const data = plainToInstance(UserResponseDto, users, {
-      excludeExtraneousValues: true,
-    });
-
     const lastPage = Math.ceil(total / limit);
 
-    return {
-      data,
-      meta: {
-        total,
-        page,
-        limit,
-        lastPage,
-      },
+    const response = new PaginatedResponseDto<UserResponseAllDto>();
+
+    response.data = plainToInstance(UserResponseAllDto, users, {
+      excludeExtraneousValues: true,
+    });
+    response.meta = {
+      total,
+      page,
+      limit,
+      lastPage,
     };
+
+    return response;
   }
 }

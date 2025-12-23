@@ -4,10 +4,9 @@ import { CompanyCreateDto } from '../dtos/company-create.dto';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
 import { CompanyName } from '../../domain/values-objects/company-name.vo';
 import { CompanyCnpj } from '../../domain/values-objects/company-cnpj.vo';
-import { CompanyAlreadyExistsException } from '../../domain/exceptions/company-already-exists.exception';
-import { CompanyTypeEnum } from '../../domain/enums/company-type.enum';
 import { FindOneCompanyUseCase } from './find-one-company.use-case';
 import { FindOneCompanyTypeUseCase } from './find-one-company-type.use-case';
+import { CompanyDomainService } from '../../domain/services/company-domain.service';
 
 @Injectable()
 export class CreateCompanyUseCase {
@@ -17,31 +16,30 @@ export class CreateCompanyUseCase {
     private readonly findOneUserUseCase: FindOneUserUseCase,
     private readonly findOneCompanyUseCase: FindOneCompanyUseCase,
     private readonly findOneCompanyTypeUseCase: FindOneCompanyTypeUseCase,
+    private readonly companyDomainService: CompanyDomainService,
   ) {}
 
   async execute(dto: CompanyCreateDto, userId: number): Promise<void> {
-    const name = CompanyName.create(dto.name);
-    const cnpj = CompanyCnpj.create(dto.cnpj);
-    const user = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      name: CompanyName.create(dto.name),
+      cnpj: CompanyCnpj.create(dto.cnpj),
+      companyTypes: await this.findOneCompanyTypeUseCase.findByNames(
+        dto.companyTypes,
+      ),
+    };
+
+    const userCreating = await this.findOneUserUseCase.findById(userId);
     const existingCompany = await this.findOneCompanyUseCase.findByCnpj(
-      cnpj.getValue(),
+      binds.cnpj.getValue(),
     );
 
-    if (existingCompany) {
-      throw new CompanyAlreadyExistsException();
-    }
-
-    const companyTypeNames = dto.companyTypes.map(
-      (key) => CompanyTypeEnum[key],
-    );
-    const companyTypes =
-      await this.findOneCompanyTypeUseCase.findByNames(companyTypeNames);
+    this.companyDomainService.validateCompanyExistsCreate(existingCompany);
 
     await this.companyRepository.create({
-      name: name.getValue(),
-      cnpj: cnpj.getValue(),
-      companyTypes: companyTypes,
-      userCreated: user,
+      name: binds.name.getValue(),
+      cnpj: binds.cnpj.getValue(),
+      companyTypes: binds.companyTypes,
+      userCreated: userCreating,
     });
   }
 }

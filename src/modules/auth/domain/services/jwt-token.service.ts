@@ -8,8 +8,9 @@ export class JwtTokenService {
   constructor(private readonly jwtService: JwtService) {}
 
   generateToken(user: UserEntity): string {
-    const payload: Omit<UserPayload, 'iat' | 'exp'> = {
-      sub: user.id,
+    const payload: UserPayload = {
+      id: user.id,
+      uuid: user.uuid,
       name: user.name,
       email: user.email,
       role: user.role.name,

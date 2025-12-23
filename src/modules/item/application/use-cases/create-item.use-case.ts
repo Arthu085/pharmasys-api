@@ -23,38 +23,36 @@ export class CreateItemUseCase {
   ) {}
 
   async execute(dto: ItemCreateDto, userId: number): Promise<void> {
-    const name = ItemName.create(dto.name);
-    const user = await this.findOneUserUseCase.findById(userId);
-    const type = await this.findOneTypeUseCase.findByName(dto.type);
-    this.itemDomainService.validateType(type);
+    const binds = {
+      name: ItemName.create(dto.name),
+      type: await this.findOneTypeUseCase.findByName(dto.type),
+      presentation: await this.findOnePresentationUseCase.findByName(
+        dto.presentation,
+      ),
+      dosage: await this.findOneDosageUseCase.findByFormat(dto.dosage),
+      subtype: dto.subtype
+        ? await this.findOneSubtypeUseCase.findByName(dto.subtype)
+        : null,
+    };
 
-    const presentation = await this.findOnePresentationUseCase.findByName(
-      dto.presentation,
-    );
-    this.itemDomainService.validatePresentation(presentation);
+    const userCreating = await this.findOneUserUseCase.findById(userId);
 
-    const dosage = await this.findOneDosageUseCase.findByFormat(dto.dosage);
-    this.itemDomainService.validateDosage(dosage);
+    this.itemDomainService.validatePresentation(binds.presentation);
+    this.itemDomainService.validateDosage(binds.dosage);
+    this.itemDomainService.validateType(binds.type);
 
-    let subtype = dto.subtype
-      ? this.itemDomainService.validateSubtype(
-          await this.findOneSubtypeUseCase.findByName(dto.subtype),
-        )
-      : null;
-
-    subtype = this.itemDomainService.validateTypeAndSubtypeCompatibility(
-      type,
-      subtype,
+    binds.subtype = this.itemDomainService.validateTypeAndSubtypeCompatibility(
+      binds.type,
+      binds.subtype,
     );
 
     await this.itemRepository.create({
-      ...dto,
-      name: name.getValue(),
-      type: type,
-      presentation: presentation,
-      dosage: dosage,
-      subtype: subtype,
-      userCreated: user,
+      name: binds.name.getValue(),
+      type: binds.type,
+      presentation: binds.presentation,
+      dosage: binds.dosage,
+      subtype: binds.subtype,
+      userCreated: userCreating,
     });
   }
 }

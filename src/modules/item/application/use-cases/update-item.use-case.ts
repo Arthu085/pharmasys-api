@@ -29,55 +29,65 @@ export class UpdateItemUseCase {
   ) {}
 
   async execute(uuid: UUID, dto: ItemUpdateDto, userId: number): Promise<void> {
-    const user = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      name: dto.name ? ItemName.create(dto.name) : undefined,
+      type: dto.type
+        ? await this.findOneTypeUseCase.findByName(dto.type)
+        : undefined,
+      presentation: dto.presentation
+        ? await this.findOnePresentationUseCase.findByName(dto.presentation)
+        : undefined,
+      dosage: dto.dosage
+        ? await this.findOneDosageUseCase.findByFormat(dto.dosage)
+        : undefined,
+      subtype: dto.subtype
+        ? await this.findOneSubtypeUseCase.findByName(dto.subtype)
+        : null,
+    };
+
+    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const item = await this.findOneItemUseCase.findEntityByUuid(uuid);
 
     this.itemDomainService.validateItemAndEnsureActive(item);
 
-    if (dto.name) {
-      const name = ItemName.create(dto.name);
-
-      item.changeName(name);
+    if (binds.name) {
+      item.changeName(binds.name);
     }
 
-    if (dto.dosage) {
-      const dosage = await this.findOneDosageUseCase.findByFormat(dto.dosage);
-      this.itemDomainService.validateDosage(dosage);
+    if (binds.dosage) {
+      this.itemDomainService.validateDosage(binds.dosage);
 
-      item.changeDosage(dosage);
+      item.changeDosage(binds.dosage);
     }
 
-    if (dto.type) {
-      const type = await this.findOneTypeUseCase.findByName(dto.type);
-      this.itemDomainService.validateType(type);
-
-      item.changeType(type);
-    }
-
-    if (dto.presentation) {
-      const presentation = await this.findOnePresentationUseCase.findByName(
-        dto.presentation,
+    if (binds.type) {
+      this.itemDomainService.validateType(binds.type);
+      this.itemDomainService.validateTypeAndSubtypeCompatibility(
+        binds.type,
+        item.subtype ?? null,
       );
-      this.itemDomainService.validatePresentation(presentation);
 
-      item.changePresentation(presentation);
+      item.changeType(binds.type);
     }
 
-    if (dto.subtype) {
-      const subtype = this.itemDomainService.validateSubtype(
-        await this.findOneSubtypeUseCase.findByName(dto.subtype),
-      );
+    if (binds.presentation) {
+      this.itemDomainService.validatePresentation(binds.presentation);
+
+      item.changePresentation(binds.presentation);
+    }
+
+    if (binds.subtype) {
       this.itemDomainService.validateTypeAndSubtypeCompatibility(
         item.type,
-        subtype,
+        binds.subtype,
       );
-
-      item.changeSubtype(subtype);
     }
 
-    item.userUpdated = user;
+    item.changeSubtype(binds.subtype);
 
-    await this.itemRepository.update(item);
+    item.userUpdated = userUpdating;
+
+    await this.itemRepository.update(item.uuid, item);
   }
 
   async updateStatus(
@@ -85,7 +95,7 @@ export class UpdateItemUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
-    const user = await this.findOneUserUseCase.findById(userId);
+    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const item = await this.findOneItemUseCase.findEntityByUuid(uuid, false);
 
     this.itemDomainService.validateItemSameStatus(item, dto.status);
@@ -96,8 +106,8 @@ export class UpdateItemUseCase {
       item.deactivate();
     }
 
-    item.userUpdated = user;
+    item.userUpdated = userUpdating;
 
-    await this.itemRepository.update(item);
+    await this.itemRepository.update(item.uuid, item);
   }
 }

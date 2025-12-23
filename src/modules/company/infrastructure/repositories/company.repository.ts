@@ -73,12 +73,12 @@ export class CompanyRepository implements ICompanyRepository {
     return this.repo.save(newCompany);
   }
 
-  update(company: CompanyEntity): Promise<UpdateResult> {
-    return this.repo.update({ uuid: company.uuid }, company);
+  update(uuid: UUID, data: Partial<CompanyEntity>): Promise<UpdateResult> {
+    return this.repo.update({ uuid }, data);
   }
 
-  updateRelations(company: CompanyEntity): Promise<CompanyEntity> {
-    return this.repo.save(company);
+  updateRelations(data: Partial<CompanyEntity>): Promise<CompanyEntity> {
+    return this.repo.save(data as CompanyEntity);
   }
 
   softDelete(uuid: UUID): Promise<UpdateResult> {

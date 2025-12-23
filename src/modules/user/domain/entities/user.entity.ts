@@ -14,8 +14,8 @@ import { UUID } from 'crypto';
 
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { RoleEntity } from './role.entity';
-import { Email } from '../value-objects/email.vo';
-import { Password } from '../value-objects/password.vo';
+import { UserEmail } from '../value-objects/user-email.vo';
+import { UserPassword } from '../value-objects/user-password.vo';
 import { UserName } from '../value-objects/user-name.vo';
 import { UserInactiveException } from '../exceptions/user-inactive.exception';
 
@@ -85,8 +85,8 @@ export class UserEntity {
   @Index()
   role: RoleEntity;
 
-  changeEmail(newEmail: Email): void {
-    const currentEmail = Email.create(this.email);
+  changeEmail(newEmail: UserEmail): void {
+    const currentEmail = UserEmail.create(this.email);
 
     if (newEmail.equals(currentEmail)) {
       return;
@@ -107,8 +107,8 @@ export class UserEntity {
     this.updatedAt = new Date();
   }
 
-  changePassword(newPassword: Password): void {
-    const currentPassword = Password.createFromHash(this.password);
+  changePassword(newPassword: UserPassword): void {
+    const currentPassword = UserPassword.createFromHash(this.password);
 
     if (newPassword.equals(currentPassword)) {
       return;

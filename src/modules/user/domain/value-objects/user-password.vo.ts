@@ -1,12 +1,12 @@
 import { InvalidPasswordException } from '../exceptions/invalid-password.exception';
 
-export class Password {
+export class UserPassword {
   private constructor(
     private readonly value: string,
     private readonly hashed: boolean,
   ) {}
 
-  static create(plainPassword: string): Password {
+  static create(plainPassword: string): UserPassword {
     if (!plainPassword) {
       throw new InvalidPasswordException('Senha é obrigatória');
     }
@@ -23,15 +23,15 @@ export class Password {
       );
     }
 
-    return new Password(plainPassword, false);
+    return new UserPassword(plainPassword, false);
   }
 
-  static createFromHash(hashedPassword: string): Password {
+  static createFromHash(hashedPassword: string): UserPassword {
     if (!hashedPassword) {
       throw new InvalidPasswordException('Hash da senha é obrigatório');
     }
 
-    return new Password(hashedPassword, true);
+    return new UserPassword(hashedPassword, true);
   }
 
   getValue(): string {
@@ -42,7 +42,7 @@ export class Password {
     return this.hashed;
   }
 
-  equals(other: Password): boolean {
+  equals(other: UserPassword): boolean {
     return this.value === other.value && this.hashed === other.hashed;
   }
 }

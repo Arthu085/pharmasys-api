@@ -3,9 +3,9 @@ import { UUID } from 'crypto';
 
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 import { UserDomainService } from '../../domain/services/user-domain.service';
-import { UserResponseDto } from '../dtos/user-response.dto';
 import { plainToInstance } from 'class-transformer';
 import { UserEntity } from '../../domain/entities/user.entity';
+import { UserResponseOneDto } from '../dtos/user-response-one.dto';
 
 @Injectable()
 export class FindOneUserUseCase {
@@ -15,12 +15,11 @@ export class FindOneUserUseCase {
     private readonly userDomainService: UserDomainService,
   ) {}
 
-  async execute(uuid: UUID): Promise<UserResponseDto> {
+  async execute(uuid: UUID): Promise<UserResponseOneDto> {
     const user = await this.userRepository.findOne(uuid);
-    const validatedUser =
-      this.userDomainService.validateUserAndEnsureActive(user);
+    this.userDomainService.validateUserAndEnsureActive(user);
 
-    return plainToInstance(UserResponseDto, validatedUser, {
+    return plainToInstance(UserResponseOneDto, user, {
       excludeExtraneousValues: true,
     });
   }
@@ -38,14 +37,7 @@ export class FindOneUserUseCase {
     return this.userDomainService.validateUser(user);
   }
 
-  async findByEmail(email: string): Promise<UserEntity> {
-    const user = await this.userRepository.findByEmail(email);
-    return this.userDomainService.validateUser(user);
-  }
-
-  async findByEmailWithoutValidation(
-    email: string,
-  ): Promise<UserEntity | null> {
+  async findByEmail(email: string): Promise<UserEntity | null> {
     return await this.userRepository.findByEmail(email);
   }
 

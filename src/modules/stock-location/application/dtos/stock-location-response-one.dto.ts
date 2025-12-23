@@ -1,13 +1,9 @@
 import { Expose, Transform } from 'class-transformer';
 import { UUID } from 'crypto';
 
-import { RoleEnum, RoleEnumTranslated } from 'src/shared/enums/role.enum';
 import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
 
-export class UserResponseDto {
-  @Expose()
-  id: number;
-
+export class StockLocationResponseOneDto {
   @Expose()
   uuid: UUID;
 
@@ -15,14 +11,10 @@ export class UserResponseDto {
   name: string;
 
   @Expose()
-  email: string;
+  code: string;
 
   @Expose()
-  @Transform(({ obj }) => ({
-    value: obj.role?.name,
-    label: RoleEnumTranslated[obj.role?.name as RoleEnum] || obj.role?.name,
-  }))
-  role: { value: string; label: string };
+  isCentralStock: boolean;
 
   @Expose()
   @Transform(({ obj }) => ({

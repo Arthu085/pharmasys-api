@@ -1,7 +1,3 @@
-export class RegisterResponseDto {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  token: string;
-}
+import { LoginResponseDto } from './login-response.dto';
+
+export class RegisterResponseDto extends LoginResponseDto {}

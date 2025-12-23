@@ -3,10 +3,11 @@ import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { AdviceEntity } from './advice.entity';
 import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
 import { PrescriptorName } from '../value-objects/prescriptor-name.vo';
-import { RegistrationNumber } from '../value-objects/registration-number.vo';
-import { State } from '../value-objects/state.vo';
+import { PrescriptorRegistration } from '../value-objects/prescriptor-registration.vo';
+import { PrescriptorState } from '../value-objects/prescriptor-state.vo';
 import { PrescriptorInactiveException } from '../exceptions/prescriptor-inactive.exception';
 import { StatusEnum } from 'src/shared/enums/status.enum';
+import { PrescriptorSpecialty } from '../value-objects/prescriptor-specialty';
 
 @Entity('prescriptor', { comment: 'Tabela para cadastro de prescritores' })
 @Index(['name', 'registrationNumber', 'advice'])
@@ -70,8 +71,10 @@ export class PrescriptorEntity extends BaseEntity {
     this.updatedAt = new Date();
   }
 
-  changeRegistrationNumber(newRegistrationNumber: RegistrationNumber): void {
-    const currentRegistrationNumber = RegistrationNumber.create(
+  changeRegistrationNumber(
+    newRegistrationNumber: PrescriptorRegistration,
+  ): void {
+    const currentRegistrationNumber = PrescriptorRegistration.create(
       this.registrationNumber,
     );
 
@@ -83,8 +86,8 @@ export class PrescriptorEntity extends BaseEntity {
     this.updatedAt = new Date();
   }
 
-  changeState(newState: State): void {
-    const currentState = State.create(this.state);
+  changeState(newState: PrescriptorState): void {
+    const currentState = PrescriptorState.create(this.state);
 
     if (newState.equals(currentState)) {
       return;
@@ -99,8 +102,8 @@ export class PrescriptorEntity extends BaseEntity {
     this.updatedAt = new Date();
   }
 
-  changeSpecialty(newSpecialty: string | null): void {
-    this.specialty = newSpecialty;
+  changeSpecialty(newSpecialty: PrescriptorSpecialty | null): void {
+    this.specialty = newSpecialty ? newSpecialty.getValue() : null;
     this.updatedAt = new Date();
   }
 

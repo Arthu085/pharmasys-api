@@ -21,7 +21,7 @@ export interface IUserRepository {
 
   create(user: Partial<UserEntity>): Promise<UserEntity>;
 
-  update(user: UserEntity): Promise<UpdateResult>;
+  update(uuid: UUID, data: Partial<UserEntity>): Promise<UpdateResult>;
 
   softDelete(uuid: UUID): Promise<UpdateResult>;
 }

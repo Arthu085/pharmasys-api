@@ -5,6 +5,7 @@ import { StatusEnum } from 'src/shared/enums/status.enum';
 import { AdviceEntity } from '../entities/advice.entity';
 import { PrescriptorNotFoundException } from '../exceptions/prescriptor-not-found.exception';
 import { AdviceNotFoundException } from '../exceptions/advice-not-found.exception';
+import { PrescriptorAlreadyExistsException } from '../exceptions/prescriptor-already-exists.exception';
 
 @Injectable()
 export class PrescriptorDomainService {
@@ -42,5 +43,24 @@ export class PrescriptorDomainService {
     }
 
     return advice;
+  }
+
+  validatePrescriptorExistsCreate(prescriptor: PrescriptorEntity | null): void {
+    if (prescriptor) {
+      throw new PrescriptorAlreadyExistsException();
+    }
+  }
+
+  validatePrescriptorExistsUpdate(
+    updatePrescriptor: PrescriptorEntity | null,
+    existingPrescriptor: PrescriptorEntity | null,
+  ): void {
+    if (
+      updatePrescriptor &&
+      existingPrescriptor &&
+      existingPrescriptor.uuid !== updatePrescriptor.uuid
+    ) {
+      throw new PrescriptorAlreadyExistsException();
+    }
   }
 }

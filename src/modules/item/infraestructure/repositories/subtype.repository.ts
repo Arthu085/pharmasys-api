@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SubtypeEntity } from '../../domain/entities/subtype.entity';
+import { SubtypeEnum } from '../../domain/enums/subtype.enum';
 
 @Injectable()
 export class SubtypeRepository {
@@ -10,7 +11,7 @@ export class SubtypeRepository {
     private readonly repo: Repository<SubtypeEntity>,
   ) {}
 
-  findByName(name: string): Promise<SubtypeEntity | null> {
+  findByName(name: SubtypeEnum): Promise<SubtypeEntity | null> {
     return this.repo.findOne({ where: { name } });
   }
 }

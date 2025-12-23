@@ -17,7 +17,7 @@ export interface IItemRepository {
 
   create(item: Partial<ItemEntity>): Promise<ItemEntity>;
 
-  update(item: ItemEntity): Promise<UpdateResult>;
+  update(uuid: UUID, data: Partial<ItemEntity>): Promise<UpdateResult>;
 
   softDelete(uuid: UUID): Promise<UpdateResult>;
 }

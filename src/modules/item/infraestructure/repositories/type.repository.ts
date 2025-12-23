@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TypeEntity } from '../../domain/entities/type.entity';
+import { TypeEnum } from '../../domain/enums/type.enum';
 
 @Injectable()
 export class TypeRepository {
@@ -10,7 +11,7 @@ export class TypeRepository {
     private readonly repo: Repository<TypeEntity>,
   ) {}
 
-  findByName(name: string): Promise<TypeEntity | null> {
+  findByName(name: TypeEnum): Promise<TypeEntity | null> {
     return this.repo.findOne({ where: { name } });
   }
 }

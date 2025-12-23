@@ -6,9 +6,7 @@ import { CompanyUpdateDto } from '../dtos/company-update.dto';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
 import { FindOneCompanyUseCase } from './find-one-company.use-case';
 import { CompanyCnpj } from '../../domain/values-objects/company-cnpj.vo';
-import { CompanyAlreadyExistsException } from '../../domain/exceptions/company-already-exists.exception';
 import { CompanyName } from '../../domain/values-objects/company-name.vo';
-import { CompanyTypeEnum } from '../../domain/enums/company-type.enum';
 import { FindOneCompanyTypeUseCase } from './find-one-company-type.use-case';
 import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
 import { CompanyDomainService } from '../../domain/services/company-domain.service';
@@ -30,47 +28,49 @@ export class UpdateCompanyUseCase {
     dto: CompanyUpdateDto,
     userId: number,
   ): Promise<void> {
-    const user = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      name: dto.name ? CompanyName.create(dto.name) : undefined,
+      cnpj: dto.cnpj ? CompanyCnpj.create(dto.cnpj) : undefined,
+      companyTypes: dto.companyTypes
+        ? await this.findOneCompanyTypeUseCase.findByNames(dto.companyTypes)
+        : undefined,
+    };
+
+    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const company = await this.findOneCompanyUseCase.findEntityByUuid(uuid);
 
-    if (dto.cnpj) {
-      const cnpj = CompanyCnpj.create(dto.cnpj);
+    this.companyDomainService.validateCompanyAndEnsureActive(company);
+
+    if (binds.name) {
+      company.changeName(binds.name);
+    }
+
+    if (binds.cnpj) {
       const currentCnpj = CompanyCnpj.create(company.cnpj);
 
-      if (!cnpj.equals(currentCnpj)) {
+      if (!binds.cnpj.equals(currentCnpj)) {
         const existingCompany = await this.findOneCompanyUseCase.findByCnpj(
-          cnpj.getValue(),
+          binds.cnpj.getValue(),
         );
-
-        if (existingCompany && existingCompany.id !== company.id) {
-          throw new CompanyAlreadyExistsException();
-        }
+        this.companyDomainService.validateCompanyExistsUpdate(
+          company,
+          existingCompany,
+        );
+        company.changeCnpj(binds.cnpj);
       }
-
-      company.changeCnpj(cnpj);
     }
 
-    if (dto.name) {
-      const name = CompanyName.create(dto.name);
-      company.changeName(name);
-    }
-
-    if (dto.companyTypes && dto.companyTypes.length > 0) {
-      const companyTypeNames = dto.companyTypes.map(
-        (key) => CompanyTypeEnum[key],
-      );
-      const companyTypes =
-        await this.findOneCompanyTypeUseCase.findByNames(companyTypeNames);
-      company.changeCompanyTypes(companyTypes);
-    }
-
-    company.userUpdated = user;
-
-    if (dto.companyTypes && dto.companyTypes.length > 0) {
+    if (binds.companyTypes) {
+      company.companyTypes = [];
+      company.changeCompanyTypes(binds.companyTypes);
       await this.companyRepository.updateRelations(company);
-    } else {
-      await this.companyRepository.update(company);
     }
+
+    company.userUpdated = userUpdating;
+
+    delete (company as any).companyTypes;
+
+    await this.companyRepository.update(company.uuid, company);
   }
 
   async updateStatus(
@@ -78,7 +78,7 @@ export class UpdateCompanyUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
-    const user = await this.findOneUserUseCase.findById(userId);
+    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const company = await this.findOneCompanyUseCase.findEntityByUuid(
       uuid,
       false,
@@ -92,9 +92,9 @@ export class UpdateCompanyUseCase {
       company.deactivate();
     }
 
-    company.userUpdated = user;
+    company.userUpdated = userUpdating;
 
     delete (company as any).companyTypes;
-    await this.companyRepository.update(company);
+    await this.companyRepository.update(company.uuid, company);
   }
 }

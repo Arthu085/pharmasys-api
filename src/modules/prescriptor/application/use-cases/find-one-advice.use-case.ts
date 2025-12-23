@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IAdviceRepository } from '../../domain/repositories/advice.repository.interface';
 import { PrescriptorDomainService } from '../../domain/services/prescriptor-domain.service';
 import { AdviceEntity } from '../../domain/entities/advice.entity';
+import { AdviceEnum } from '../../domain/enums/advice.enum';
 
 @Injectable()
 export class FindOneAdviceUseCase {
@@ -11,7 +12,7 @@ export class FindOneAdviceUseCase {
     private readonly prescriptorDomainService: PrescriptorDomainService,
   ) {}
 
-  async findByAcronym(acronym: string): Promise<AdviceEntity> {
+  async findByAcronym(acronym: AdviceEnum): Promise<AdviceEntity> {
     const advice = await this.adviceRepository.findByAcronym(acronym);
 
     return this.prescriptorDomainService.validateAdvice(advice);

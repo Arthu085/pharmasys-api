@@ -5,9 +5,10 @@ import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-
 import { FindOneAdviceUseCase } from './find-one-advice.use-case';
 import { FindOnePrescriptorUseCase } from './find-one-prescriptor.use-case';
 import { PrescriptorName } from '../../domain/value-objects/prescriptor-name.vo';
-import { RegistrationNumber } from '../../domain/value-objects/registration-number.vo';
-import { State } from '../../domain/value-objects/state.vo';
-import { PrescriptorAlreadyExistsException } from '../../domain/exceptions/prescriptor-already-exists.exception';
+import { PrescriptorRegistration } from '../../domain/value-objects/prescriptor-registration.vo';
+import { PrescriptorState } from '../../domain/value-objects/prescriptor-state.vo';
+import { PrescriptorSpecialty } from '../../domain/value-objects/prescriptor-specialty';
+import { PrescriptorDomainService } from '../../domain/services/prescriptor-domain.service';
 
 @Injectable()
 export class CreatePrescriptorUseCase {
@@ -17,33 +18,40 @@ export class CreatePrescriptorUseCase {
     private readonly findOneUserUseCase: FindOneUserUseCase,
     private readonly findOneAdviceUseCase: FindOneAdviceUseCase,
     private readonly findOnePrescriptorUseCase: FindOnePrescriptorUseCase,
+    private readonly prescriptorDomainService: PrescriptorDomainService,
   ) {}
 
   async execute(dto: PrescriptorCreateDto, userId: number): Promise<void> {
-    const name = PrescriptorName.create(dto.name);
-    const registrationNumber = RegistrationNumber.create(
-      dto.registrationNumber,
-    );
-    const state = State.create(dto.state);
-    const user = await this.findOneUserUseCase.findById(userId);
-    const advice = await this.findOneAdviceUseCase.findByAcronym(dto.advice);
+    const binds = {
+      name: PrescriptorName.create(dto.name),
+      registrationNumber: PrescriptorRegistration.create(
+        dto.registrationNumber,
+      ),
+      state: PrescriptorState.create(dto.state),
+      specialty: dto.specialty
+        ? PrescriptorSpecialty.create(dto.specialty)
+        : null,
+      advice: await this.findOneAdviceUseCase.findByAcronym(dto.advice),
+    };
+
+    const userCreating = await this.findOneUserUseCase.findById(userId);
     const existingPrescriptor =
       await this.findOnePrescriptorUseCase.findByRegistrationNumberAndAdvice(
-        registrationNumber.getValue(),
-        advice.id,
+        binds.registrationNumber.getValue(),
+        binds.advice.id,
       );
 
-    if (existingPrescriptor) {
-      throw new PrescriptorAlreadyExistsException();
-    }
+    this.prescriptorDomainService.validatePrescriptorExistsCreate(
+      existingPrescriptor,
+    );
 
     await this.prescriptorRepository.create({
-      ...dto,
-      name: name.getValue(),
-      registrationNumber: registrationNumber.getValue(),
-      state: state.getValue(),
-      userCreated: user,
-      advice: advice,
+      name: binds.name.getValue(),
+      registrationNumber: binds.registrationNumber.getValue(),
+      state: binds.state.getValue(),
+      specialty: binds.specialty?.getValue() || null,
+      userCreated: userCreating,
+      advice: binds.advice,
     });
   }
 }
