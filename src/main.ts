@@ -1,8 +1,10 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { corsConfig } from './config/cors.config';
+import { corsConfig } from './core/config/cors.config';
+import { env } from './core/config/env.config';
 import { ValidationPipe } from '@nestjs/common';
-import { TransformResponseInterceptor } from './common/interceptors/transform-response.interceptor';
+import { TransformResponseInterceptor } from './core/interceptors/transform-response.interceptor';
+import { HttpExceptionFilter } from './core/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +12,7 @@ async function bootstrap() {
   app.enableCors(corsConfig);
   app.setGlobalPrefix('api');
 
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new TransformResponseInterceptor(new Reflector()));
   app.useGlobalPipes(
     new ValidationPipe({
@@ -18,6 +21,6 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(env.port);
 }
 bootstrap();

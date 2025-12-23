@@ -1,47 +1,80 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Item } from './entities/item.entity';
-import { User } from '../user/entities/user.entity';
-import { Dosage } from './entities/dosage.entity';
-import { Type } from './entities/type.entity';
-import { Subtype } from './entities/subtype.entity';
-import { Presentation } from './entities/presentation.entity';
-import { ItemController } from './controllers/item.controller';
-import { ItemRepository } from './repositories/item.repository';
-import { DosageRepository } from './repositories/dosage.repository';
-import { TypeRepository } from './repositories/type.repository';
-import { SubtypeRepository } from './repositories/subtype.repository';
-import { PresentationRepository } from './repositories/presentation.repository';
-import { ItemService } from './services/item.service';
-import { UserService } from '../user/services/user.service';
-import { UserRepository } from '../user/repositories/user.repository';
-import { RoleRepository } from '../user/repositories/role.repository';
-import { Role } from '../user/entities/role.entity';
+import { IItemRepository } from './domain/repositories/item.repository.interface';
+import { IDosageRepository } from './domain/repositories/dosage.repository.interface';
+import { IPresentationRepository } from './domain/repositories/presentation.repository.interface';
+import { ITypeRepository } from './domain/repositories/type.repository.interface';
+import { ISubtypeRepository } from './domain/repositories/subtype.repository.interface';
+import { ItemEntity } from './domain/entities/item.entity';
+import { DosageEntity } from './domain/entities/dosage.entity';
+import { PresentationEntity } from './domain/entities/presentation.entity';
+import { TypeEntity } from './domain/entities/type.entity';
+import { SubtypeEntity } from './domain/entities/subtype.entity';
+import { ItemRepository } from './infraestructure/repositories/item.repository';
+import { DosageRepository } from './infraestructure/repositories/dosage.repository';
+import { PresentationRepository } from './infraestructure/repositories/presentation.repository';
+import { TypeRepository } from './infraestructure/repositories/type.repository';
+import { SubtypeRepository } from './infraestructure/repositories/subtype.repository';
+import { ItemDomainService } from './domain/services/item-domain.service';
+import { CreateItemUseCase } from './application/use-cases/create-item.use-case';
+import { UpdateItemUseCase } from './application/use-cases/update-item.use-case';
+import { FindOneItemUseCase } from './application/use-cases/find-one-item.use-case';
+import { FindAllItemUseCase } from './application/use-cases/find-all-item.use-case';
+import { DeleteItemUseCase } from './application/use-cases/delete-item.use-case';
+import { FindOneTypeUseCase } from './application/use-cases/find-one-type.use-case';
+import { FindOneSubtypeUseCase } from './application/use-cases/find-one-subtype.use-case';
+import { FindOnePresentationUseCase } from './application/use-cases/find-one-presentation.use-case';
+import { FindOneDosageUseCase } from './application/use-cases/find-one-dosage.use-case';
+import { UserModule } from '../user/user.module';
+import { SharedModule } from 'src/shared/shared.module';
+import { ItemProtectedController } from './infraestructure/controllers/item-protected.controller';
+import { ItemPublicController } from './infraestructure/controllers/item-public.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      Item,
-      User,
-      Dosage,
-      Type,
-      Subtype,
-      Presentation,
-      Role,
+      ItemEntity,
+      DosageEntity,
+      PresentationEntity,
+      TypeEntity,
+      SubtypeEntity,
     ]),
+    UserModule,
+    SharedModule,
   ],
-  controllers: [ItemController],
+  controllers: [ItemProtectedController, ItemPublicController],
   providers: [
-    ItemRepository,
-    DosageRepository,
-    TypeRepository,
-    SubtypeRepository,
-    PresentationRepository,
-    UserRepository,
-    RoleRepository,
-    ItemService,
-    UserService,
+    {
+      provide: IItemRepository,
+      useClass: ItemRepository,
+    },
+    {
+      provide: IDosageRepository,
+      useClass: DosageRepository,
+    },
+    {
+      provide: IPresentationRepository,
+      useClass: PresentationRepository,
+    },
+    {
+      provide: ITypeRepository,
+      useClass: TypeRepository,
+    },
+    {
+      provide: ISubtypeRepository,
+      useClass: SubtypeRepository,
+    },
+    ItemDomainService,
+    CreateItemUseCase,
+    UpdateItemUseCase,
+    FindOneItemUseCase,
+    FindAllItemUseCase,
+    DeleteItemUseCase,
+    FindOneTypeUseCase,
+    FindOneSubtypeUseCase,
+    FindOnePresentationUseCase,
+    FindOneDosageUseCase,
   ],
-  exports: [ItemService],
+  exports: [FindOneItemUseCase],
 })
 export class ItemModule {}

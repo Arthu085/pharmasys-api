@@ -1,28 +1,47 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Company } from './entities/company.entity';
-import { CompanyType } from './entities/company-type.entity';
-import { CompanyRepository } from './repositories/company.repository';
-import { CompanyTypeRepository } from './repositories/company-type.repository';
-import { CompanyService } from './services/company.service';
-import { CompanyController } from './controllers/company.controller';
-import { UserService } from '../user/services/user.service';
-import { UserRepository } from '../user/repositories/user.repository';
-import { RoleRepository } from '../user/repositories/role.repository';
-import { User } from '../user/entities/user.entity';
-import { Role } from '../user/entities/role.entity';
+import { CompanyEntity } from './domain/entities/company.entity';
+import { CompanyTypeEntity } from './domain/entities/company-type.entity';
+import { ICompanyRepository } from './domain/repositories/company.repository.interface';
+import { ICompanyTypeRepository } from './domain/repositories/company-type.repository.interface';
+import { CompanyRepository } from './infrastructure/repositories/company.repository';
+import { CompanyTypeRepository } from './infrastructure/repositories/company-type.repository';
+import { CompanyProtectedController } from './infrastructure/controllers/company-protected.controller';
+import { CompanyPublicController } from './infrastructure/controllers/company-public.controller';
+import { CompanyDomainService } from './domain/services/company-domain.service';
+import { CreateCompanyUseCase } from './application/use-cases/create-company.use-case';
+import { UpdateCompanyUseCase } from './application/use-cases/update-company.use-case';
+import { FindOneCompanyUseCase } from './application/use-cases/find-one-company.use-case';
+import { FindAllCompanyUseCase } from './application/use-cases/find-all-company.use-case';
+import { DeleteCompanyUseCase } from './application/use-cases/delete-company.use-case';
+import { FindOneCompanyTypeUseCase } from './application/use-cases/find-one-company-type.use-case';
+import { UserModule } from '../user/user.module';
+import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Company, CompanyType, User, Role])],
-  controllers: [CompanyController],
-  providers: [
-    CompanyRepository,
-    CompanyTypeRepository,
-    UserRepository,
-    RoleRepository,
-    CompanyService,
-    UserService,
+  imports: [
+    TypeOrmModule.forFeature([CompanyEntity, CompanyTypeEntity]),
+    UserModule,
+    SharedModule,
   ],
-  exports: [CompanyService],
+  controllers: [CompanyProtectedController, CompanyPublicController],
+  providers: [
+    {
+      provide: ICompanyRepository,
+      useClass: CompanyRepository,
+    },
+    {
+      provide: ICompanyTypeRepository,
+      useClass: CompanyTypeRepository,
+    },
+    CompanyDomainService,
+    CreateCompanyUseCase,
+    UpdateCompanyUseCase,
+    FindOneCompanyUseCase,
+    FindAllCompanyUseCase,
+    DeleteCompanyUseCase,
+    FindOneCompanyTypeUseCase,
+  ],
+  exports: [FindOneCompanyUseCase],
 })
 export class CompanyModule {}

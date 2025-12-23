@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { StockBalance } from './entities/stock-balance.entity';
+import { StockBalanceEntity } from './domain/entities/stock-balance.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([StockBalance])],
+  imports: [TypeOrmModule.forFeature([StockBalanceEntity])],
   controllers: [],
   providers: [],
   exports: [],

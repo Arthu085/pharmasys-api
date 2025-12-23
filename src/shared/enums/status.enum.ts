@@ -1,4 +1,9 @@
 export enum StatusEnum {
-  ATIVO = 'A',
-  INATIVO = 'I',
+  ATIVO = 'ATIVO',
+  INATIVO = 'INATIVO',
+}
+
+export enum StatusEnumTranslated {
+  ATIVO = 'Ativo',
+  INATIVO = 'Inativo',
 }

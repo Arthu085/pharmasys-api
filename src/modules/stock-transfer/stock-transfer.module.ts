@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { StockTransfer } from './entities/stock-transfer.entity';
-import { StockTransferItem } from './entities/stock-transfer-item.entity';
+import { StockTransferEntity } from './domain/entities/stock-transfer.entity';
+import { StockTransferItemEntity } from './domain/entities/stock-transfer-item.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([StockTransfer, StockTransferItem])],
+  imports: [
+    TypeOrmModule.forFeature([StockTransferEntity, StockTransferItemEntity]),
+  ],
   controllers: [],
   providers: [],
   exports: [],

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Batch } from './entities/batch.entity';
+import { BatchEntity } from './domain/entities/batch.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Batch])],
+  imports: [TypeOrmModule.forFeature([BatchEntity])],
   controllers: [],
   providers: [],
   exports: [],

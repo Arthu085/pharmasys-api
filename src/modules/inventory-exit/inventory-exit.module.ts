@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { InventoryExit } from './entities/inventory-exit.entity';
-import { InventoryExitItem } from './entities/inventory-exit-item.entity';
-import { ExitItemType } from './entities/exit-item-type.entity';
+import { InventoryExitEntity } from './domain/entities/inventory-exit.entity';
+import { InventoryExitItemEntity } from './domain/entities/inventory-exit-item.entity';
+import { ExitItemTypeEntity } from './domain/entities/exit-item-type.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([InventoryExit, InventoryExitItem, ExitItemType]),
+    TypeOrmModule.forFeature([
+      InventoryExitEntity,
+      InventoryExitItemEntity,
+      ExitItemTypeEntity,
+    ]),
   ],
   controllers: [],
   providers: [],
