@@ -7,8 +7,8 @@ export const ADVICES_SEED = [
     fullName: 'CONSELHO_REGIONAL_ODONTOLOGIA',
   },
   {
-    acronym: AdviceEnum.COREM,
-    fullName: 'CONSELHO_REGIONAL_TECNICOS_RADIOLOGIA',
+    acronym: AdviceEnum.COREN,
+    fullName: 'CONSELHO_REGIONAL_ENFERMAGEM',
   },
   {
     acronym: AdviceEnum.CRMV,
