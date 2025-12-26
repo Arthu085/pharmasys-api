@@ -1,8 +1,10 @@
+import { Transform } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
   IsNotEmpty,
   IsString,
+  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -17,8 +19,10 @@ export class CompanyCreateDto {
 
   @IsNotEmpty({ message: 'O CNPJ é obrigatório' })
   @IsString({ message: 'O CNPJ deve ser uma string' })
-  @MinLength(14, { message: 'O CNPJ deve ter no mínimo 14 caracteres' })
-  @MaxLength(14, { message: 'O nome deve ter no máximo 14 caracteres' })
+  @Transform(({ value }) => value?.replace(/\D/g, ''))
+  @Matches(/^\d{14}$/, {
+    message: 'O CNPJ deve conter 14 dígitos',
+  })
   cnpj: string;
 
   @IsArray()

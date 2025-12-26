@@ -3,16 +3,52 @@ import { InvalidCompanyCnpjException } from '../exceptions/invalid-company-cnpj.
 export class CompanyCnpj {
   private constructor(private readonly value: string) {}
 
-  static create(cnpj: string): CompanyCnpj {
-    const formatedCnpj = cnpj.trim().toUpperCase();
+  static create(cnpjValue: string): CompanyCnpj {
+    const cleanedCnpj = cnpjValue.replace(/\D/g, '');
 
-    if (!formatedCnpj || formatedCnpj.length !== 14) {
-      throw new InvalidCompanyCnpjException(
-        'CNPJ da empresa deve ter no mínimo e máximo 14 caracteres',
-      );
+    if (!this.isValidCnpj(cleanedCnpj)) {
+      throw new InvalidCompanyCnpjException('CNPJ inválido');
     }
 
-    return new CompanyCnpj(formatedCnpj);
+    return new CompanyCnpj(cleanedCnpj);
+  }
+
+  private static isValidCnpj(cnpj: string): boolean {
+    if (cnpj.length !== 14) return false;
+
+    // Rejeita sequências repetidas
+    if (/^(\d)\1{13}$/.test(cnpj)) return false;
+
+    // Calcula primeiro dígito verificador
+    let size = cnpj.length - 2;
+    let numbers = cnpj.substring(0, size);
+    let digits = cnpj.substring(size);
+    let sum = 0;
+    let pos = size - 7;
+
+    for (let i = size; i >= 1; i--) {
+      sum += parseInt(numbers.charAt(size - i)) * pos--;
+      if (pos < 2) pos = 9;
+    }
+
+    let result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+    if (result !== parseInt(digits.charAt(0))) return false;
+
+    // Calcula segundo dígito verificador
+    size = size + 1;
+    numbers = cnpj.substring(0, size);
+    sum = 0;
+    pos = size - 7;
+
+    for (let i = size; i >= 1; i--) {
+      sum += parseInt(numbers.charAt(size - i)) * pos--;
+      if (pos < 2) pos = 9;
+    }
+
+    result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+    if (result !== parseInt(digits.charAt(1))) return false;
+
+    return true;
   }
 
   getValue(): string {

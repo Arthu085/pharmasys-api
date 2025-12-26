@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { CompanyTypeEnum } from '../../domain/enums/company-type.enum';
@@ -10,6 +11,7 @@ export class CompanyFilterDto extends FilterDto {
 
   @IsOptional()
   @IsString({ message: 'O CNPJ deve ser uma string' })
+  @Transform(({ value }) => value?.replace(/\D/g, ''))
   cnpj?: string;
 
   @IsOptional()
