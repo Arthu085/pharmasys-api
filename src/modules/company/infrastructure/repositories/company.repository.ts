@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, ILike, Repository, UpdateResult } from 'typeorm';
 import { UUID } from 'crypto';
 
-import { StatusEnum } from 'src/shared/enums/status.enum';
 import { ICompanyRepository } from '../../domain/repositories/company.repository.interface';
 import { CompanyEntity } from '../../domain/entities/company.entity';
 import { CompanyFilterDto } from '../../application/dtos/company-filter.dto';
@@ -38,9 +37,7 @@ export class CompanyRepository implements ICompanyRepository {
     }
 
     if (filters.status) {
-      const status = StatusEnum[filters.status];
-
-      where.status = status;
+      where.status = filters.status;
     }
 
     return this.repo.findAndCount({

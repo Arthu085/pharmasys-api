@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+
 import { IPrescriptorRepository } from '../../domain/repositories/prescriptor.repository.interface';
 import { PrescriptorCreateDto } from '../dtos/prescriptor-create.dto';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
@@ -50,8 +51,8 @@ export class CreatePrescriptorUseCase {
       registrationNumber: binds.registrationNumber.getValue(),
       state: binds.state.getValue(),
       specialty: binds.specialty?.getValue() || null,
-      userCreated: userCreating,
       advice: binds.advice,
+      userCreated: userCreating,
     });
   }
 }

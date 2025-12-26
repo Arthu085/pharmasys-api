@@ -4,7 +4,6 @@ import { UUID } from 'crypto';
 
 import { StockLocationEntity } from '../../domain/entities/stock-location.entity';
 import { FindOptionsWhere, ILike, Repository, UpdateResult } from 'typeorm';
-import { StatusEnum } from 'src/shared/enums/status.enum';
 import { StockLocationFilterDto } from '../../application/dtos/stock-location-filter.dto';
 import { IStockLocationRepository } from '../../domain/repositories/stock-location.repository.interface';
 
@@ -31,8 +30,7 @@ export class StockLocationRepository implements IStockLocationRepository {
     }
 
     if (filters.status) {
-      const status = StatusEnum[filters.status];
-      where.status = status;
+      where.status = filters.status;
     }
 
     return this.repo.findAndCount({
