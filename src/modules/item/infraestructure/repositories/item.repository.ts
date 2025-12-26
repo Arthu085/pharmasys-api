@@ -4,7 +4,6 @@ import { FindOptionsWhere, ILike, Repository, UpdateResult } from 'typeorm';
 import { UUID } from 'crypto';
 
 import { ItemFilterDto } from '../../application/dtos/item-filter.dto';
-import { StatusEnum } from 'src/shared/enums/status.enum';
 import { ItemEntity } from '../../domain/entities/item.entity';
 import { TypeEnum } from '../../domain/enums/type.enum';
 import { PresentationEnum } from '../../domain/enums/presentation.enum';
@@ -55,9 +54,7 @@ export class ItemRepository implements IItemRepository {
     }
 
     if (filters.status) {
-      const status = StatusEnum[filters.status];
-
-      where.status = status;
+      where.status = filters.status;
     }
 
     return this.repo.findAndCount({
