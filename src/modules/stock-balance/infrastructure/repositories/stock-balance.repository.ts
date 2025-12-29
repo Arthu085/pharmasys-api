@@ -5,6 +5,9 @@ import { UUID } from 'crypto';
 import { FindOptionsWhere, ILike, Repository, UpdateResult } from 'typeorm';
 import { IStockBalanceRepository } from '../../domain/repositories/stock-balance.repository.interface';
 import { StockBalanceEntity } from '../../domain/entities/stock-balance.entity';
+import { StockBalanceFilterDto } from '../../application/dtos/stock-balance-filter.dto';
+import { BatchEntity } from 'src/modules/batch/domain/entities/batch.entity';
+import { StockLocationEntity } from 'src/modules/stock-location/domain/entities/stock-location.entity';
 
 @Injectable()
 export class StockBalanceRepository implements IStockBalanceRepository {
@@ -19,20 +22,21 @@ export class StockBalanceRepository implements IStockBalanceRepository {
     skip: number,
   ): Promise<[StockBalanceEntity[], number]> {
     const where: FindOptionsWhere<StockBalanceEntity> = {};
-    if (filters.name) {
-      where.name = ILike(`%${filters.name}%`);
+    if (filters.item) {
+      where.item = { uuid: filters.item };
     }
 
-    if (filters.code) {
-      where.code = ILike(`%${filters.code}%`);
+    if (filters.batch) {
+      where.batch = { uuid: filters.batch };
     }
 
-    if (filters.status) {
-      where.status = filters.status;
+    if (filters.stockLocation) {
+      where.stockLocation = { uuid: filters.stockLocation };
     }
 
     return this.repo.findAndCount({
       where,
+      relations: ['item', 'batch', 'stockLocation'],
       take,
       skip,
       order: { id: 'DESC' },
@@ -43,6 +47,20 @@ export class StockBalanceRepository implements IStockBalanceRepository {
   findOne(uuid: UUID): Promise<StockBalanceEntity | null> {
     return this.repo.findOne({
       where: { uuid },
+      relations: ['item', 'batch', 'stockLocation'],
+      withDeleted: false,
+    });
+  }
+
+  findByBatchAndStockLocation(
+    batch: BatchEntity,
+    stockLocation: StockLocationEntity,
+  ): Promise<StockBalanceEntity | null> {
+    return this.repo.findOne({
+      where: {
+        batch: { uuid: batch.uuid },
+        stockLocation: { uuid: stockLocation.uuid },
+      },
       withDeleted: false,
     });
   }
