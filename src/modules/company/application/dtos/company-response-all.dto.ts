@@ -14,7 +14,7 @@ export class CompanyResponseAllDto {
 
   @Expose()
   @Transform(({ value }) => {
-    if (!value) return value;
+    if (!value) return null;
     return value.replace(
       /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
       '$1.$2.$3/$4-$5',
@@ -23,16 +23,9 @@ export class CompanyResponseAllDto {
   cnpj: string;
 
   @Expose()
-  @Transform(({ obj }) => ({
-    value: obj.status,
-    label:
-      StatusEnumTranslated[obj.status as keyof typeof StatusEnumTranslated],
-  }))
-  status: { value: string; label: string };
-
-  @Expose()
   @Type(() => CompanyTypeResponseDto)
   @Transform(({ obj }) => {
+    if (!obj.companyTypes) return [];
     return obj.companyTypes.map((type: { name: string }) => ({
       value: type.name,
       label:
@@ -42,4 +35,12 @@ export class CompanyResponseAllDto {
     })) as Array<{ value: string; label: string }>;
   })
   companyTypes: CompanyTypeResponseDto[];
+
+  @Expose()
+  @Transform(({ obj }) => ({
+    value: obj.status,
+    label:
+      StatusEnumTranslated[obj.status as keyof typeof StatusEnumTranslated],
+  }))
+  status: { value: string; label: string };
 }

@@ -10,11 +10,11 @@ import { DosageEntity } from './domain/entities/dosage.entity';
 import { PresentationEntity } from './domain/entities/presentation.entity';
 import { TypeEntity } from './domain/entities/type.entity';
 import { SubtypeEntity } from './domain/entities/subtype.entity';
-import { ItemRepository } from './infraestructure/repositories/item.repository';
-import { DosageRepository } from './infraestructure/repositories/dosage.repository';
-import { PresentationRepository } from './infraestructure/repositories/presentation.repository';
-import { TypeRepository } from './infraestructure/repositories/type.repository';
-import { SubtypeRepository } from './infraestructure/repositories/subtype.repository';
+import { ItemRepository } from './infrastructure/repositories/item.repository';
+import { DosageRepository } from './infrastructure/repositories/dosage.repository';
+import { PresentationRepository } from './infrastructure/repositories/presentation.repository';
+import { TypeRepository } from './infrastructure/repositories/type.repository';
+import { SubtypeRepository } from './infrastructure/repositories/subtype.repository';
 import { ItemDomainService } from './domain/services/item-domain.service';
 import { CreateItemUseCase } from './application/use-cases/create-item.use-case';
 import { UpdateItemUseCase } from './application/use-cases/update-item.use-case';
@@ -27,8 +27,8 @@ import { FindOnePresentationUseCase } from './application/use-cases/find-one-pre
 import { FindOneDosageUseCase } from './application/use-cases/find-one-dosage.use-case';
 import { UserModule } from '../user/user.module';
 import { SharedModule } from 'src/shared/shared.module';
-import { ItemProtectedController } from './infraestructure/controllers/item-protected.controller';
-import { ItemPublicController } from './infraestructure/controllers/item-public.controller';
+import { ItemProtectedController } from './infrastructure/controllers/item-protected.controller';
+import { ItemPublicController } from './infrastructure/controllers/item-public.controller';
 
 @Module({
   imports: [

@@ -3,31 +3,37 @@ import { CompanyEntity } from 'src/modules/company/domain/entities/company.entit
 import { ItemEntity } from 'src/modules/item/domain/entities/item.entity';
 import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import { BatchCode } from '../values-objects/batch-code.vo';
+import { StatusEnum } from 'src/shared/enums/status.enum';
+import { BatchInactiveException } from '../exceptions/batch-inactive.exception';
 
 @Entity('batch', { comment: 'Tabela para cadastro de lotes' })
 @Index(['item', 'company', 'batchCode'])
+@Index('IDX_code_unique_when_not_deleted', ['batchCode'], {
+  unique: true,
+  where: '"deleted_at" IS NULL',
+})
 export class BatchEntity extends BaseEntity {
-  @ManyToOne(() => UserEntity, { eager: true })
+  @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'user_created_id' })
   userCreated: UserEntity;
 
-  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
   userUpdated?: UserEntity | null;
 
-  @ManyToOne(() => ItemEntity, { eager: true })
+  @ManyToOne(() => ItemEntity)
   @JoinColumn({ name: 'item_id' })
   @Index()
   item: ItemEntity;
 
-  @ManyToOne(() => CompanyEntity, { eager: true })
+  @ManyToOne(() => CompanyEntity)
   @JoinColumn({ name: 'company_id' })
   @Index()
   company: CompanyEntity;
 
   @Column({
-    length: 90,
-    unique: true,
+    length: 20,
     comment: 'Código do lote',
     name: 'batch_code',
   })
@@ -40,4 +46,68 @@ export class BatchEntity extends BaseEntity {
     name: 'expiration_date',
   })
   expirationDate: Date;
+
+  changeBatchCode(newBatchCode: BatchCode): void {
+    const currentBatchCode = BatchCode.create(this.batchCode);
+
+    if (newBatchCode.equals(currentBatchCode)) {
+      return;
+    }
+
+    this.batchCode = newBatchCode.getValue();
+    this.updatedAt = new Date();
+  }
+
+  changeItem(newItem: ItemEntity): void {
+    const currentItem = this.item;
+
+    if (newItem.id === currentItem.id) {
+      return;
+    }
+
+    this.item = newItem;
+    this.updatedAt = new Date();
+  }
+
+  changeCompany(newCompany: CompanyEntity): void {
+    const currentCompany = this.company;
+
+    if (newCompany.id === currentCompany.id) {
+      return;
+    }
+
+    this.company = newCompany;
+    this.updatedAt = new Date();
+  }
+
+  changeExpirationDate(newExpirationDate: Date): void {
+    const currentExpirationDate = this.expirationDate;
+
+    if (newExpirationDate === currentExpirationDate) {
+      return;
+    }
+
+    this.expirationDate = newExpirationDate;
+    this.updatedAt = new Date();
+  }
+
+  activate(): void {
+    this.status = StatusEnum.ATIVO;
+    this.updatedAt = new Date();
+  }
+
+  deactivate(): void {
+    this.status = StatusEnum.INATIVO;
+    this.updatedAt = new Date();
+  }
+
+  isActive(): boolean {
+    return this.status === StatusEnum.ATIVO;
+  }
+
+  ensureIsActive(): void {
+    if (!this.isActive()) {
+      throw new BatchInactiveException();
+    }
+  }
 }

@@ -9,7 +9,7 @@ import { ItemModule } from './modules/item/item.module';
 import { CompanyModule } from './modules/company/company.module';
 import { PatientModule } from './modules/patient/patient.module';
 // import { StockBalanceModule } from './modules/stock-balance/stock-balance.module';
-// import { BatchModule } from './modules/batch/batch.module';
+import { BatchModule } from './modules/batch/batch.module';
 // import { InventoryEntryModule } from './modules/inventory-entry/inventory-entry.module';
 // import { StockTransferModule } from './modules/stock-transfer/stock-transfer.module';
 // import { TransferRequestModule } from './modules/transfer-request/transfer-request.module';
@@ -26,7 +26,7 @@ import { PatientModule } from './modules/patient/patient.module';
     CompanyModule,
     PatientModule,
     // StockBalanceModule,
-    // BatchModule,
+    BatchModule,
     // InventoryEntryModule,
     // StockTransferModule,
     // TransferRequestModule,

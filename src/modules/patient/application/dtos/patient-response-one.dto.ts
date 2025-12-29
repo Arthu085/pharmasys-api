@@ -25,8 +25,8 @@ export class PatientResponseOneDto {
   status: { value: string; label: string };
 
   @Expose()
-  @Transform(({ obj }) => obj.userCreated?.name)
-  userCreated: string;
+  @Transform(({ obj }) => obj.userCreated?.name || null)
+  userCreated: string | null;
 
   @Expose()
   @Transform(({ obj }) => obj.userUpdated?.name || null)
