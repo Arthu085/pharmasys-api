@@ -12,17 +12,6 @@ export class BatchResponseOneDto {
 
   @Expose()
   @Transform(({ obj }) => {
-    return obj.item
-      ? {
-          value: obj.item.uuid,
-          label: obj.item.name,
-        }
-      : null;
-  })
-  item: { value: UUID; label: string } | null;
-
-  @Expose()
-  @Transform(({ obj }) => {
     return obj.company
       ? {
           value: obj.company.uuid,

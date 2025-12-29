@@ -6,7 +6,6 @@ import { ChangeStatusDto } from 'src/shared/dtos/change-status.dto';
 import { StatusEnum } from 'src/shared/enums/status.enum';
 import { IBatchRepository } from '../../domain/repositories/batch.repository.interface';
 import { FindOneBatchUseCase } from './find-one-batch.use-case';
-import { FindOneItemUseCase } from 'src/modules/item/application/use-cases/find-one-item.use-case';
 import { FindOneCompanyUseCase } from 'src/modules/company/application/use-cases/find-one-company.use-case';
 import { BatchDomainService } from '../../domain/services/batch-domain.service';
 import { BatchUpdateDto } from '../dtos/batch-update.dto';
@@ -19,7 +18,6 @@ export class UpdateBatchUseCase {
     private readonly batchRepository: IBatchRepository,
     private readonly findOneUserUseCase: FindOneUserUseCase,
     private readonly findOneBatchUseCase: FindOneBatchUseCase,
-    private readonly findOneItemUseCase: FindOneItemUseCase,
     private readonly findOneCompanyUseCase: FindOneCompanyUseCase,
     private readonly batchDomainService: BatchDomainService,
   ) {}
@@ -31,9 +29,6 @@ export class UpdateBatchUseCase {
   ): Promise<void> {
     const binds = {
       batchCode: dto.batchCode ? BatchCode.create(dto.batchCode) : undefined,
-      item: dto.item
-        ? await this.findOneItemUseCase.findEntityByUuid(dto.item)
-        : undefined,
       company: dto.company
         ? await this.findOneCompanyUseCase.findEntityByUuid(dto.company)
         : undefined,
@@ -55,10 +50,6 @@ export class UpdateBatchUseCase {
         this.batchDomainService.validateBatchExistsUpdate(batch, existingBatch);
       }
       batch.changeBatchCode(binds.batchCode);
-    }
-
-    if (binds.item) {
-      batch.changeItem(binds.item);
     }
 
     if (binds.company) {

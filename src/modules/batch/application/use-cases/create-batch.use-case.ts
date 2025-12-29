@@ -6,7 +6,6 @@ import { FindOneBatchUseCase } from './find-one-batch.use-case';
 import { BatchDomainService } from '../../domain/services/batch-domain.service';
 import { BatchCreateDto } from '../dtos/batch-create.dto';
 import { BatchCode } from '../../domain/values-objects/batch-code.vo';
-import { FindOneItemUseCase } from 'src/modules/item/application/use-cases/find-one-item.use-case';
 import { FindOneCompanyUseCase } from 'src/modules/company/application/use-cases/find-one-company.use-case';
 
 @Injectable()
@@ -16,7 +15,6 @@ export class CreateBatchUseCase {
     private readonly batchRepository: IBatchRepository,
     private readonly findOneUserUseCase: FindOneUserUseCase,
     private readonly findOneBatchUseCase: FindOneBatchUseCase,
-    private readonly findOneItemUseCase: FindOneItemUseCase,
     private readonly findOneCompanyUseCase: FindOneCompanyUseCase,
     private readonly batchDomainService: BatchDomainService,
   ) {}
@@ -24,7 +22,6 @@ export class CreateBatchUseCase {
   async execute(dto: BatchCreateDto, userId: number): Promise<void> {
     const binds = {
       batchCode: BatchCode.create(dto.batchCode),
-      item: await this.findOneItemUseCase.findEntityByUuid(dto.item),
       company: await this.findOneCompanyUseCase.findEntityByUuid(dto.company),
       expirationDate: dto.expirationDate,
     };
@@ -38,7 +35,6 @@ export class CreateBatchUseCase {
 
     await this.batchRepository.create({
       batchCode: binds.batchCode.getValue(),
-      item: binds.item,
       company: binds.company,
       expirationDate: binds.expirationDate,
       userCreated: userCreating,

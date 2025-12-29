@@ -8,7 +8,6 @@ import { UpdateBatchUseCase } from './application/use-cases/update-batch.use-cas
 import { FindOneBatchUseCase } from './application/use-cases/find-one-batch.use-case';
 import { FindAllBatchUseCase } from './application/use-cases/find-all-batch.use-case';
 import { DeleteBatchUseCase } from './application/use-cases/delete-batch.use-case';
-import { ItemModule } from '../item/item.module';
 import { CompanyModule } from '../company/company.module';
 import { UserModule } from '../user/user.module';
 import { SharedModule } from 'src/shared/shared.module';
@@ -19,7 +18,6 @@ import { CreateBatchUseCase } from './application/use-cases/create-batch.use-cas
 @Module({
   imports: [
     TypeOrmModule.forFeature([BatchEntity]),
-    ItemModule,
     CompanyModule,
     UserModule,
     SharedModule,

@@ -10,10 +10,6 @@ export class BatchFilterDto extends FilterDto {
   batchCode?: string;
 
   @IsOptional()
-  @IsUUID('4', { message: 'Item deve ser um UUID válido' })
-  item?: UUID;
-
-  @IsOptional()
   @IsUUID('4', { message: 'Empresa deve ser um UUID válido' })
   company?: UUID;
 

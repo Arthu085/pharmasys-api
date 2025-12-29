@@ -24,10 +24,6 @@ export class BatchRepository implements IBatchRepository {
       where.batchCode = ILike(`%${filters.batchCode}%`);
     }
 
-    if (filters.item) {
-      where.item = { uuid: filters.item };
-    }
-
     if (filters.company) {
       where.company = { uuid: filters.company };
     }
