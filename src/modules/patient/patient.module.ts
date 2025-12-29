@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { IPatientRepository } from './domain/repositories/patient.repository.interface';
 import { PatientEntity } from './domain/entities/patient.entity';
-import { PatientRepository } from './infraestructure/repositories/patient.repository';
+import { PatientRepository } from './infrastructure/repositories/patient.repository';
 import { PatientDomainService } from './domain/services/patient-domain.service';
 import { CreatePatientUseCase } from './application/use-cases/create-patient.use-case';
 import { UpdatePatientUseCase } from './application/use-cases/update-patient.use-case';
@@ -11,8 +11,8 @@ import { FindAllPatientUseCase } from './application/use-cases/find-all-patient.
 import { DeletePatientUseCase } from './application/use-cases/delete-patient.use-case';
 import { UserModule } from '../user/user.module';
 import { SharedModule } from 'src/shared/shared.module';
-import { PatientProtectedController } from './infraestructure/controllers/patient-protected.controller';
-import { PatientPublicController } from './infraestructure/controllers/patient-public.controller';
+import { PatientProtectedController } from './infrastructure/controllers/patient-protected.controller';
+import { PatientPublicController } from './infrastructure/controllers/patient-public.controller';
 
 @Module({
   imports: [

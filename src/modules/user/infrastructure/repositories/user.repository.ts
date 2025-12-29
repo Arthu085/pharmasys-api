@@ -37,7 +37,7 @@ export class UserRepository implements IUserRepository {
 
     return this.repo.findAndCount({
       where,
-      relations: ['role', 'userCreated', 'userUpdated'],
+      relations: ['role'],
       take,
       skip,
       order: { id: 'DESC' },

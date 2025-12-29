@@ -42,7 +42,7 @@ export class CompanyRepository implements ICompanyRepository {
 
     return this.repo.findAndCount({
       where,
-      relations: ['companyTypes', 'userCreated', 'userUpdated'],
+      relations: ['companyTypes'],
       take,
       skip,
       order: { id: 'DESC' },

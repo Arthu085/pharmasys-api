@@ -25,7 +25,7 @@ export class PatientEntity extends BaseEntity {
   @Index()
   name: string;
 
-  @Column({ length: 14, unique: true, comment: 'Documento do paciente' })
+  @Column({ length: 14, comment: 'Documento do paciente' })
   document: string;
 
   changeName(newName: PatientName): void {

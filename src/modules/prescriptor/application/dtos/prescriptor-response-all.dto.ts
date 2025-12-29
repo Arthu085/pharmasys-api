@@ -16,21 +16,29 @@ export class PrescriptorResponseAllDto {
   registrationNumber: string;
 
   @Expose()
-  @Transform(({ obj }) => ({
-    value: obj.state,
-    label: UfEnumTranslated[obj.state as keyof typeof UfEnumTranslated],
-  }))
-  state: { value: string; label: string };
+  @Transform(({ obj }) =>
+    obj.state
+      ? {
+          value: obj.state,
+          label: UfEnumTranslated[obj.state as keyof typeof UfEnumTranslated],
+        }
+      : null,
+  )
+  state: { value: string; label: string } | null;
 
   @Expose()
-  @Transform(({ obj }) => ({
-    value: obj.advice.acronym,
-    label:
-      AdviceEnumTranslated[
-        obj.advice.acronym as keyof typeof AdviceEnumTranslated
-      ] || obj.advice.acronym,
-  }))
-  advice: { value: string; label: string };
+  @Transform(({ obj }) =>
+    obj.advice
+      ? {
+          value: obj.advice.acronym,
+          label:
+            AdviceEnumTranslated[
+              obj.advice.acronym as keyof typeof AdviceEnumTranslated
+            ] || obj.advice.acronym,
+        }
+      : null,
+  )
+  advice: { value: string; label: string } | null;
 
   @Expose()
   @Transform(({ obj }) => ({

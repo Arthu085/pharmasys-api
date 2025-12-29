@@ -45,7 +45,6 @@ export class PatientRepository implements IPatientRepository {
   findOne(uuid: UUID): Promise<PatientEntity | null> {
     return this.repo.findOne({
       where: { uuid },
-      relations: ['userCreated', 'userUpdated'],
       withDeleted: false,
     });
   }

@@ -23,16 +23,9 @@ export class CompanyResponseOneDto {
   cnpj: string;
 
   @Expose()
-  @Transform(({ obj }) => ({
-    value: obj.status,
-    label:
-      StatusEnumTranslated[obj.status as keyof typeof StatusEnumTranslated],
-  }))
-  status: { value: string; label: string };
-
-  @Expose()
   @Type(() => CompanyTypeResponseDto)
   @Transform(({ obj }) => {
+    if (!obj.companyTypes) return [];
     return obj.companyTypes.map((type: { name: string }) => ({
       value: type.name,
       label:
@@ -44,8 +37,16 @@ export class CompanyResponseOneDto {
   companyTypes: CompanyTypeResponseDto[];
 
   @Expose()
-  @Transform(({ obj }) => obj.userCreated?.name)
-  userCreated: string;
+  @Transform(({ obj }) => ({
+    value: obj.status,
+    label:
+      StatusEnumTranslated[obj.status as keyof typeof StatusEnumTranslated],
+  }))
+  status: { value: string; label: string };
+
+  @Expose()
+  @Transform(({ obj }) => obj.userCreated?.name || null)
+  userCreated: string | null;
 
   @Expose()
   @Transform(({ obj }) => obj.userUpdated?.name || null)

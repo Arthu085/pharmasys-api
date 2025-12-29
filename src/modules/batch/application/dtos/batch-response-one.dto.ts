@@ -1,39 +1,45 @@
 import { Expose, Transform } from 'class-transformer';
 import { UUID } from 'crypto';
 
-import { RoleEnumTranslated } from 'src/shared/enums/role.enum';
 import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
 
-export class UserResponseOneDto {
+export class BatchResponseOneDto {
   @Expose()
   uuid: UUID;
 
   @Expose()
-  name: string;
+  batchCode: string;
 
   @Expose()
-  email: string;
-
-  @Expose()
-  @Transform(({ obj }) =>
-    obj.role
+  @Transform(({ obj }) => {
+    return obj.item
       ? {
-          value: obj.role.name,
-          label:
-            RoleEnumTranslated[
-              obj.role.name as keyof typeof RoleEnumTranslated
-            ] || obj.role.name,
+          value: obj.item.uuid,
+          label: obj.item.name,
         }
-      : null,
-  )
-  role: { value: string; label: string } | null;
+      : null;
+  })
+  item: { value: UUID; label: string } | null;
+
+  @Expose()
+  @Transform(({ obj }) => {
+    return obj.company
+      ? {
+          value: obj.company.uuid,
+          label: obj.company.name,
+        }
+      : null;
+  })
+  company: { value: UUID; label: string } | null;
+
+  @Expose()
+  expirationDate: Date;
 
   @Expose()
   @Transform(({ obj }) => ({
     value: obj.status,
     label:
-      StatusEnumTranslated[obj.status as keyof typeof StatusEnumTranslated] ||
-      obj.status,
+      StatusEnumTranslated[obj.status as keyof typeof StatusEnumTranslated],
   }))
   status: { value: string; label: string };
 

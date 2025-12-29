@@ -15,15 +15,18 @@ export class UserResponseAllDto {
   email: string;
 
   @Expose()
-  @Transform(({ obj }) => {
-    return {
-      value: obj.role.name,
-      label:
-        RoleEnumTranslated[obj.role.name as keyof typeof RoleEnumTranslated] ||
-        obj.role.name,
-    };
-  })
-  role: { value: string; label: string };
+  @Transform(({ obj }) =>
+    obj.role
+      ? {
+          value: obj.role.name,
+          label:
+            RoleEnumTranslated[
+              obj.role.name as keyof typeof RoleEnumTranslated
+            ] || obj.role.name,
+        }
+      : null,
+  )
+  role: { value: string; label: string } | null;
 
   @Expose()
   @Transform(({ obj }) => ({

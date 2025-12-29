@@ -4,10 +4,10 @@ import { IPrescriptorRepository } from './domain/repositories/prescriptor.reposi
 import { IAdviceRepository } from './domain/repositories/advice.repository.interface';
 import { AdviceEntity } from './domain/entities/advice.entity';
 import { PrescriptorEntity } from './domain/entities/prescriptor.entity';
-import { PrescriptorProtectedController } from './infraestructure/controllers/prescriptor-protected.controller';
-import { PrescriptorPublicController } from './infraestructure/controllers/prescriptor-public.controller';
-import { PrescriptorRepository } from './infraestructure/repositories/prescriptor.repository';
-import { AdviceRepository } from './infraestructure/repositories/advice.repository';
+import { PrescriptorProtectedController } from './infrastructure/controllers/prescriptor-protected.controller';
+import { PrescriptorPublicController } from './infrastructure/controllers/prescriptor-public.controller';
+import { PrescriptorRepository } from './infrastructure/repositories/prescriptor.repository';
+import { AdviceRepository } from './infrastructure/repositories/advice.repository';
 import { PrescriptorDomainService } from './domain/services/prescriptor-domain.service';
 import { CreatePrescriptorUseCase } from './application/use-cases/create-prescriptor.use-case';
 import { UpdatePrescriptorUseCase } from './application/use-cases/update-prescriptor.use-case';

@@ -15,33 +15,46 @@ export class ItemResponseOneDto {
   name: string;
 
   @Expose()
-  @Transform(({ obj }) => ({
-    value: obj.type.name,
-    label:
-      TypeEnumTranslated[obj.type.name as keyof typeof TypeEnumTranslated] ||
-      obj.type.name,
-  }))
-  type: { value: string; label: string };
+  @Transform(({ obj }) =>
+    obj.type
+      ? {
+          value: obj.type.name,
+          label:
+            TypeEnumTranslated[
+              obj.type.name as keyof typeof TypeEnumTranslated
+            ] || obj.type.name,
+        }
+      : null,
+  )
+  type: { value: string; label: string } | null;
 
   @Expose()
-  @Transform(({ obj }) => ({
-    value: obj.presentation.name,
-    label:
-      PresentationEnumTranslated[
-        obj.presentation.name as keyof typeof PresentationEnumTranslated
-      ] || obj.presentation.name,
-  }))
-  presentation: { value: string; label: string };
+  @Transform(({ obj }) =>
+    obj.presentation
+      ? {
+          value: obj.presentation.name,
+          label:
+            PresentationEnumTranslated[
+              obj.presentation.name as keyof typeof PresentationEnumTranslated
+            ] || obj.presentation.name,
+        }
+      : null,
+  )
+  presentation: { value: string; label: string } | null;
 
   @Expose()
-  @Transform(({ obj }) => ({
-    value: obj.dosage.format,
-    label:
-      DosageEnumTranslated[
-        obj.dosage.format as keyof typeof DosageEnumTranslated
-      ] || obj.dosage.format,
-  }))
-  dosage: { value: string; label: string };
+  @Transform(({ obj }) =>
+    obj.dosage
+      ? {
+          value: obj.dosage.format,
+          label:
+            DosageEnumTranslated[
+              obj.dosage.format as keyof typeof DosageEnumTranslated
+            ] || obj.dosage.format,
+        }
+      : null,
+  )
+  dosage: { value: string; label: string } | null;
 
   @Expose()
   @Transform(({ obj }) =>
