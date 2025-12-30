@@ -4,6 +4,7 @@ import { StockBalanceNotFoundException } from '../exceptions/stock-balance-not-f
 import { StockBalanceAlreadyExistsException } from '../exceptions/stock-balance-already-exists.exception';
 import { StockBalanceInsufficientBalanceException } from '../exceptions/stock-balance-insufficient-balance.exception';
 import { StockBalanceOperationType } from '../enums/stock-balance-operation-type.enum';
+import { InvalidStockBalanceOperationTypeException } from '../exceptions/invalid-stock-balance-operation-type.exception';
 
 @Injectable()
 export class StockBalanceDomainService {
@@ -17,14 +18,6 @@ export class StockBalanceDomainService {
     }
 
     return stockBalance;
-  }
-
-  validateExistsStockBalanceCreate(
-    stockBalance: StockBalanceEntity | null,
-  ): void {
-    if (stockBalance) {
-      throw new StockBalanceAlreadyExistsException();
-    }
   }
 
   validateExistsStockBalanceUpdate(
@@ -49,7 +42,13 @@ export class StockBalanceDomainService {
     }
   }
 
-  validateOperationType(
+  validateOperationTypeCreate(operation: StockBalanceOperationType): void {
+    if (operation === StockBalanceOperationType.SUBTRACT) {
+      throw new InvalidStockBalanceOperationTypeException();
+    }
+  }
+
+  validateOperationTypeUpdate(
     operation: StockBalanceOperationType,
     currentQuantity: number,
     newQuantity: number,

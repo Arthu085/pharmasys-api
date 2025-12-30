@@ -28,6 +28,7 @@ export class UpdateStockBalanceUseCase {
       quantity: dto.quantity
         ? StockBalanceQuantity.create(dto.quantity)
         : undefined,
+      type: dto.type ? dto.type : undefined,
     };
 
     const stockBalance =
@@ -39,9 +40,10 @@ export class UpdateStockBalanceUseCase {
       const currentStockLocation = stockBalance.stockLocation;
       if (binds.stockLocation.uuid !== currentStockLocation.uuid) {
         const existingStockBalanceWithStockLocation =
-          await this.findOneStockBalanceUseCase.findByBatchAndStockLocation(
+          await this.findOneStockBalanceUseCase.findByBatchAndStockLocationAndItem(
             stockBalance.batch,
             binds.stockLocation,
+            stockBalance.item,
           );
         this.stockBalanceDomainService.validateExistsStockBalanceUpdate(
           stockBalance,
@@ -51,13 +53,13 @@ export class UpdateStockBalanceUseCase {
       }
     }
 
-    if (binds.quantity) {
+    if (binds.quantity && binds.type) {
       const currentQuantity = StockBalanceQuantity.create(
         stockBalance.quantity,
       );
 
-      const result = this.stockBalanceDomainService.validateOperationType(
-        dto.type,
+      const result = this.stockBalanceDomainService.validateOperationTypeUpdate(
+        binds.type,
         currentQuantity.getValue(),
         binds.quantity.getValue(),
       );

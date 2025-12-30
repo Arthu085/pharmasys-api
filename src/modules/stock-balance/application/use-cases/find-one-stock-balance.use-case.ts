@@ -3,11 +3,11 @@ import { plainToInstance } from 'class-transformer';
 import { UUID } from 'crypto';
 
 import { IStockBalanceRepository } from '../../domain/repositories/stock-balance.repository.interface';
-import { StockBalanceResponseOneDto } from '../dtos/stock-balance-response-one.dto';
 import { StockBalanceEntity } from '../../domain/entities/stock-balance.entity';
 import { StockBalanceDomainService } from '../../domain/services/stock-balance-domain.service';
 import { BatchEntity } from 'src/modules/batch/domain/entities/batch.entity';
 import { StockLocationEntity } from 'src/modules/stock-location/domain/entities/stock-location.entity';
+import { ItemEntity } from 'src/modules/item/domain/entities/item.entity';
 
 @Injectable()
 export class FindOneStockBalanceUseCase {
@@ -17,28 +17,21 @@ export class FindOneStockBalanceUseCase {
     private readonly stockBalanceDomainService: StockBalanceDomainService,
   ) {}
 
-  async execute(uuid: UUID): Promise<StockBalanceResponseOneDto> {
-    const stockBalance = await this.stockBalanceRepository.findOne(uuid);
-    this.stockBalanceDomainService.validateStockBalance(stockBalance);
-
-    return plainToInstance(StockBalanceResponseOneDto, stockBalance, {
-      excludeExtraneousValues: true,
-    });
-  }
-
   async findEntityByUuid(uuid: UUID): Promise<StockBalanceEntity> {
     const stockBalance = await this.stockBalanceRepository.findOne(uuid);
 
     return this.stockBalanceDomainService.validateStockBalance(stockBalance);
   }
 
-  async findByBatchAndStockLocation(
+  async findByBatchAndStockLocationAndItem(
     batch: BatchEntity,
     stockLocation: StockLocationEntity,
+    item: ItemEntity,
   ): Promise<StockBalanceEntity | null> {
-    return await this.stockBalanceRepository.findByBatchAndStockLocation(
+    return await this.stockBalanceRepository.findByBatchAndStockLocationAndItem(
       batch,
       stockLocation,
+      item,
     );
   }
 }

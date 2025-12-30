@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
 import { UUID } from 'crypto';
+import { StockBalanceOperationType } from '../../domain/enums/stock-balance-operation-type.enum';
 
 export class StockBalanceCreateDto {
   @IsNotEmpty({ message: 'O item é obrigatório' })
@@ -17,4 +18,8 @@ export class StockBalanceCreateDto {
   @IsNotEmpty({ message: 'A quantidade é obrigatória' })
   @IsNumber({}, { message: 'A quantidade deve ser um número' })
   quantity: number;
+
+  @IsEnum(StockBalanceOperationType, { message: 'Tipo de operação inválido' })
+  @IsNotEmpty({ message: 'O tipo de operação é obrigatório' })
+  type: StockBalanceOperationType;
 }

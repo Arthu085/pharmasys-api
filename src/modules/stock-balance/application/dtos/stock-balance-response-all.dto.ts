@@ -1,5 +1,9 @@
 import { Expose, Transform } from 'class-transformer';
 import { UUID } from 'crypto';
+import {
+  StockLocationEnum,
+  StockLocationEnumTranslated,
+} from 'src/modules/stock-location/domain/enums/stock-location.enum';
 
 export class StockBalanceResponseAllDto {
   @Expose()
@@ -32,7 +36,10 @@ export class StockBalanceResponseAllDto {
     return obj.stockLocation
       ? {
           value: obj.stockLocation.uuid,
-          label: obj.stockLocation.name,
+          label:
+            StockLocationEnumTranslated[
+              obj.stockLocation.name as keyof typeof StockLocationEnumTranslated
+            ] || obj.stockLocation.name,
         }
       : null;
   })

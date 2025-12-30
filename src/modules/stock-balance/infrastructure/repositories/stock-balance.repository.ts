@@ -8,6 +8,7 @@ import { StockBalanceEntity } from '../../domain/entities/stock-balance.entity';
 import { StockBalanceFilterDto } from '../../application/dtos/stock-balance-filter.dto';
 import { BatchEntity } from 'src/modules/batch/domain/entities/batch.entity';
 import { StockLocationEntity } from 'src/modules/stock-location/domain/entities/stock-location.entity';
+import { ItemEntity } from 'src/modules/item/domain/entities/item.entity';
 
 @Injectable()
 export class StockBalanceRepository implements IStockBalanceRepository {
@@ -52,14 +53,16 @@ export class StockBalanceRepository implements IStockBalanceRepository {
     });
   }
 
-  findByBatchAndStockLocation(
+  findByBatchAndStockLocationAndItem(
     batch: BatchEntity,
     stockLocation: StockLocationEntity,
+    item: ItemEntity,
   ): Promise<StockBalanceEntity | null> {
     return this.repo.findOne({
       where: {
         batch: { uuid: batch.uuid },
         stockLocation: { uuid: stockLocation.uuid },
+        item: { uuid: item.uuid },
       },
       withDeleted: false,
     });
