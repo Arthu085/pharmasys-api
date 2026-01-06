@@ -1,19 +1,18 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
-import { UUID } from 'crypto';
+import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 import { StockBalanceOperationType } from '../../domain/enums/stock-balance-operation-type.enum';
+import { ItemEntity } from 'src/modules/item/domain/entities/item.entity';
+import { BatchEntity } from 'src/modules/batch/domain/entities/batch.entity';
+import { StockLocationEntity } from 'src/modules/stock-location/domain/entities/stock-location.entity';
 
 export class StockBalanceCreateDto {
   @IsNotEmpty({ message: 'O item é obrigatório' })
-  @IsUUID('4', { message: 'Item deve ser um UUID válido' })
-  item: UUID;
+  item: ItemEntity;
 
   @IsNotEmpty({ message: 'O lote é obrigatório' })
-  @IsUUID('4', { message: 'Lote deve ser um UUID válido' })
-  batch: UUID;
+  batch: BatchEntity;
 
   @IsNotEmpty({ message: 'O local de estoque é obrigatório' })
-  @IsUUID('4', { message: 'Local de estoque deve ser um UUID válido' })
-  stockLocation: UUID;
+  stockLocation: StockLocationEntity;
 
   @IsNotEmpty({ message: 'A quantidade é obrigatória' })
   @IsNumber({}, { message: 'A quantidade deve ser um número' })

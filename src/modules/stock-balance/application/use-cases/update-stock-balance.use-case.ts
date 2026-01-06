@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { UUID } from 'crypto';
+import { EntityManager } from 'typeorm';
 
 import { IStockBalanceRepository } from '../../domain/repositories/stock-balance.repository.interface';
 import { FindOneStockBalanceUseCase } from './find-one-stock-balance.use-case';
 import { StockBalanceDomainService } from '../../domain/services/stock-balance-domain.service';
 import { StockBalanceUpdateDto } from '../dtos/stock-balance-update.dto';
-import { FindOneStockLocationUseCase } from 'src/modules/stock-location/application/use-cases/find-one-stock-location.use-case';
 import { StockBalanceQuantity } from '../../domain/value-objects/stock-balance-quantity.vo';
+import { StockBalanceEntity } from '../../domain/entities/stock-balance.entity';
 
 @Injectable()
 export class UpdateStockBalanceUseCase {
@@ -14,25 +14,21 @@ export class UpdateStockBalanceUseCase {
     @Inject(IStockBalanceRepository)
     private readonly stockBalanceRepository: IStockBalanceRepository,
     private readonly findOneStockBalanceUseCase: FindOneStockBalanceUseCase,
-    private readonly findOneStockLocationUseCase: FindOneStockLocationUseCase,
     private readonly stockBalanceDomainService: StockBalanceDomainService,
   ) {}
 
-  async execute(uuid: UUID, dto: StockBalanceUpdateDto): Promise<void> {
+  async execute(
+    stockBalance: StockBalanceEntity,
+    dto: StockBalanceUpdateDto,
+    entityManager: EntityManager,
+  ): Promise<void> {
     const binds = {
-      stockLocation: dto.stockLocation
-        ? await this.findOneStockLocationUseCase.findEntityByUuid(
-            dto.stockLocation,
-          )
-        : undefined,
+      stockLocation: dto.stockLocation ? dto.stockLocation : undefined,
       quantity: dto.quantity
         ? StockBalanceQuantity.create(dto.quantity)
         : undefined,
       type: dto.type ? dto.type : undefined,
     };
-
-    const stockBalance =
-      await this.findOneStockBalanceUseCase.findEntityByUuid(uuid);
 
     this.stockBalanceDomainService.validateStockBalance(stockBalance);
 
@@ -67,6 +63,10 @@ export class UpdateStockBalanceUseCase {
       stockBalance.changeQuantity(result);
     }
 
-    await this.stockBalanceRepository.update(stockBalance.uuid, stockBalance);
+    await this.stockBalanceRepository.update(
+      stockBalance.uuid,
+      stockBalance,
+      entityManager,
+    );
   }
 }

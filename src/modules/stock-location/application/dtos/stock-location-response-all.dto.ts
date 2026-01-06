@@ -8,6 +8,12 @@ export class StockLocationResponseAllDto {
   uuid: UUID;
 
   @Expose()
+  @Transform(({ obj }) => {
+    const nameMap = {
+      ESTOQUE_CENTRAL: 'Estoque Central',
+    };
+    return nameMap[obj.name] || obj.name;
+  })
   name: string;
 
   @Expose()

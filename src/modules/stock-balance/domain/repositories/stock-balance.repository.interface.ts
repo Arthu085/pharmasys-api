@@ -1,4 +1,4 @@
-import { UpdateResult } from 'typeorm';
+import { UpdateResult, EntityManager } from 'typeorm';
 import { UUID } from 'crypto';
 import { StockBalanceEntity } from '../entities/stock-balance.entity';
 import { StockBalanceFilterDto } from '../../application/dtos/stock-balance-filter.dto';
@@ -25,7 +25,12 @@ export interface IStockBalanceRepository {
 
   create(
     stockBalance: Partial<StockBalanceEntity>,
+    entityManager: EntityManager,
   ): Promise<StockBalanceEntity>;
 
-  update(uuid: UUID, data: Partial<StockBalanceEntity>): Promise<UpdateResult>;
+  update(
+    uuid: UUID,
+    data: Partial<StockBalanceEntity>,
+    entityManager: EntityManager,
+  ): Promise<UpdateResult>;
 }

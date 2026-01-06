@@ -38,7 +38,7 @@ export class BatchRepository implements IBatchRepository {
 
     return this.repo.findAndCount({
       where,
-      relations: ['item', 'company'],
+      relations: ['company'],
       take,
       skip,
       order: { id: 'DESC' },
@@ -49,7 +49,7 @@ export class BatchRepository implements IBatchRepository {
   findOne(uuid: UUID): Promise<BatchEntity | null> {
     return this.repo.findOne({
       where: { uuid },
-      relations: ['item', 'company', 'userCreated', 'userUpdated'],
+      relations: ['company', 'userCreated', 'userUpdated'],
       withDeleted: false,
     });
   }

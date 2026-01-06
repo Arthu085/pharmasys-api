@@ -2,7 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
 
-import { FindOptionsWhere, ILike, Repository, UpdateResult } from 'typeorm';
+import {
+  FindOptionsWhere,
+  ILike,
+  Repository,
+  UpdateResult,
+  EntityManager,
+} from 'typeorm';
 import { IStockBalanceRepository } from '../../domain/repositories/stock-balance.repository.interface';
 import { StockBalanceEntity } from '../../domain/entities/stock-balance.entity';
 import { StockBalanceFilterDto } from '../../application/dtos/stock-balance-filter.dto';
@@ -64,18 +70,26 @@ export class StockBalanceRepository implements IStockBalanceRepository {
         stockLocation: { uuid: stockLocation.uuid },
         item: { uuid: item.uuid },
       },
+      relations: ['item', 'batch', 'stockLocation'],
       withDeleted: false,
     });
   }
 
   create(
     stockBalance: Partial<StockBalanceEntity>,
+    entityManager: EntityManager,
   ): Promise<StockBalanceEntity> {
-    const newStockBalance = this.repo.create(stockBalance);
-    return this.repo.save(newStockBalance);
+    const manager = entityManager.getRepository(StockBalanceEntity);
+    const newStockBalance = manager.create(stockBalance);
+    return manager.save(newStockBalance);
   }
 
-  update(uuid: UUID, data: Partial<StockBalanceEntity>): Promise<UpdateResult> {
-    return this.repo.update({ uuid }, data);
+  update(
+    uuid: UUID,
+    data: Partial<StockBalanceEntity>,
+    entityManager: EntityManager,
+  ): Promise<UpdateResult> {
+    const manager = entityManager.getRepository(StockBalanceEntity);
+    return manager.update({ uuid }, data);
   }
 }
