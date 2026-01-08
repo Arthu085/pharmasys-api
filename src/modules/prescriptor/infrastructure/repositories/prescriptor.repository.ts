@@ -32,17 +32,11 @@ export class PrescriptorRepository implements IPrescriptorRepository {
     }
 
     if (filters.advice) {
-      const adviceAcronym = AdviceEnum[filters.advice];
-
-      where.advice = {
-        acronym: adviceAcronym,
-      };
+      where.advice = { acronym: filters.advice };
     }
 
     if (filters.state) {
-      const state = UfEnum[filters.state];
-
-      where.state = state;
+      where.state = filters.state;
     }
 
     if (filters.status) {

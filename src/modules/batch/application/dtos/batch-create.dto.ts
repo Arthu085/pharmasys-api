@@ -16,10 +16,6 @@ export class BatchCreateDto {
   @MaxLength(20, { message: 'O código deve ter no máximo 20 caracteres' })
   batchCode: string;
 
-  @IsNotEmpty({ message: 'Item é obrigatório' })
-  @IsUUID('4', { message: 'Item deve ser um UUID válido' })
-  item: UUID;
-
   @IsNotEmpty({ message: 'Empresa é obrigatória' })
   @IsUUID('4', { message: 'Empresa deve ser um UUID válido' })
   company: UUID;

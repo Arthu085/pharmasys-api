@@ -1,6 +1,5 @@
 import { BaseEntity } from 'src/core/database/entities/base.entity';
 import { CompanyEntity } from 'src/modules/company/domain/entities/company.entity';
-import { ItemEntity } from 'src/modules/item/domain/entities/item.entity';
 import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { BatchCode } from '../values-objects/batch-code.vo';
@@ -8,7 +7,7 @@ import { StatusEnum } from 'src/shared/enums/status.enum';
 import { BatchInactiveException } from '../exceptions/batch-inactive.exception';
 
 @Entity('batch', { comment: 'Tabela para cadastro de lotes' })
-@Index(['item', 'company', 'batchCode'])
+@Index(['company', 'batchCode'])
 @Index('IDX_code_unique_when_not_deleted', ['batchCode'], {
   unique: true,
   where: '"deleted_at" IS NULL',
@@ -21,11 +20,6 @@ export class BatchEntity extends BaseEntity {
   @ManyToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
   userUpdated?: UserEntity | null;
-
-  @ManyToOne(() => ItemEntity)
-  @JoinColumn({ name: 'item_id' })
-  @Index()
-  item: ItemEntity;
 
   @ManyToOne(() => CompanyEntity)
   @JoinColumn({ name: 'company_id' })
@@ -55,17 +49,6 @@ export class BatchEntity extends BaseEntity {
     }
 
     this.batchCode = newBatchCode.getValue();
-    this.updatedAt = new Date();
-  }
-
-  changeItem(newItem: ItemEntity): void {
-    const currentItem = this.item;
-
-    if (newItem.id === currentItem.id) {
-      return;
-    }
-
-    this.item = newItem;
     this.updatedAt = new Date();
   }
 

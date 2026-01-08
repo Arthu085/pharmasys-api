@@ -45,6 +45,7 @@ export class StockLocationRepository implements IStockLocationRepository {
   findOne(uuid: UUID): Promise<StockLocationEntity | null> {
     return this.repo.findOne({
       where: { uuid },
+      relations: ['userCreated', 'userUpdated'],
       withDeleted: false,
     });
   }
