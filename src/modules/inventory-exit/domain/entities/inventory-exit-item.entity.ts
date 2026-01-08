@@ -8,17 +8,17 @@ import { InventoryExitEntity } from './inventory-exit.entity';
   comment: 'Tabela para cadastro de dados do item na saída',
 })
 export class InventoryExitItemEntity extends BaseEntity {
-  @ManyToOne(() => InventoryExitEntity, { eager: true })
+  @ManyToOne(() => InventoryExitEntity)
   @JoinColumn({ name: 'inventory_exit_id' })
   @Index()
   inventoryExit: InventoryExitEntity;
 
-  @ManyToOne(() => ItemEntity, { eager: true })
+  @ManyToOne(() => ItemEntity)
   @JoinColumn({ name: 'item_id' })
   @Index()
   item: ItemEntity;
 
-  @ManyToOne(() => BatchEntity, { eager: true })
+  @ManyToOne(() => BatchEntity)
   @JoinColumn({ name: 'batch_id' })
   @Index()
   batch: BatchEntity;

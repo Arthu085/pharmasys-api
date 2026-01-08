@@ -5,6 +5,8 @@ import { StockBalanceAlreadyExistsException } from '../exceptions/stock-balance-
 import { StockBalanceInsufficientBalanceException } from '../exceptions/stock-balance-insufficient-balance.exception';
 import { StockBalanceOperationType } from '../enums/stock-balance-operation-type.enum';
 import { InvalidStockBalanceOperationTypeException } from '../exceptions/invalid-stock-balance-operation-type.exception';
+import { BatchEntity } from 'src/modules/batch/domain/entities/batch.entity';
+import { StockBalanceBatchExpirationException } from '../exceptions/stock-balance-batch-expiration.exception';
 
 @Injectable()
 export class StockBalanceDomainService {
@@ -61,6 +63,18 @@ export class StockBalanceDomainService {
         return currentQuantity - newQuantity;
       default:
         return currentQuantity;
+    }
+  }
+
+  validateBatchDate(batch: BatchEntity): void {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const expiration = new Date(batch.expirationDate);
+    expiration.setHours(0, 0, 0, 0);
+
+    if (expiration < today) {
+      throw new StockBalanceBatchExpirationException();
     }
   }
 }

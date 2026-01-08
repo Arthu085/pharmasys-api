@@ -15,7 +15,7 @@ import { InventoryEntryItemEntity } from './inventory-entry-item.entity';
 @Entity('inventory_entry', {
   comment: 'Tabela para cadastro de dados de entrada de item',
 })
-@Index(['invoiceNumber', 'entryDate'])
+@Index(['invoiceNumber', 'entryDate', 'entryType', 'stockLocation'])
 export class InventoryEntryEntity extends BaseEntity {
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'user_created_id' })

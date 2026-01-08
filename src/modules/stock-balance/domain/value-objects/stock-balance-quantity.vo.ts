@@ -4,7 +4,12 @@ export class StockBalanceQuantity {
   private constructor(private readonly value: number) {}
 
   static create(quantity: number): StockBalanceQuantity {
-    if (!quantity || quantity < 0) {
+    if (
+      quantity === null ||
+      quantity === undefined ||
+      quantity < 0 ||
+      isNaN(quantity)
+    ) {
       throw new InvalidStockBalanceQuantityException();
     }
 
