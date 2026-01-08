@@ -37,6 +37,8 @@ export class CreateStockBalanceUseCase {
       type: dto.type,
     };
 
+    this.stockBalanceDomainService.validateBatchDate(binds.batch);
+
     const existingStockBalance =
       await this.findOneStockBalanceUseCase.findByBatchAndStockLocationAndItem(
         binds.batch,
