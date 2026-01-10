@@ -14,7 +14,7 @@ import { InventoryEntryModule } from './modules/inventory-entry/inventory-entry.
 import { InventoryExitModule } from './modules/inventory-exit/inventory-exit.module';
 // import { StockTransferModule } from './modules/stock-transfer/stock-transfer.module';
 // import { TransferRequestModule } from './modules/transfer-request/transfer-request.module';
-// import { ItemDispensationModule } from './modules/item-dispensation/item-dispensation.module';
+import { ItemDispensationModule } from './modules/item-dispensation/item-dispensation.module';
 
 @Module({
   imports: [
@@ -32,7 +32,7 @@ import { InventoryExitModule } from './modules/inventory-exit/inventory-exit.mod
     InventoryExitModule,
     // StockTransferModule,
     // TransferRequestModule,
-    // ItemDispensationModule,
+    ItemDispensationModule,
   ],
 })
 export class AppModule {}
