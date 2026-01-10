@@ -57,6 +57,7 @@ export class CreateInventoryExitUseCase {
         await this.createInventoryExitItemUseCase.execute(
           dtoItem,
           inventoryExitEntity,
+          dto.exitType,
           entityManager,
         );
       }

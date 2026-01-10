@@ -53,6 +53,7 @@ export class CreateInventoryEntryItemUseCase {
         quantity: binds.quantity.getValue(),
         type: StockBalanceOperationType.ADD,
       },
+      null,
       entityManager,
     );
   }

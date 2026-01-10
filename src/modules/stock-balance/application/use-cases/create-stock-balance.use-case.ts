@@ -7,6 +7,7 @@ import { UpdateStockBalanceUseCase } from './update-stock-balance.use-case';
 import { StockBalanceDomainService } from '../../domain/services/stock-balance-domain.service';
 import { StockBalanceCreateDto } from '../dtos/stock-balance-create.dto';
 import { StockBalanceQuantity } from '../../domain/value-objects/stock-balance-quantity.vo';
+import { ExitTypeEnum } from 'src/modules/inventory-exit/domain/enums/exit-type.enum';
 
 @Injectable()
 export class CreateStockBalanceUseCase {
@@ -20,13 +21,15 @@ export class CreateStockBalanceUseCase {
 
   async execute(
     dto: StockBalanceCreateDto,
+    exitType: ExitTypeEnum | null,
     entityManager: EntityManager,
   ): Promise<void> {
-    await this.upsert(dto, entityManager);
+    await this.upsert(dto, exitType, entityManager);
   }
 
   private async upsert(
     dto: StockBalanceCreateDto,
+    exitType: ExitTypeEnum | null,
     entityManager: EntityManager,
   ): Promise<void> {
     const binds = {
@@ -37,7 +40,7 @@ export class CreateStockBalanceUseCase {
       type: dto.type,
     };
 
-    this.stockBalanceDomainService.validateBatchDate(binds.batch);
+    this.stockBalanceDomainService.validateBatchDate(binds.batch, exitType);
 
     const existingStockBalance =
       await this.findOneStockBalanceUseCase.findByBatchAndStockLocationAndItem(

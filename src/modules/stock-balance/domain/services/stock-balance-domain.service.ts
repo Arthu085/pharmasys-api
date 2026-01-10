@@ -7,6 +7,7 @@ import { StockBalanceOperationType } from '../enums/stock-balance-operation-type
 import { InvalidStockBalanceOperationTypeException } from '../exceptions/invalid-stock-balance-operation-type.exception';
 import { BatchEntity } from 'src/modules/batch/domain/entities/batch.entity';
 import { StockBalanceBatchExpirationException } from '../exceptions/stock-balance-batch-expiration.exception';
+import { ExitTypeEnum } from 'src/modules/inventory-exit/domain/enums/exit-type.enum';
 
 @Injectable()
 export class StockBalanceDomainService {
@@ -66,15 +67,21 @@ export class StockBalanceDomainService {
     }
   }
 
-  validateBatchDate(batch: BatchEntity): void {
+  validateBatchDate(batch: BatchEntity, type: ExitTypeEnum | null): void {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const expiration = new Date(batch.expirationDate);
     expiration.setHours(0, 0, 0, 0);
 
-    if (expiration < today) {
-      throw new StockBalanceBatchExpirationException();
+    if (type) {
+      if (expiration < today && type !== ExitTypeEnum.VALIDADE_VENCIDA) {
+        throw new StockBalanceBatchExpirationException();
+      }
+    } else {
+      if (expiration < today) {
+        throw new StockBalanceBatchExpirationException();
+      }
     }
   }
 }

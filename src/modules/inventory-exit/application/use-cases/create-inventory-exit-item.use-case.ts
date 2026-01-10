@@ -9,6 +9,7 @@ import { InventoryExitItemCreateDto } from '../dtos/inventory-exit-item-create.d
 import { InventoryExitEntity } from '../../domain/entities/inventory-exit.entity';
 import { InventoryExitItemQuantity } from '../../domain/value-objects/inventory-exit-item-quantity.vo';
 import { StockBalanceOperationType } from 'src/modules/stock-balance/domain/enums/stock-balance-operation-type.enum';
+import { ExitTypeEnum } from '../../domain/enums/exit-type.enum';
 
 @Injectable()
 export class CreateInventoryExitItemUseCase {
@@ -23,6 +24,7 @@ export class CreateInventoryExitItemUseCase {
   async execute(
     dto: InventoryExitItemCreateDto,
     inventoryExit: InventoryExitEntity,
+    type: ExitTypeEnum,
     entityManager: EntityManager,
   ): Promise<void> {
     const binds = {
@@ -50,6 +52,7 @@ export class CreateInventoryExitItemUseCase {
         quantity: binds.quantity.getValue(),
         type: StockBalanceOperationType.SUBTRACT,
       },
+      type,
       entityManager,
     );
   }
