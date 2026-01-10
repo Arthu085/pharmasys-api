@@ -7,18 +7,19 @@ import { BatchEntity } from 'src/modules/batch/domain/entities/batch.entity';
 @Entity('item_dispensation_item', {
   comment: 'Tabela para cadastro de dados do item na dispensação',
 })
+@Index(['itemDispensation', 'item', 'batch'])
 export class ItemDispensationItemEntity extends BaseEntity {
-  @ManyToOne(() => ItemDispensationEntity, { eager: true })
+  @ManyToOne(() => ItemDispensationEntity)
   @JoinColumn({ name: 'item_dispensation_id' })
   @Index()
   itemDispensation: ItemDispensationEntity;
 
-  @ManyToOne(() => ItemEntity, { eager: true })
+  @ManyToOne(() => ItemEntity)
   @JoinColumn({ name: 'item_id' })
   @Index()
   item: ItemEntity;
 
-  @ManyToOne(() => BatchEntity, { eager: true })
+  @ManyToOne(() => BatchEntity)
   @JoinColumn({ name: 'batch_id' })
   @Index()
   batch: BatchEntity;
@@ -38,11 +39,12 @@ export class ItemDispensationItemEntity extends BaseEntity {
   isPsychotropic?: boolean;
 
   @Column({
+    type: 'varchar',
     length: 50,
     name: 'prescription_notification_number',
     nullable: true,
     comment:
       'Número da notificação da prescrição (é necessário somente se é psicotrópico)',
   })
-  prescriptionNotificationNumber?: string;
+  prescriptionNotificationNumber?: string | null;
 }

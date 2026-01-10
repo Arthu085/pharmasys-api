@@ -7,6 +7,7 @@ import { BatchEntity } from 'src/modules/batch/domain/entities/batch.entity';
 @Entity('inventory_entry_item', {
   comment: 'Tabela para cadastro de dados do item na entrada',
 })
+@Index(['inventoryEntry', 'item', 'batch'])
 export class InventoryEntryItemEntity extends BaseEntity {
   @ManyToOne(() => InventoryEntryEntity)
   @JoinColumn({ name: 'inventory_entry_id' })
