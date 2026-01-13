@@ -7,18 +7,19 @@ import { StockTransferEntity } from './stock-transfer.entity';
 @Entity('stock_transfer_item', {
   comment: 'Tabela para cadastro de dados do item na trasnferência de estoque',
 })
+@Index(['stockTransfer', 'item', 'batch'])
 export class StockTransferItemEntity extends BaseEntity {
-  @ManyToOne(() => StockTransferEntity, { eager: true })
+  @ManyToOne(() => StockTransferEntity)
   @JoinColumn({ name: 'stock_transfer_id' })
   @Index()
   stockTransfer: StockTransferEntity;
 
-  @ManyToOne(() => ItemEntity, { eager: true })
+  @ManyToOne(() => ItemEntity)
   @JoinColumn({ name: 'item_id' })
   @Index()
   item: ItemEntity;
 
-  @ManyToOne(() => BatchEntity, { eager: true })
+  @ManyToOne(() => BatchEntity)
   @JoinColumn({ name: 'batch_id' })
   @Index()
   batch: BatchEntity;
