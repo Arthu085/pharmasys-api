@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
 import { FindOneStockLocationUseCase } from 'src/modules/stock-location/application/use-cases/find-one-stock-location.use-case';
@@ -8,6 +8,7 @@ import { CreateStockTransferItemUseCase } from './create-stock-transfer-item.use
 import { StockTransferCreateDto } from '../dtos/stock-transfer-create.dto';
 import { StockTransferItemCreateDto } from '../dtos/stock-transfer-item-create.dto';
 import { StockTransferDate } from '../../domain/value-objects/stock-transfer-date.vo';
+import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
 
 @Injectable()
 export class CreateStockTransferUseCase {
@@ -24,8 +25,10 @@ export class CreateStockTransferUseCase {
     dto: StockTransferCreateDto,
     dtoItems: StockTransferItemCreateDto[],
     userId: number,
+    user?: UserEntity | null,
+    entityManager?: EntityManager,
   ): Promise<void> {
-    await this.dataSource.transaction(async (entityManager) => {
+    const executeTransaction = async (manager: EntityManager) => {
       const binds = {
         transferDate: StockTransferDate.create(dto.transferDate),
         origin: await this.findOneStockLocationUseCase.findEntityByUuid(
@@ -36,7 +39,8 @@ export class CreateStockTransferUseCase {
         ),
       };
 
-      const userCreating = await this.findOneUserUseCase.findById(userId);
+      const userCreating: UserEntity =
+        user || (await this.findOneUserUseCase.findById(userId));
 
       const stockTransferEntity = await this.stockTransferRepository.create(
         {
@@ -45,16 +49,22 @@ export class CreateStockTransferUseCase {
           destination: binds.destination,
           userCreated: userCreating,
         },
-        entityManager,
+        manager,
       );
 
       for (const dtoItem of dtoItems) {
         await this.createStockTransferItemUseCase.execute(
           dtoItem,
           stockTransferEntity,
-          entityManager,
+          manager,
         );
       }
-    });
+    };
+
+    if (entityManager) {
+      await executeTransaction(entityManager);
+    } else {
+      await this.dataSource.transaction(executeTransaction);
+    }
   }
 }
