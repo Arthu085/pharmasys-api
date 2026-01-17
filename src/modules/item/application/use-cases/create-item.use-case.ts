@@ -24,6 +24,7 @@ export class CreateItemUseCase {
 
   async execute(dto: ItemCreateDto, userId: number): Promise<void> {
     const binds = {
+      userCreated: await this.findOneUserUseCase.findById(userId),
       name: ItemName.create(dto.name),
       type: await this.findOneTypeUseCase.findByName(dto.type),
       presentation: await this.findOnePresentationUseCase.findByName(
@@ -35,8 +36,6 @@ export class CreateItemUseCase {
         : null,
     };
 
-    const userCreating = await this.findOneUserUseCase.findById(userId);
-
     this.itemDomainService.validatePresentation(binds.presentation);
     this.itemDomainService.validateDosage(binds.dosage);
     this.itemDomainService.validateType(binds.type);
@@ -47,12 +46,8 @@ export class CreateItemUseCase {
     );
 
     await this.itemRepository.create({
+      ...binds,
       name: binds.name.getValue(),
-      type: binds.type,
-      presentation: binds.presentation,
-      dosage: binds.dosage,
-      subtype: binds.subtype,
-      userCreated: userCreating,
     });
   }
 }

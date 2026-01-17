@@ -29,6 +29,7 @@ export class UpdateCompanyUseCase {
     userId: number,
   ): Promise<void> {
     const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
       name: dto.name ? CompanyName.create(dto.name) : undefined,
       cnpj: dto.cnpj ? CompanyCnpj.create(dto.cnpj) : undefined,
       companyTypes: dto.companyTypes
@@ -36,7 +37,6 @@ export class UpdateCompanyUseCase {
         : undefined,
     };
 
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const company = await this.findOneCompanyUseCase.findEntityByUuid(uuid);
 
     this.companyDomainService.validateCompanyAndEnsureActive(company);
@@ -66,7 +66,7 @@ export class UpdateCompanyUseCase {
       await this.companyRepository.updateRelations(company);
     }
 
-    company.userUpdated = userUpdating;
+    company.userUpdated = binds.userUpdated;
 
     delete (company as any).companyTypes;
 
@@ -78,7 +78,10 @@ export class UpdateCompanyUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
+    };
+
     const company = await this.findOneCompanyUseCase.findEntityByUuid(
       uuid,
       false,
@@ -92,7 +95,7 @@ export class UpdateCompanyUseCase {
       company.deactivate();
     }
 
-    company.userUpdated = userUpdating;
+    company.userUpdated = binds.userUpdated;
 
     delete (company as any).companyTypes;
     await this.companyRepository.update(company.uuid, company);

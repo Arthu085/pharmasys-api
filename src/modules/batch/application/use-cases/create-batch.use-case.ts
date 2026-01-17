@@ -21,12 +21,12 @@ export class CreateBatchUseCase {
 
   async execute(dto: BatchCreateDto, userId: number): Promise<void> {
     const binds = {
+      userCreated: await this.findOneUserUseCase.findById(userId),
       batchCode: BatchCode.create(dto.batchCode),
       company: await this.findOneCompanyUseCase.findEntityByUuid(dto.company),
       expirationDate: dto.expirationDate,
     };
 
-    const userCreating = await this.findOneUserUseCase.findById(userId);
     const existingBatch = await this.findOneBatchUseCase.findByCode(
       binds.batchCode.getValue(),
     );
@@ -34,10 +34,8 @@ export class CreateBatchUseCase {
     this.batchDomainService.validateBatchExistsCreate(existingBatch);
 
     await this.batchRepository.create({
+      ...binds,
       batchCode: binds.batchCode.getValue(),
-      company: binds.company,
-      expirationDate: binds.expirationDate,
-      userCreated: userCreating,
     });
   }
 }

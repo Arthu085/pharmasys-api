@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
-
-import { EntityManager, FindOptionsWhere, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { IStockTransferRepository } from '../../domain/repositories/stock-transfer.repository.interface';
 import { StockTransferEntity } from '../../domain/entities/stock-transfer.entity';
 import { StockTransferFilterDto } from '../../application/dtos/stock-transfer-filter.dto';
@@ -19,43 +18,10 @@ export class StockTransferRepository implements IStockTransferRepository {
     take: number,
     skip: number,
   ): Promise<[StockTransferEntity[], number]> {
-    if (filters.item || filters.batch) {
-      return this.findAllWithItemAndBatchFilters(filters, take, skip);
-    }
-
-    const where: FindOptionsWhere<StockTransferEntity> = {};
-    if (filters.transferDate) {
-      where.transferDate = filters.transferDate;
-    }
-
-    if (filters.origin) {
-      where.origin = { uuid: filters.origin };
-    }
-
-    if (filters.destination) {
-      where.destination = { uuid: filters.destination };
-    }
-
-    return this.repo.findAndCount({
-      where,
-      relations: ['items.item', 'items.batch', 'origin', 'destination'],
-      take,
-      skip,
-      order: { id: 'DESC' },
-      withDeleted: false,
-    });
-  }
-
-  private async findAllWithItemAndBatchFilters(
-    filters: StockTransferFilterDto,
-    take: number,
-    skip: number,
-  ): Promise<[StockTransferEntity[], number]> {
     let query = this.repo
       .createQueryBuilder('ie')
       .leftJoinAndSelect('ie.origin', 'sl')
       .leftJoinAndSelect('ie.destination', 'dl')
-      .leftJoinAndSelect('ie.userCreated', 'uc')
       .leftJoinAndSelect('ie.items', 'items')
       .leftJoinAndSelect('items.item', 'item')
       .leftJoinAndSelect('items.batch', 'batch');
@@ -91,6 +57,7 @@ export class StockTransferRepository implements IStockTransferRepository {
     }
 
     return query
+      .andWhere('ie.deletedAt IS NULL')
       .orderBy('ie.id', 'DESC')
       .take(take)
       .skip(skip)

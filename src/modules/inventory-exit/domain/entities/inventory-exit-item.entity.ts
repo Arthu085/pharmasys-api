@@ -7,6 +7,7 @@ import { InventoryExitEntity } from './inventory-exit.entity';
 @Entity('inventory-exit-item', {
   comment: 'Tabela para cadastro de dados do item na saída',
 })
+@Index(['inventoryExit', 'item', 'batch'])
 export class InventoryExitItemEntity extends BaseEntity {
   @ManyToOne(() => InventoryExitEntity)
   @JoinColumn({ name: 'inventory_exit_id' })

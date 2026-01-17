@@ -29,6 +29,7 @@ export class UpdateUserUseCase {
 
   async execute(uuid: UUID, dto: UserUpdateDto, userId: number): Promise<void> {
     const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
       name: dto.name ? UserName.create(dto.name) : undefined,
       email: dto.email ? UserEmail.create(dto.email) : undefined,
       password: dto.password ? UserPassword.create(dto.password) : undefined,
@@ -37,7 +38,6 @@ export class UpdateUserUseCase {
         : undefined,
     };
 
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const user = await this.findOneUserUseCase.findEntityByUuid(uuid);
 
     this.userDomainService.validateUserAndEnsureActive(user);
@@ -72,7 +72,7 @@ export class UpdateUserUseCase {
       user.changePassword(hashedPasswordVO);
     }
 
-    user.userUpdated = userUpdating;
+    user.userUpdated = binds.userUpdated;
 
     await this.userRepository.update(user.uuid, user);
   }
@@ -82,7 +82,10 @@ export class UpdateUserUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
+    };
+
     const user = await this.findOneUserUseCase.findEntityByUuid(uuid, false);
 
     this.userDomainService.validateUserSameStatus(user, dto.status);
@@ -93,7 +96,7 @@ export class UpdateUserUseCase {
       user.deactivate();
     }
 
-    user.userUpdated = userUpdating;
+    user.userUpdated = binds.userUpdated;
 
     await this.userRepository.update(user.uuid, user);
   }

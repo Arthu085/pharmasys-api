@@ -28,6 +28,7 @@ export class UpdateBatchUseCase {
     userId: number,
   ): Promise<void> {
     const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
       batchCode: dto.batchCode ? BatchCode.create(dto.batchCode) : undefined,
       company: dto.company
         ? await this.findOneCompanyUseCase.findEntityByUuid(dto.company)
@@ -35,7 +36,6 @@ export class UpdateBatchUseCase {
       expirationDate: dto.expirationDate ? dto.expirationDate : undefined,
     };
 
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const batch = await this.findOneBatchUseCase.findEntityByUuid(uuid);
 
     this.batchDomainService.validateBatchAndEnsureActive(batch);
@@ -60,7 +60,7 @@ export class UpdateBatchUseCase {
       batch.changeExpirationDate(binds.expirationDate);
     }
 
-    batch.userUpdated = userUpdating;
+    batch.userUpdated = binds.userUpdated;
 
     await this.batchRepository.update(batch.uuid, batch);
   }
@@ -70,7 +70,10 @@ export class UpdateBatchUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
+    };
+
     const batch = await this.findOneBatchUseCase.findEntityByUuid(uuid, false);
 
     this.batchDomainService.validateBatchSameStatus(batch, dto.status);
@@ -81,7 +84,7 @@ export class UpdateBatchUseCase {
       batch.deactivate();
     }
 
-    batch.userUpdated = userUpdating;
+    batch.userUpdated = binds.userUpdated;
 
     await this.batchRepository.update(batch.uuid, batch);
   }

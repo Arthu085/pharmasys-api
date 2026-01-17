@@ -5,7 +5,6 @@ import { UUID } from 'crypto';
 import { FilterDto } from 'src/shared/dtos/filter.dto';
 import { TransferReasonEnum } from '../../domain/enums/transfer-reason.enum';
 import { TransferStatusEnum } from '../../domain/enums/transfer-status.enum';
-import { TransferStatusItemEnum } from '../../domain/enums/transfer-status-item.enum';
 
 export class TransferRequestFilterDto extends FilterDto {
   @IsOptional()
@@ -28,12 +27,6 @@ export class TransferRequestFilterDto extends FilterDto {
   @IsOptional()
   @IsEnum(TransferStatusEnum, { message: 'Status deve ser um enum válido' })
   statusTransfer?: TransferStatusEnum;
-
-  @IsOptional()
-  @IsEnum(TransferStatusItemEnum, {
-    message: 'Status do item deve ser um enum válido',
-  })
-  statusTransferItem?: TransferStatusItemEnum;
 
   @IsOptional()
   @IsUUID('4', { message: 'Item deve ser um UUID válido' })

@@ -27,11 +27,11 @@ export class UpdatePatientUseCase {
     userId: number,
   ): Promise<void> {
     const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
       name: dto.name ? PatientName.create(dto.name) : undefined,
       document: dto.document ? PatientDocument.create(dto.document) : undefined,
     };
 
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const patient = await this.findOnePatientUseCase.findEntityByUuid(uuid);
 
     this.patientDomainService.validatePatientAndEnsureActive(patient);
@@ -55,7 +55,7 @@ export class UpdatePatientUseCase {
       }
     }
 
-    patient.userUpdated = userUpdating;
+    patient.userUpdated = binds.userUpdated;
 
     await this.patientRepository.update(patient.uuid, patient);
   }
@@ -65,7 +65,10 @@ export class UpdatePatientUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
+    };
+
     const patient = await this.findOnePatientUseCase.findEntityByUuid(
       uuid,
       false,
@@ -79,7 +82,7 @@ export class UpdatePatientUseCase {
       patient.deactivate();
     }
 
-    patient.userUpdated = userUpdating;
+    patient.userUpdated = binds.userUpdated;
 
     await this.patientRepository.update(patient.uuid, patient);
   }

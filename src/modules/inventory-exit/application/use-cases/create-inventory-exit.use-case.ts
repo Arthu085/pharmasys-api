@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
 
+import { DataSourceProvider } from 'src/core/database/providers/data-source.provider';
 import { IInventoryExitRepository } from '../../domain/repositories/inventory-exit.repository.interface';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
 import { FindOneStockLocationUseCase } from 'src/modules/stock-location/application/use-cases/find-one-stock-location.use-case';
@@ -20,7 +20,7 @@ export class CreateInventoryExitUseCase {
     private readonly findOneStockLocationUseCase: FindOneStockLocationUseCase,
     private readonly findOneExitItemTypeUseCase: FindOneExitItemTypeUseCase,
     private readonly createInventoryExitItemUseCase: CreateInventoryExitItemUseCase,
-    private readonly dataSource: DataSource,
+    private readonly dataSourceProvider: DataSourceProvider,
   ) {}
 
   async execute(
@@ -28,39 +28,39 @@ export class CreateInventoryExitUseCase {
     dtoItems: InventoryExitItemCreateDto[],
     userId: number,
   ): Promise<void> {
-    await this.dataSource.transaction(async (entityManager) => {
-      const binds = {
-        exitDate: InventoryExitExitDate.create(dto.exitDate),
-        exitType: await this.findOneExitItemTypeUseCase.findByName(
-          dto.exitType,
-        ),
-        stockLocation: await this.findOneStockLocationUseCase.findEntityByUuid(
-          dto.stockLocation,
-        ),
-        notes: InventoryExitNotes.create(dto.notes),
-      };
+    await this.dataSourceProvider
+      .getDataSource()
+      .transaction(async (entityManager) => {
+        const binds = {
+          userCreated: await this.findOneUserUseCase.findById(userId),
+          exitDate: InventoryExitExitDate.create(dto.exitDate),
+          exitType: await this.findOneExitItemTypeUseCase.findByName(
+            dto.exitType,
+          ),
+          stockLocation:
+            await this.findOneStockLocationUseCase.findEntityByUuid(
+              dto.stockLocation,
+            ),
+          notes: InventoryExitNotes.create(dto.notes),
+        };
 
-      const userCreating = await this.findOneUserUseCase.findById(userId);
-
-      const inventoryExitEntity = await this.inventoryExitRepository.create(
-        {
-          exitDate: binds.exitDate.getValue(),
-          exitType: binds.exitType,
-          stockLocation: binds.stockLocation,
-          notes: binds.notes.getValue(),
-          userCreated: userCreating,
-        },
-        entityManager,
-      );
-
-      for (const dtoItem of dtoItems) {
-        await this.createInventoryExitItemUseCase.execute(
-          dtoItem,
-          inventoryExitEntity,
-          dto.exitType,
+        const inventoryExitEntity = await this.inventoryExitRepository.create(
+          {
+            ...binds,
+            exitDate: binds.exitDate.getValue(),
+            notes: binds.notes.getValue(),
+          },
           entityManager,
         );
-      }
-    });
+
+        for (const dtoItem of dtoItems) {
+          await this.createInventoryExitItemUseCase.execute(
+            dtoItem,
+            inventoryExitEntity,
+            dto.exitType,
+            entityManager,
+          );
+        }
+      });
   }
 }

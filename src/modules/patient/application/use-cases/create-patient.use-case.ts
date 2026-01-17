@@ -20,11 +20,11 @@ export class CreatePatientUseCase {
 
   async execute(dto: PatientCreateDto, userId: number): Promise<void> {
     const binds = {
+      userCreated: await this.findOneUserUseCase.findById(userId),
       name: PatientName.create(dto.name),
       document: PatientDocument.create(dto.document),
     };
 
-    const userCreating = await this.findOneUserUseCase.findById(userId);
     const existingPatient = await this.findOnePatientUseCase.findByDocument(
       binds.document.getValue(),
     );
@@ -32,9 +32,9 @@ export class CreatePatientUseCase {
     this.patientDomainService.validatePatientExistsCreate(existingPatient);
 
     await this.patientRepository.create({
+      ...binds,
       name: binds.name.getValue(),
       document: binds.document.getValue(),
-      userCreated: userCreating,
     });
   }
 }

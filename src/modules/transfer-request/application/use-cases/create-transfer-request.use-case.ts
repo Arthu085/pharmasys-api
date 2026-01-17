@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
 
+import { DataSourceProvider } from 'src/core/database/providers/data-source.provider';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
 import { FindOneStockLocationUseCase } from 'src/modules/stock-location/application/use-cases/find-one-stock-location.use-case';
 import { ITransferRequestRepository } from '../../domain/repositories/transfer-request.repository.interface';
@@ -20,7 +20,7 @@ export class CreateTransferRequestUseCase {
     private readonly findOneStockLocationUseCase: FindOneStockLocationUseCase,
     private readonly findOneTransferReasonUseCase: FindOneTransferReasonUseCase,
     private readonly createTransferRequestItemUseCase: CreateTransferRequestItemUseCase,
-    private readonly dataSource: DataSource,
+    private readonly dataSourceProvider: DataSourceProvider,
   ) {}
 
   async execute(
@@ -28,39 +28,40 @@ export class CreateTransferRequestUseCase {
     dtoItems: TransferRequestItemCreateDto[],
     userId: number,
   ): Promise<void> {
-    await this.dataSource.transaction(async (entityManager) => {
-      const binds = {
-        requestDate: TransferRequestDate.create(dto.requestDate),
-        origin: await this.findOneStockLocationUseCase.findEntityByUuid(
-          dto.origin,
-        ),
-        destination: await this.findOneStockLocationUseCase.findEntityByUuid(
-          dto.destination,
-        ),
-        reason: await this.findOneTransferReasonUseCase.findByName(dto.reason),
-      };
+    await this.dataSourceProvider
+      .getDataSource()
+      .transaction(async (entityManager) => {
+        const binds = {
+          userCreated: await this.findOneUserUseCase.findById(userId),
+          requestDate: TransferRequestDate.create(dto.requestDate),
+          origin: await this.findOneStockLocationUseCase.findEntityByUuid(
+            dto.origin,
+          ),
+          destination: await this.findOneStockLocationUseCase.findEntityByUuid(
+            dto.destination,
+          ),
+          reason: await this.findOneTransferReasonUseCase.findByName(
+            dto.reason,
+          ),
+        };
 
-      const userCreating = await this.findOneUserUseCase.findById(userId);
+        const transferRequestEntity =
+          await this.transferRequestRepository.create(
+            {
+              ...binds,
+              requestDate: binds.requestDate.getValue(),
+              statusTransfer: TransferStatusEnum.PENDENTE,
+            },
+            entityManager,
+          );
 
-      const transferRequestEntity = await this.transferRequestRepository.create(
-        {
-          requestDate: binds.requestDate.getValue(),
-          origin: binds.origin,
-          destination: binds.destination,
-          reason: binds.reason,
-          statusTransfer: TransferStatusEnum.PENDENTE,
-          userCreated: userCreating,
-        },
-        entityManager,
-      );
-
-      for (const dtoItem of dtoItems) {
-        await this.createTransferRequestItemUseCase.execute(
-          dtoItem,
-          transferRequestEntity,
-          entityManager,
-        );
-      }
-    });
+        for (const dtoItem of dtoItems) {
+          await this.createTransferRequestItemUseCase.execute(
+            dtoItem,
+            transferRequestEntity,
+            entityManager,
+          );
+        }
+      });
   }
 }
