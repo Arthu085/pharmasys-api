@@ -27,13 +27,13 @@ export class CreateUserUseCase {
 
   async execute(dto: UserCreateDto, userId: number): Promise<void> {
     const binds = {
+      userCreated: await this.findOneUserUseCase.findById(userId),
       name: UserName.create(dto.name),
       email: UserEmail.create(dto.email),
       password: UserPassword.create(dto.password),
       role: await this.findOneRoleUseCase.findByName(dto.role),
     };
 
-    const userCreating = await this.findOneUserUseCase.findById(userId);
     const existingUser = await this.findOneUserUseCase.findByEmail(
       binds.email.getValue(),
     );
@@ -45,11 +45,10 @@ export class CreateUserUseCase {
     );
 
     await this.userRepository.create({
+      ...binds,
       name: binds.name.getValue(),
       email: binds.email.getValue(),
       password: hashedPassword,
-      role: binds.role,
-      userCreated: userCreating,
     });
   }
 
@@ -68,6 +67,7 @@ export class CreateUserUseCase {
     const hashedPassword = await this.passwordHasher.hash(
       binds.password.getValue(),
     );
+
     const roleEntity = await this.findOneRoleUseCase.findByName(binds.role);
 
     return await this.userRepository.create({

@@ -24,6 +24,7 @@ export class CreatePrescriptorUseCase {
 
   async execute(dto: PrescriptorCreateDto, userId: number): Promise<void> {
     const binds = {
+      userCreated: await this.findOneUserUseCase.findById(userId),
       name: PrescriptorName.create(dto.name),
       registrationNumber: PrescriptorRegistration.create(
         dto.registrationNumber,
@@ -35,7 +36,6 @@ export class CreatePrescriptorUseCase {
       advice: await this.findOneAdviceUseCase.findByAcronym(dto.advice),
     };
 
-    const userCreating = await this.findOneUserUseCase.findById(userId);
     const existingPrescriptor =
       await this.findOnePrescriptorUseCase.findByRegistrationNumberAndAdvice(
         binds.registrationNumber.getValue(),
@@ -47,12 +47,11 @@ export class CreatePrescriptorUseCase {
     );
 
     await this.prescriptorRepository.create({
+      ...binds,
       name: binds.name.getValue(),
       registrationNumber: binds.registrationNumber.getValue(),
       state: binds.state.getValue(),
       specialty: binds.specialty?.getValue() || null,
-      advice: binds.advice,
-      userCreated: userCreating,
     });
   }
 }

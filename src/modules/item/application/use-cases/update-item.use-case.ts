@@ -30,6 +30,7 @@ export class UpdateItemUseCase {
 
   async execute(uuid: UUID, dto: ItemUpdateDto, userId: number): Promise<void> {
     const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
       name: dto.name ? ItemName.create(dto.name) : undefined,
       type: dto.type
         ? await this.findOneTypeUseCase.findByName(dto.type)
@@ -45,7 +46,6 @@ export class UpdateItemUseCase {
         : null,
     };
 
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const item = await this.findOneItemUseCase.findEntityByUuid(uuid);
 
     this.itemDomainService.validateItemAndEnsureActive(item);
@@ -85,7 +85,7 @@ export class UpdateItemUseCase {
 
     item.changeSubtype(binds.subtype);
 
-    item.userUpdated = userUpdating;
+    item.userUpdated = binds.userUpdated;
 
     await this.itemRepository.update(item.uuid, item);
   }
@@ -95,7 +95,10 @@ export class UpdateItemUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
+    };
+
     const item = await this.findOneItemUseCase.findEntityByUuid(uuid, false);
 
     this.itemDomainService.validateItemSameStatus(item, dto.status);
@@ -106,7 +109,7 @@ export class UpdateItemUseCase {
       item.deactivate();
     }
 
-    item.userUpdated = userUpdating;
+    item.userUpdated = binds.userUpdated;
 
     await this.itemRepository.update(item.uuid, item);
   }

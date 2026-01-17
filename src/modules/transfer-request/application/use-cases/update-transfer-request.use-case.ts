@@ -34,6 +34,7 @@ export class UpdateTransferRequestUseCase {
     userId: number,
   ): Promise<void> {
     const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
       origin: dto.origin
         ? await this.findOneStockLocationUseCase.findEntityByUuid(dto.origin)
         : undefined,
@@ -50,7 +51,6 @@ export class UpdateTransferRequestUseCase {
         : undefined,
     };
 
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const transferRequest =
       await this.findOneTransferRequestUseCase.findEntityByUuid(uuid);
 
@@ -60,7 +60,7 @@ export class UpdateTransferRequestUseCase {
 
     this.transferRequestDomainService.validateTransferRequestUser(
       transferRequest.userCreated,
-      userUpdating,
+      binds.userUpdated,
     );
 
     if (binds.origin) {
@@ -79,7 +79,7 @@ export class UpdateTransferRequestUseCase {
       transferRequest.changeReason(binds.reason);
     }
 
-    transferRequest.userUpdated = userUpdating;
+    transferRequest.userUpdated = binds.userUpdated;
 
     await this.transferRequestRepository.update(
       transferRequest.uuid,

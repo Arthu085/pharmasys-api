@@ -30,6 +30,7 @@ export class CreateInventoryExitUseCase {
   ): Promise<void> {
     await this.dataSource.transaction(async (entityManager) => {
       const binds = {
+        userCreated: await this.findOneUserUseCase.findById(userId),
         exitDate: InventoryExitExitDate.create(dto.exitDate),
         exitType: await this.findOneExitItemTypeUseCase.findByName(
           dto.exitType,
@@ -40,15 +41,11 @@ export class CreateInventoryExitUseCase {
         notes: InventoryExitNotes.create(dto.notes),
       };
 
-      const userCreating = await this.findOneUserUseCase.findById(userId);
-
       const inventoryExitEntity = await this.inventoryExitRepository.create(
         {
+          ...binds,
           exitDate: binds.exitDate.getValue(),
-          exitType: binds.exitType,
-          stockLocation: binds.stockLocation,
           notes: binds.notes.getValue(),
-          userCreated: userCreating,
         },
         entityManager,
       );

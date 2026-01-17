@@ -30,6 +30,7 @@ export class CreateStockTransferUseCase {
   ): Promise<void> {
     const executeTransaction = async (manager: EntityManager) => {
       const binds = {
+        userCreated: user || (await this.findOneUserUseCase.findById(userId)),
         transferDate: StockTransferDate.create(dto.transferDate),
         origin: await this.findOneStockLocationUseCase.findEntityByUuid(
           dto.origin,
@@ -39,15 +40,10 @@ export class CreateStockTransferUseCase {
         ),
       };
 
-      const userCreating: UserEntity =
-        user || (await this.findOneUserUseCase.findById(userId));
-
       const stockTransferEntity = await this.stockTransferRepository.create(
         {
+          ...binds,
           transferDate: binds.transferDate.getValue(),
-          origin: binds.origin,
-          destination: binds.destination,
-          userCreated: userCreating,
         },
         manager,
       );

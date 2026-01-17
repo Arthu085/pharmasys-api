@@ -33,6 +33,7 @@ export class CreateInventoryEntryUseCase {
   ): Promise<void> {
     await this.dataSource.transaction(async (entityManager) => {
       const binds = {
+        userCreated: await this.findOneUserUseCase.findById(userId),
         invoiceNumber: dto.invoiceNumber
           ? InventoryEntryInvoiceNumber.create(dto.invoiceNumber)
           : null,
@@ -48,8 +49,6 @@ export class CreateInventoryEntryUseCase {
           : null,
       };
 
-      const userCreating = await this.findOneUserUseCase.findById(userId);
-
       this.inventoryEntryDomainService.validateTypeAndInvoiceNumber(
         binds.entryType,
         binds.invoiceNumber?.getValue() || null,
@@ -57,12 +56,10 @@ export class CreateInventoryEntryUseCase {
 
       const inventoryEntryEntity = await this.inventoryEntryRepository.create(
         {
+          ...binds,
           invoiceNumber: binds.invoiceNumber?.getValue() || null,
           entryDate: binds.entryDate.getValue(),
-          entryType: binds.entryType,
-          stockLocation: binds.stockLocation,
           totalValue: binds.totalValue?.getValue() || null,
-          userCreated: userCreating,
         },
         entityManager,
       );

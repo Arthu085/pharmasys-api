@@ -21,6 +21,7 @@ export class CreateCompanyUseCase {
 
   async execute(dto: CompanyCreateDto, userId: number): Promise<void> {
     const binds = {
+      userCreated: await this.findOneUserUseCase.findById(userId),
       name: CompanyName.create(dto.name),
       cnpj: CompanyCnpj.create(dto.cnpj),
       companyTypes: await this.findOneCompanyTypeUseCase.findByNames(
@@ -28,7 +29,6 @@ export class CreateCompanyUseCase {
       ),
     };
 
-    const userCreating = await this.findOneUserUseCase.findById(userId);
     const existingCompany = await this.findOneCompanyUseCase.findByCnpj(
       binds.cnpj.getValue(),
     );
@@ -36,10 +36,9 @@ export class CreateCompanyUseCase {
     this.companyDomainService.validateCompanyExistsCreate(existingCompany);
 
     await this.companyRepository.create({
+      ...binds,
       name: binds.name.getValue(),
       cnpj: binds.cnpj.getValue(),
-      companyTypes: binds.companyTypes,
-      userCreated: userCreating,
     });
   }
 }

@@ -32,6 +32,7 @@ export class UpdatePrescriptorUseCase {
     userId: number,
   ): Promise<void> {
     const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
       name: dto.name ? PrescriptorName.create(dto.name) : undefined,
       registrationNumber: dto.registrationNumber
         ? PrescriptorRegistration.create(dto.registrationNumber)
@@ -45,7 +46,6 @@ export class UpdatePrescriptorUseCase {
         : undefined,
     };
 
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const prescriptor =
       await this.findOnePrescriptorUseCase.findEntityByUuid(uuid);
 
@@ -97,7 +97,7 @@ export class UpdatePrescriptorUseCase {
 
     prescriptor.changeSpecialty(binds.specialty);
 
-    prescriptor.userUpdated = userUpdating;
+    prescriptor.userUpdated = binds.userUpdated;
 
     await this.prescriptorRepository.update(prescriptor.uuid, prescriptor);
   }
@@ -107,7 +107,10 @@ export class UpdatePrescriptorUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
+    };
+
     const prescriptor = await this.findOnePrescriptorUseCase.findEntityByUuid(
       uuid,
       false,
@@ -124,7 +127,7 @@ export class UpdatePrescriptorUseCase {
       prescriptor.deactivate();
     }
 
-    prescriptor.userUpdated = userUpdating;
+    prescriptor.userUpdated = binds.userUpdated;
 
     await this.prescriptorRepository.update(prescriptor.uuid, prescriptor);
   }

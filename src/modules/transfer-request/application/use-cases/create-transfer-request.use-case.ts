@@ -30,6 +30,7 @@ export class CreateTransferRequestUseCase {
   ): Promise<void> {
     await this.dataSource.transaction(async (entityManager) => {
       const binds = {
+        userCreated: await this.findOneUserUseCase.findById(userId),
         requestDate: TransferRequestDate.create(dto.requestDate),
         origin: await this.findOneStockLocationUseCase.findEntityByUuid(
           dto.origin,
@@ -40,16 +41,11 @@ export class CreateTransferRequestUseCase {
         reason: await this.findOneTransferReasonUseCase.findByName(dto.reason),
       };
 
-      const userCreating = await this.findOneUserUseCase.findById(userId);
-
       const transferRequestEntity = await this.transferRequestRepository.create(
         {
+          ...binds,
           requestDate: binds.requestDate.getValue(),
-          origin: binds.origin,
-          destination: binds.destination,
-          reason: binds.reason,
           statusTransfer: TransferStatusEnum.PENDENTE,
-          userCreated: userCreating,
         },
         entityManager,
       );

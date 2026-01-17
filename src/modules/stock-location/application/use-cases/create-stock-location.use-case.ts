@@ -20,11 +20,11 @@ export class CreateStockLocationUseCase {
 
   async execute(dto: StockLocationCreateDto, userId: number): Promise<void> {
     const binds = {
+      userCreated: await this.findOneUserUseCase.findById(userId),
       name: StockLocationName.create(dto.name),
       code: StockLocationCode.create(dto.code),
     };
 
-    const userCreating = await this.findOneUserUseCase.findById(userId);
     const existingStockLocation =
       await this.findOneStockLocationUseCase.findByCode(binds.code.getValue());
 
@@ -33,9 +33,9 @@ export class CreateStockLocationUseCase {
     );
 
     await this.stockLocationRepository.create({
+      ...binds,
       name: binds.name.getValue(),
       code: binds.code.getValue(),
-      userCreated: userCreating,
     });
   }
 }

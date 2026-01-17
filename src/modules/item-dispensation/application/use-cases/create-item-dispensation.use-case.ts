@@ -31,6 +31,7 @@ export class CreateItemDispensationUseCase {
   ): Promise<void> {
     await this.dataSource.transaction(async (entityManager) => {
       const binds = {
+        userCreated: await this.findOneUserUseCase.findById(userId),
         dispensationDate: ItemDispensationDate.create(dto.dispensationDate),
         patient: await this.findOnePatientUseCase.findEntityByUuid(dto.patient),
         prescriptor: await this.findOnePrescriptorUseCase.findEntityByUuid(
@@ -41,16 +42,11 @@ export class CreateItemDispensationUseCase {
         ),
       };
 
-      const userCreating = await this.findOneUserUseCase.findById(userId);
-
       const itemDispensationEntity =
         await this.itemDispensationRepository.create(
           {
+            ...binds,
             dispensationDate: binds.dispensationDate.getValue(),
-            patient: binds.patient,
-            prescriptor: binds.prescriptor,
-            stockLocation: binds.stockLocation,
-            userCreated: userCreating,
           },
           entityManager,
         );

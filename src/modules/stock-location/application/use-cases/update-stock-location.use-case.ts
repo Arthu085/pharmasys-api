@@ -28,11 +28,11 @@ export class UpdateStockLocationUseCase {
     userId: number,
   ): Promise<void> {
     const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
       name: dto.name ? StockLocationName.create(dto.name) : undefined,
       code: dto.code ? StockLocationCode.create(dto.code) : undefined,
     };
 
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
     const stockLocation =
       await this.findOneStockLocationUseCase.findEntityByUuid(uuid);
 
@@ -63,7 +63,7 @@ export class UpdateStockLocationUseCase {
       }
     }
 
-    stockLocation.userUpdated = userUpdating;
+    stockLocation.userUpdated = binds.userUpdated;
 
     await this.stockLocationRepository.update(
       stockLocation.uuid,
@@ -76,7 +76,10 @@ export class UpdateStockLocationUseCase {
     dto: ChangeStatusDto,
     userId: number,
   ): Promise<void> {
-    const userUpdating = await this.findOneUserUseCase.findById(userId);
+    const binds = {
+      userUpdated: await this.findOneUserUseCase.findById(userId),
+    };
+
     const stockLocation =
       await this.findOneStockLocationUseCase.findEntityByUuid(uuid, false);
 
@@ -95,7 +98,7 @@ export class UpdateStockLocationUseCase {
       stockLocation.deactivate();
     }
 
-    stockLocation.userUpdated = userUpdating;
+    stockLocation.userUpdated = binds.userUpdated;
 
     await this.stockLocationRepository.update(
       stockLocation.uuid,
