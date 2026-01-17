@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PresentationEntity } from '../../domain/entities/presentation.entity';
 import { PresentationEnum } from '../../domain/enums/presentation.enum';
+import { IPresentationRepository } from '../../domain/repositories/presentation.repository.interface';
 
 @Injectable()
-export class PresentationRepository {
+export class PresentationRepository implements IPresentationRepository {
   constructor(
     @InjectRepository(PresentationEntity)
     private readonly repo: Repository<PresentationEntity>,

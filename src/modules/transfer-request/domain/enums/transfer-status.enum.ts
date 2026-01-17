@@ -1,8 +1,8 @@
 export enum TransferStatusEnum {
-  PENDENTE = 'P',
-  SEPARACAO = 'S',
-  CONCLUIDO = 'C',
-  NEGADO = 'N',
+  PENDENTE = 'PENDENTE',
+  SEPARACAO = 'SEPARACAO',
+  CONCLUIDO = 'CONCLUIDO',
+  NEGADO = 'NEGADO',
 }
 
 export enum TransferStatusEnumTranslated {

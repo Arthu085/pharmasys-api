@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DosageEntity } from '../../domain/entities/dosage.entity';
 import { DosageEnum } from '../../domain/enums/dosage.enum';
+import { IDosageRepository } from '../../domain/repositories/dosage.repository.interface';
 
 @Injectable()
-export class DosageRepository {
+export class DosageRepository implements IDosageRepository {
   constructor(
     @InjectRepository(DosageEntity)
     private readonly repo: Repository<DosageEntity>,

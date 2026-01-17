@@ -5,8 +5,6 @@ import { UUID } from 'crypto';
 import { PrescriptorEntity } from '../../domain/entities/prescriptor.entity';
 import { FindOptionsWhere, ILike, Repository, UpdateResult } from 'typeorm';
 import { PrescriptorFilterDto } from '../../application/dtos/prescriptor-filter.dto';
-import { AdviceEnum } from '../../domain/enums/advice.enum';
-import { UfEnum } from '../../domain/enums/uf.enum';
 import { IPrescriptorRepository } from '../../domain/repositories/prescriptor.repository.interface';
 
 @Injectable()

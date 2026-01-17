@@ -49,6 +49,6 @@ import { SharedModule } from 'src/shared/shared.module';
     FindOneStockTransferUseCase,
     FindAllStockTransferUseCase,
   ],
-  exports: [FindOneStockTransferUseCase],
+  exports: [FindOneStockTransferUseCase, CreateStockTransferUseCase],
 })
 export class StockTransferModule {}
