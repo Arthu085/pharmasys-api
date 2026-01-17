@@ -18,7 +18,7 @@ export class ItemDispensationItemResponseDto {
         }
       : null,
   )
-  item: { value: string; label: string } | null;
+  item: { label: string } | null;
 
   @Expose()
   @Transform(({ obj }) =>
@@ -28,5 +28,5 @@ export class ItemDispensationItemResponseDto {
         }
       : null,
   )
-  batch: { value: string; label: string } | null;
+  batch: { label: string } | null;
 }

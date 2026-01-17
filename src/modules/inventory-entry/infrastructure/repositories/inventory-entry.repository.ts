@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
-import { EntityManager, FindOptionsWhere, ILike, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { IInventoryEntryRepository } from '../../domain/repositories/inventory-entry.repository.interface';
 import { InventoryEntryEntity } from '../../domain/entities/inventory-entry.entity';
 import { InventoryEntryFilterDto } from '../../application/dtos/inventory-entry-filter.dto';
@@ -18,47 +18,10 @@ export class InventoryEntryRepository implements IInventoryEntryRepository {
     take: number,
     skip: number,
   ): Promise<[InventoryEntryEntity[], number]> {
-    if (filters.item || filters.batch) {
-      return this.findAllWithItemAndBatchFilters(filters, take, skip);
-    }
-
-    const where: FindOptionsWhere<InventoryEntryEntity> = {};
-    if (filters.invoiceNumber) {
-      where.invoiceNumber = ILike(`%${filters.invoiceNumber}%`);
-    }
-
-    if (filters.entryDate) {
-      where.entryDate = filters.entryDate;
-    }
-
-    if (filters.entryType) {
-      where.entryType = { name: filters.entryType };
-    }
-
-    if (filters.stockLocation) {
-      where.stockLocation = { uuid: filters.stockLocation };
-    }
-
-    return this.repo.findAndCount({
-      where,
-      relations: ['items.item', 'items.batch', 'stockLocation', 'entryType'],
-      take,
-      skip,
-      order: { id: 'DESC' },
-      withDeleted: false,
-    });
-  }
-
-  private async findAllWithItemAndBatchFilters(
-    filters: InventoryEntryFilterDto,
-    take: number,
-    skip: number,
-  ): Promise<[InventoryEntryEntity[], number]> {
     let query = this.repo
       .createQueryBuilder('ie')
       .leftJoinAndSelect('ie.stockLocation', 'sl')
       .leftJoinAndSelect('ie.entryType', 'et')
-      .leftJoinAndSelect('ie.userCreated', 'uc')
       .leftJoinAndSelect('ie.items', 'items')
       .leftJoinAndSelect('items.item', 'item')
       .leftJoinAndSelect('items.batch', 'batch');
@@ -100,6 +63,7 @@ export class InventoryEntryRepository implements IInventoryEntryRepository {
     }
 
     return query
+      .andWhere('ie.deletedAt IS NULL')
       .orderBy('ie.id', 'DESC')
       .take(take)
       .skip(skip)

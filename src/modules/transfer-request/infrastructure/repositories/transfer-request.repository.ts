@@ -1,13 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
-
-import {
-  EntityManager,
-  FindOptionsWhere,
-  Repository,
-  UpdateResult,
-} from 'typeorm';
+import { EntityManager, Repository, UpdateResult } from 'typeorm';
 import { ITransferRequestRepository } from '../../domain/repositories/transfer-request.repository.interface';
 import { TransferRequestEntity } from '../../domain/entities/transfer-request.entity';
 import { TransferRequestFilterDto } from '../../application/dtos/transfer-request-filter.dto';
@@ -27,66 +21,14 @@ export class TransferRequestRepository implements ITransferRequestRepository {
     take: number,
     skip: number,
   ): Promise<[TransferRequestEntity[], number]> {
-    if (filters.item || filters.batch || filters.statusTransferItem) {
-      return this.findAllWithItemAndBatchAndStatusTransferItemFilters(
-        filters,
-        take,
-        skip,
-      );
-    }
-
-    const where: FindOptionsWhere<TransferRequestEntity> = {};
-    if (filters.requestDate) {
-      where.requestDate = filters.requestDate;
-    }
-
-    if (filters.origin) {
-      where.origin = { uuid: filters.origin };
-    }
-
-    if (filters.destination) {
-      where.destination = { uuid: filters.destination };
-    }
-
-    if (filters.reason) {
-      const reason = TransferReasonEnum[filters.reason];
-
-      where.reason = { name: reason };
-    }
-
-    if (filters.statusTransfer) {
-      where.statusTransfer = filters.statusTransfer;
-    }
-
-    return this.repo.findAndCount({
-      where,
-      relations: [
-        'items.item',
-        'items.batch',
-        'origin',
-        'destination',
-        'reason',
-      ],
-      take,
-      skip,
-      order: { id: 'DESC' },
-      withDeleted: false,
-    });
-  }
-
-  private async findAllWithItemAndBatchAndStatusTransferItemFilters(
-    filters: TransferRequestFilterDto,
-    take: number,
-    skip: number,
-  ): Promise<[TransferRequestEntity[], number]> {
     let query = this.repo
       .createQueryBuilder('ie')
       .leftJoinAndSelect('ie.origin', 'sl')
       .leftJoinAndSelect('ie.destination', 'dl')
+      .leftJoinAndSelect('ie.reason', 'r')
       .leftJoinAndSelect('ie.items', 'items')
       .leftJoinAndSelect('items.item', 'item')
-      .leftJoinAndSelect('items.batch', 'batch')
-      .leftJoinAndSelect('items.reason', 'reason');
+      .leftJoinAndSelect('items.batch', 'batch');
 
     if (filters.requestDate) {
       query = query.andWhere('ie.requestDate = :requestDate', {
@@ -106,6 +48,19 @@ export class TransferRequestRepository implements ITransferRequestRepository {
       });
     }
 
+    if (filters.reason) {
+      const reason = TransferReasonEnum[filters.reason];
+      query = query.andWhere('r.name = :reason', {
+        reason,
+      });
+    }
+
+    if (filters.statusTransfer) {
+      query = query.andWhere('ie.statusTransfer = :statusTransfer', {
+        statusTransfer: filters.statusTransfer,
+      });
+    }
+
     if (filters.item) {
       query = query.andWhere('item.uuid = :item', {
         item: filters.item,
@@ -118,13 +73,8 @@ export class TransferRequestRepository implements ITransferRequestRepository {
       });
     }
 
-    if (filters.statusTransferItem) {
-      query = query.andWhere('items.statusTransferItem = :statusTransferItem', {
-        statusTransferItem: filters.statusTransferItem,
-      });
-    }
-
     return query
+      .andWhere('ie.deletedAt IS NULL')
       .orderBy('ie.id', 'DESC')
       .take(take)
       .skip(skip)

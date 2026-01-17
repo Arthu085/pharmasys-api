@@ -1,7 +1,11 @@
 import { Expose, Transform } from 'class-transformer';
 import { TransferStatusItemEnumTranslated } from '../../domain/enums/transfer-status-item.enum';
+import { UUID } from 'crypto';
 
 export class TransferRequestItemResponseDto {
+  @Expose()
+  uuid: UUID;
+
   @Expose()
   quantity: number;
 
@@ -27,7 +31,7 @@ export class TransferRequestItemResponseDto {
         }
       : null,
   )
-  item: { value: string; label: string } | null;
+  item: { label: string } | null;
 
   @Expose()
   @Transform(({ obj }) =>
@@ -37,5 +41,5 @@ export class TransferRequestItemResponseDto {
         }
       : null,
   )
-  batch: { value: string; label: string } | null;
+  batch: { label: string } | null;
 }

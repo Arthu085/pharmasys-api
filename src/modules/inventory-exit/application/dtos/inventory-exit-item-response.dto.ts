@@ -12,7 +12,7 @@ export class InventoryExitItemResponseDto {
         }
       : null,
   )
-  item: { value: string; label: string } | null;
+  item: { label: string } | null;
 
   @Expose()
   @Transform(({ obj }) =>
@@ -22,5 +22,5 @@ export class InventoryExitItemResponseDto {
         }
       : null,
   )
-  batch: { value: string; label: string } | null;
+  batch: { label: string } | null;
 }
