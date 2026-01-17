@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { UUID } from 'crypto';
-import { DataSource } from 'typeorm';
 
+import { DataSourceProvider } from 'src/core/database/providers/data-source.provider';
 import { ITransferRequestRepository } from '../../domain/repositories/transfer-request.repository.interface';
 import { TransferRequestUpdateDto } from '../dtos/transfer-request-update.dto';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
@@ -25,7 +25,7 @@ export class UpdateTransferRequestUseCase {
     private readonly findOneTransferRequestUseCase: FindOneTransferRequestUseCase,
     private readonly updateTransferRequestItemUseCase: UpdateTransferRequestItemUseCase,
     private readonly transferRequestDomainService: TransferRequestDomainService,
-    private readonly dataSource: DataSource,
+    private readonly dataSourceProvider: DataSourceProvider,
   ) {}
 
   async execute(
@@ -92,76 +92,78 @@ export class UpdateTransferRequestUseCase {
     dto: TransferRequestUpdateStatusDto,
     userId: number,
   ): Promise<void> {
-    await this.dataSource.transaction(async (entityManager) => {
-      const binds = {
-        statusTransfer: dto.statusTransfer,
-      };
+    await this.dataSourceProvider
+      .getDataSource()
+      .transaction(async (entityManager) => {
+        const binds = {
+          statusTransfer: dto.statusTransfer,
+        };
 
-      const userUpdating = await this.findOneUserUseCase.findById(userId);
-      const transferRequest =
-        await this.findOneTransferRequestUseCase.findEntityByUuid(uuid);
+        const userUpdating = await this.findOneUserUseCase.findById(userId);
+        const transferRequest =
+          await this.findOneTransferRequestUseCase.findEntityByUuid(uuid);
 
-      switch (binds.statusTransfer) {
-        case TransferStatusEnum.SEPARACAO:
-          this.transferRequestDomainService.validateStatusTransferRequestUpdate(
-            transferRequest,
-            binds.statusTransfer,
-          );
-          await this.transferRequestRepository.updateStatus(
-            transferRequest.uuid,
-            TransferStatusEnum.SEPARACAO,
-            userUpdating,
-          );
-          await this.updateTransferRequestItemUseCase.updateStatusTransferItem(
-            transferRequest.items,
-            transferRequest,
-            { statusTransferItem: TransferStatusItemEnum.SEPARACAO },
-            userUpdating,
-            entityManager,
-          );
-          break;
-        case TransferStatusEnum.CONCLUIDO:
-          this.transferRequestDomainService.validateStatusTransferRequestUpdate(
-            transferRequest,
-            binds.statusTransfer,
-          );
-          await this.transferRequestRepository.updateStatus(
-            transferRequest.uuid,
-            TransferStatusEnum.CONCLUIDO,
-            userUpdating,
-          );
-          await this.updateTransferRequestItemUseCase.updateStatusTransferItem(
-            transferRequest.items,
-            transferRequest,
-            { statusTransferItem: TransferStatusItemEnum.FINALIZADO },
-            userUpdating,
-            entityManager,
-          );
-          break;
-        case TransferStatusEnum.NEGADO:
-          this.transferRequestDomainService.validateStatusTransferRequestUpdate(
-            transferRequest,
-            binds.statusTransfer,
-          );
-          await this.transferRequestRepository.updateStatus(
-            transferRequest.uuid,
-            TransferStatusEnum.NEGADO,
-            userUpdating,
-          );
-          await this.updateTransferRequestItemUseCase.updateStatusTransferItem(
-            transferRequest.items,
-            transferRequest,
-            { statusTransferItem: TransferStatusItemEnum.CANCELADO },
-            userUpdating,
-            entityManager,
-          );
-          break;
-        default:
-          this.transferRequestDomainService.validateStatusTransferRequest(
-            binds.statusTransfer,
-          );
-          break;
-      }
-    });
+        switch (binds.statusTransfer) {
+          case TransferStatusEnum.SEPARACAO:
+            this.transferRequestDomainService.validateStatusTransferRequestUpdate(
+              transferRequest,
+              binds.statusTransfer,
+            );
+            await this.transferRequestRepository.updateStatus(
+              transferRequest.uuid,
+              TransferStatusEnum.SEPARACAO,
+              userUpdating,
+            );
+            await this.updateTransferRequestItemUseCase.updateStatusTransferItem(
+              transferRequest.items,
+              transferRequest,
+              { statusTransferItem: TransferStatusItemEnum.SEPARACAO },
+              userUpdating,
+              entityManager,
+            );
+            break;
+          case TransferStatusEnum.CONCLUIDO:
+            this.transferRequestDomainService.validateStatusTransferRequestUpdate(
+              transferRequest,
+              binds.statusTransfer,
+            );
+            await this.transferRequestRepository.updateStatus(
+              transferRequest.uuid,
+              TransferStatusEnum.CONCLUIDO,
+              userUpdating,
+            );
+            await this.updateTransferRequestItemUseCase.updateStatusTransferItem(
+              transferRequest.items,
+              transferRequest,
+              { statusTransferItem: TransferStatusItemEnum.FINALIZADO },
+              userUpdating,
+              entityManager,
+            );
+            break;
+          case TransferStatusEnum.NEGADO:
+            this.transferRequestDomainService.validateStatusTransferRequestUpdate(
+              transferRequest,
+              binds.statusTransfer,
+            );
+            await this.transferRequestRepository.updateStatus(
+              transferRequest.uuid,
+              TransferStatusEnum.NEGADO,
+              userUpdating,
+            );
+            await this.updateTransferRequestItemUseCase.updateStatusTransferItem(
+              transferRequest.items,
+              transferRequest,
+              { statusTransferItem: TransferStatusItemEnum.CANCELADO },
+              userUpdating,
+              entityManager,
+            );
+            break;
+          default:
+            this.transferRequestDomainService.validateStatusTransferRequest(
+              binds.statusTransfer,
+            );
+            break;
+        }
+      });
   }
 }

@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DataSource, EntityManager } from 'typeorm';
+import { EntityManager } from 'typeorm';
 
+import { DataSourceProvider } from 'src/core/database/providers/data-source.provider';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
 import { FindOneStockLocationUseCase } from 'src/modules/stock-location/application/use-cases/find-one-stock-location.use-case';
 import { IStockTransferRepository } from '../../domain/repositories/stock-transfer.repository.interface';
@@ -18,7 +19,7 @@ export class CreateStockTransferUseCase {
     private readonly findOneUserUseCase: FindOneUserUseCase,
     private readonly findOneStockLocationUseCase: FindOneStockLocationUseCase,
     private readonly createStockTransferItemUseCase: CreateStockTransferItemUseCase,
-    private readonly dataSource: DataSource,
+    private readonly dataSourceProvider: DataSourceProvider,
   ) {}
 
   async execute(
@@ -60,7 +61,9 @@ export class CreateStockTransferUseCase {
     if (entityManager) {
       await executeTransaction(entityManager);
     } else {
-      await this.dataSource.transaction(executeTransaction);
+      await this.dataSourceProvider
+        .getDataSource()
+        .transaction(executeTransaction);
     }
   }
 }

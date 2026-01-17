@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
 
+import { DataSourceProvider } from 'src/core/database/providers/data-source.provider';
 import { IInventoryEntryRepository } from '../../domain/repositories/inventory-entry.repository.interface';
 import { InventoryEntryCreateDto } from '../dtos/inventory-entry-create.dto';
 import { InventoryEntryItemCreateDto } from '../dtos/inventory-entry-item-create.dto';
@@ -23,7 +23,7 @@ export class CreateInventoryEntryUseCase {
     private readonly findOneEntryItemTypeUseCase: FindOneEntryItemTypeUseCase,
     private readonly createInventoryEntryItemUseCase: CreateInventoryEntryItemUseCase,
     private readonly inventoryEntryDomainService: InventoryEntryDomainService,
-    private readonly dataSource: DataSource,
+    private readonly dataSourceProvider: DataSourceProvider,
   ) {}
 
   async execute(
@@ -31,46 +31,49 @@ export class CreateInventoryEntryUseCase {
     dtoItems: InventoryEntryItemCreateDto[],
     userId: number,
   ): Promise<void> {
-    await this.dataSource.transaction(async (entityManager) => {
-      const binds = {
-        userCreated: await this.findOneUserUseCase.findById(userId),
-        invoiceNumber: dto.invoiceNumber
-          ? InventoryEntryInvoiceNumber.create(dto.invoiceNumber)
-          : null,
-        entryDate: InventoryEntryEntryDate.create(dto.entryDate),
-        entryType: await this.findOneEntryItemTypeUseCase.findByName(
-          dto.entryType,
-        ),
-        stockLocation: await this.findOneStockLocationUseCase.findEntityByUuid(
-          dto.stockLocation,
-        ),
-        totalValue: dto.totalValue
-          ? InventoryEntryTotalValue.create(dto.totalValue)
-          : null,
-      };
+    await this.dataSourceProvider
+      .getDataSource()
+      .transaction(async (entityManager) => {
+        const binds = {
+          userCreated: await this.findOneUserUseCase.findById(userId),
+          invoiceNumber: dto.invoiceNumber
+            ? InventoryEntryInvoiceNumber.create(dto.invoiceNumber)
+            : null,
+          entryDate: InventoryEntryEntryDate.create(dto.entryDate),
+          entryType: await this.findOneEntryItemTypeUseCase.findByName(
+            dto.entryType,
+          ),
+          stockLocation:
+            await this.findOneStockLocationUseCase.findEntityByUuid(
+              dto.stockLocation,
+            ),
+          totalValue: dto.totalValue
+            ? InventoryEntryTotalValue.create(dto.totalValue)
+            : null,
+        };
 
-      this.inventoryEntryDomainService.validateTypeAndInvoiceNumber(
-        binds.entryType,
-        binds.invoiceNumber?.getValue() || null,
-      );
+        this.inventoryEntryDomainService.validateTypeAndInvoiceNumber(
+          binds.entryType,
+          binds.invoiceNumber?.getValue() || null,
+        );
 
-      const inventoryEntryEntity = await this.inventoryEntryRepository.create(
-        {
-          ...binds,
-          invoiceNumber: binds.invoiceNumber?.getValue() || null,
-          entryDate: binds.entryDate.getValue(),
-          totalValue: binds.totalValue?.getValue() || null,
-        },
-        entityManager,
-      );
-
-      for (const dtoItem of dtoItems) {
-        await this.createInventoryEntryItemUseCase.execute(
-          dtoItem,
-          inventoryEntryEntity,
+        const inventoryEntryEntity = await this.inventoryEntryRepository.create(
+          {
+            ...binds,
+            invoiceNumber: binds.invoiceNumber?.getValue() || null,
+            entryDate: binds.entryDate.getValue(),
+            totalValue: binds.totalValue?.getValue() || null,
+          },
           entityManager,
         );
-      }
-    });
+
+        for (const dtoItem of dtoItems) {
+          await this.createInventoryEntryItemUseCase.execute(
+            dtoItem,
+            inventoryEntryEntity,
+            entityManager,
+          );
+        }
+      });
   }
 }

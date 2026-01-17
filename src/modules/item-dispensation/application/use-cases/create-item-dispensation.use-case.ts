@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
 
+import { DataSourceProvider } from 'src/core/database/providers/data-source.provider';
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
 import { IItemDispensationRepository } from '../../domain/repositories/item-dispensation.repository.interface';
 import { FindOneStockLocationUseCase } from 'src/modules/stock-location/application/use-cases/find-one-stock-location.use-case';
@@ -21,7 +21,7 @@ export class CreateItemDispensationUseCase {
     private readonly createItemDispensationItemUseCase: CreateItemDispensationItemUseCase,
     private readonly findOnePatientUseCase: FindOnePatientUseCase,
     private readonly findOnePrescriptorUseCase: FindOnePrescriptorUseCase,
-    private readonly dataSource: DataSource,
+    private readonly dataSourceProvider: DataSourceProvider,
   ) {}
 
   async execute(
@@ -29,35 +29,40 @@ export class CreateItemDispensationUseCase {
     dtoItems: ItemDispensationItemCreateDto[],
     userId: number,
   ): Promise<void> {
-    await this.dataSource.transaction(async (entityManager) => {
-      const binds = {
-        userCreated: await this.findOneUserUseCase.findById(userId),
-        dispensationDate: ItemDispensationDate.create(dto.dispensationDate),
-        patient: await this.findOnePatientUseCase.findEntityByUuid(dto.patient),
-        prescriptor: await this.findOnePrescriptorUseCase.findEntityByUuid(
-          dto.prescriptor,
-        ),
-        stockLocation: await this.findOneStockLocationUseCase.findEntityByUuid(
-          dto.stockLocation,
-        ),
-      };
+    await this.dataSourceProvider
+      .getDataSource()
+      .transaction(async (entityManager) => {
+        const binds = {
+          userCreated: await this.findOneUserUseCase.findById(userId),
+          dispensationDate: ItemDispensationDate.create(dto.dispensationDate),
+          patient: await this.findOnePatientUseCase.findEntityByUuid(
+            dto.patient,
+          ),
+          prescriptor: await this.findOnePrescriptorUseCase.findEntityByUuid(
+            dto.prescriptor,
+          ),
+          stockLocation:
+            await this.findOneStockLocationUseCase.findEntityByUuid(
+              dto.stockLocation,
+            ),
+        };
 
-      const itemDispensationEntity =
-        await this.itemDispensationRepository.create(
-          {
-            ...binds,
-            dispensationDate: binds.dispensationDate.getValue(),
-          },
-          entityManager,
-        );
+        const itemDispensationEntity =
+          await this.itemDispensationRepository.create(
+            {
+              ...binds,
+              dispensationDate: binds.dispensationDate.getValue(),
+            },
+            entityManager,
+          );
 
-      for (const dtoItem of dtoItems) {
-        await this.createItemDispensationItemUseCase.execute(
-          dtoItem,
-          itemDispensationEntity,
-          entityManager,
-        );
-      }
-    });
+        for (const dtoItem of dtoItems) {
+          await this.createItemDispensationItemUseCase.execute(
+            dtoItem,
+            itemDispensationEntity,
+            entityManager,
+          );
+        }
+      });
   }
 }
