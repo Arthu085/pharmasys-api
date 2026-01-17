@@ -1,0 +1,72 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { EntityManager } from 'typeorm';
+
+import { IStockBalanceRepository } from '../../domain/repositories/stock-balance.repository.interface';
+import { FindOneStockBalanceUseCase } from './find-one-stock-balance.use-case';
+import { StockBalanceDomainService } from '../../domain/services/stock-balance-domain.service';
+import { StockBalanceUpdateDto } from '../dtos/stock-balance-update.dto';
+import { StockBalanceQuantity } from '../../domain/value-objects/stock-balance-quantity.vo';
+import { StockBalanceEntity } from '../../domain/entities/stock-balance.entity';
+
+@Injectable()
+export class UpdateStockBalanceUseCase {
+  constructor(
+    @Inject(IStockBalanceRepository)
+    private readonly stockBalanceRepository: IStockBalanceRepository,
+    private readonly findOneStockBalanceUseCase: FindOneStockBalanceUseCase,
+    private readonly stockBalanceDomainService: StockBalanceDomainService,
+  ) {}
+
+  async execute(
+    stockBalance: StockBalanceEntity,
+    dto: StockBalanceUpdateDto,
+    entityManager: EntityManager,
+  ): Promise<void> {
+    const binds = {
+      stockLocation: dto.stockLocation ? dto.stockLocation : undefined,
+      quantity: dto.quantity
+        ? StockBalanceQuantity.create(dto.quantity)
+        : undefined,
+      type: dto.type ? dto.type : undefined,
+    };
+
+    this.stockBalanceDomainService.validateStockBalance(stockBalance);
+
+    if (binds.stockLocation) {
+      const currentStockLocation = stockBalance.stockLocation;
+      if (binds.stockLocation.uuid !== currentStockLocation.uuid) {
+        const existingStockBalanceWithStockLocation =
+          await this.findOneStockBalanceUseCase.findByBatchAndStockLocationAndItem(
+            stockBalance.batch,
+            binds.stockLocation,
+            stockBalance.item,
+          );
+        this.stockBalanceDomainService.validateExistsStockBalanceUpdate(
+          stockBalance,
+          existingStockBalanceWithStockLocation,
+        );
+        stockBalance.changeStockLocation(binds.stockLocation);
+      }
+    }
+
+    if (binds.quantity && binds.type) {
+      const currentQuantity = StockBalanceQuantity.create(
+        stockBalance.quantity,
+      );
+
+      const result = this.stockBalanceDomainService.validateOperationTypeUpdate(
+        binds.type,
+        currentQuantity.getValue(),
+        binds.quantity.getValue(),
+      );
+
+      stockBalance.changeQuantity(result);
+    }
+
+    await this.stockBalanceRepository.update(
+      stockBalance.uuid,
+      stockBalance,
+      entityManager,
+    );
+  }
+}

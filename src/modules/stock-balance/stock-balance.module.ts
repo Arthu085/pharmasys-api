@@ -1,11 +1,37 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { StockBalance } from './entities/stock-balance.entity';
+import { StockBalanceEntity } from './domain/entities/stock-balance.entity';
+import { SharedModule } from 'src/shared/shared.module';
+import { StockBalancePublicController } from './infrastructure/controllers/stock-balance-public.controller';
+import { StockBalanceProtectedController } from './infrastructure/controllers/stock-balance-protected.controller';
+import { IStockBalanceRepository } from './domain/repositories/stock-balance.repository.interface';
+import { StockBalanceRepository } from './infrastructure/repositories/stock-balance.repository';
+import { StockBalanceDomainService } from './domain/services/stock-balance-domain.service';
+import { FindAllStockBalanceUseCase } from './application/use-cases/find-all-stock-balance.use-case';
+import { FindOneStockBalanceUseCase } from './application/use-cases/find-one-stock-balance.use-case';
+import { CreateStockBalanceUseCase } from './application/use-cases/create-stock-balance.use-case';
+import { UpdateStockBalanceUseCase } from './application/use-cases/update-stock-balance.use-case';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([StockBalance])],
-  controllers: [],
-  providers: [],
-  exports: [],
+  imports: [TypeOrmModule.forFeature([StockBalanceEntity]), SharedModule],
+  controllers: [StockBalancePublicController, StockBalanceProtectedController],
+  providers: [
+    {
+      provide: IStockBalanceRepository,
+      useClass: StockBalanceRepository,
+    },
+    StockBalanceDomainService,
+    FindAllStockBalanceUseCase,
+    FindOneStockBalanceUseCase,
+    CreateStockBalanceUseCase,
+    UpdateStockBalanceUseCase,
+  ],
+  exports: [
+    FindAllStockBalanceUseCase,
+    FindOneStockBalanceUseCase,
+    StockBalanceDomainService,
+    CreateStockBalanceUseCase,
+    UpdateStockBalanceUseCase,
+  ],
 })
 export class StockBalanceModule {}

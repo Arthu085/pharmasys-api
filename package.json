@@ -1,6 +1,6 @@
 {
   "name": "nome-do-projeto",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "author": "",
   "private": true,
@@ -18,11 +18,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource src/config/data.source.ts",
-    "migration:generate": "npm run typeorm -- migration:generate src/config/database/migrations/$npm_config_name",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource src/core/database/data-source.ts",
+    "migration:generate": "npm run typeorm -- migration:generate src/core/database/migrations/$npm_config_name",
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert",
-    "seed:run": "ts-node -r tsconfig-paths/register src/config/database/seeds/run.seed.ts"
+    "seed:run": "ts-node -r tsconfig-paths/register src/core/database/seeds/run.seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -35,6 +35,7 @@
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "cpf": "^2.0.1",
     "dotenv": "^17.2.1",
     "joi": "^17.13.3",
     "passport": "^0.7.0",
