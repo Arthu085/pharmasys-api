@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: pharmasys-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    preDeployCommand: npm run migration:run && npm run seed:run
+    envVars:
+      - key: NODE_ENV
+        value: production
