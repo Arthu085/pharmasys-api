@@ -23,4 +23,4 @@ COPY --from=builder /src/app/tsconfig.json ./
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npm run migration:run && npm run seed:run && node dist/main.js"]
+CMD ["node", "dist/main.js"]
