@@ -8,10 +8,6 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run migration:run
-
-RUN npm run seed:run
-
 RUN npm run build
 
 FROM node:18-alpine
@@ -25,4 +21,4 @@ COPY --from=builder /src/app/dist ./dist
 
 EXPOSE 3000
 
-CMD ["node", "dist/src/main.js"]
+CMD ["sh", "-c", "npm run migration:run && npm run seed:run && node dist/src/main.js"]
