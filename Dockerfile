@@ -22,4 +22,4 @@ COPY --from=builder /src/app/src ./src
 
 EXPOSE 3000
 
-CMD ["node", "dist/main.js"]
+CMD ["sh", "-c", "npm run migration:run && npm run seed:run && node dist/main.js"]
