@@ -19,6 +19,7 @@ COPY --from=builder /src/app/package*.json ./
 
 COPY --from=builder /src/app/dist ./dist
 COPY --from=builder /src/app/src ./src
+COPY --from=builder /src/app/tsconfig.json ./
 
 EXPOSE 3000
 
