@@ -31,17 +31,21 @@ export class TransformResponseInterceptor<T>
       map((data: T & PaginatedData) => {
         const message = this.getResponseMessage(data, responseMessage);
 
+        const normalizedData = (data === undefined ? null : data) as
+          | (T & PaginatedData)
+          | null;
+
         return {
           success: true,
           message,
-          data,
+          data: normalizedData,
         };
       }),
     );
   }
 
   private getResponseMessage(
-    data: PaginatedData,
+    data: PaginatedData | null | undefined,
     defaultMessage: string,
   ): string {
     if (data?.meta?.total === 0) {
