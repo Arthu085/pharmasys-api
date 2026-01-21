@@ -1,22 +1,25 @@
 import { Expose, Transform } from 'class-transformer';
+import { UUID } from 'crypto';
 import { RoleEnumTranslated } from 'src/shared/enums/role.enum';
 
-export class LoginResponseDto {
+export class ProfileResponseDto {
   @Expose()
-  token: string;
+  uuid: UUID;
 
   @Expose()
   name: string;
 
   @Expose()
-  @Transform(({ obj }) =>
-    obj.role
+  email: string;
+
+  @Expose()
+  @Transform(({ value }) =>
+    value
       ? {
-          value: obj.role.name,
+          value,
           label:
-            RoleEnumTranslated[
-              obj.role.name as keyof typeof RoleEnumTranslated
-            ] || obj.role.name,
+            RoleEnumTranslated[value as keyof typeof RoleEnumTranslated] ||
+            value,
         }
       : null,
   )
