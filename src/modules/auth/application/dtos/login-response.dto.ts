@@ -1,5 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
 import { RoleEnumTranslated } from 'src/shared/enums/role.enum';
+import { StatusEnumTranslated } from 'src/shared/enums/status.enum';
 
 export class LoginResponseDto {
   @Expose()
@@ -9,8 +10,8 @@ export class LoginResponseDto {
   name: string;
 
   @Expose()
-  @Transform(({ obj }) =>
-    obj.role
+  @Transform(({ obj }) => {
+    return obj.role
       ? {
           value: obj.role.name,
           label:
@@ -18,7 +19,15 @@ export class LoginResponseDto {
               obj.role.name as keyof typeof RoleEnumTranslated
             ] || obj.role.name,
         }
-      : null,
-  )
+      : null;
+  })
   role: { value: string; label: string } | null;
+
+  @Expose()
+  @Transform(({ obj }) => ({
+    value: obj.status,
+    label:
+      StatusEnumTranslated[obj.status as keyof typeof StatusEnumTranslated],
+  }))
+  status: { value: string; label: string };
 }

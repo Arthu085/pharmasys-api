@@ -31,7 +31,7 @@ export class RegisterUseCase {
 
     return plainToInstance(
       RegisterResponseDto,
-      { token, name: newUser.name, role: newUser.role },
+      { token, name: newUser.name, role: newUser.role, status: newUser.status },
       {
         excludeExtraneousValues: true,
       },
