@@ -5,10 +5,12 @@ import { env } from './core/config/env.config';
 import { ValidationPipe } from '@nestjs/common';
 import { TransformResponseInterceptor } from './core/interceptors/transform-response.interceptor';
 import { HttpExceptionFilter } from './core/filters/http-exception.filter';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.use(cookieParser());
   app.enableCors(corsConfig);
   app.setGlobalPrefix('api');
 

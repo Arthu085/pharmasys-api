@@ -2,9 +2,8 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 import { env } from './env.config';
 
 export const corsConfig: CorsOptions = {
-  origin:
-    env.nodeEnv === 'production'
-      ? ['https://pharmasys-to4a.onrender.com'] // REMOTO
-      : ['http://localhost:5173'], // LOCAL
+  origin: env.frontendUrl,
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Accept'],
 };
