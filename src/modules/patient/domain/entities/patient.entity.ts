@@ -13,11 +13,11 @@ import { PatientDocument } from '../values-objects/patient-document.vo';
   where: '"deleted_at" IS NULL',
 })
 export class PatientEntity extends BaseEntity {
-  @ManyToOne(() => UserEntity, { eager: true })
+  @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'user_created_id' })
   userCreated: UserEntity;
 
-  @ManyToOne(() => UserEntity, { eager: true, nullable: true })
+  @ManyToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'user_updated_id' })
   userUpdated?: UserEntity | null;
 

@@ -35,6 +35,7 @@ export class PatientRepository implements IPatientRepository {
 
     return this.repo.findAndCount({
       where,
+      relations: ['userCreated', 'userUpdated'],
       take,
       skip,
       order: { id: 'DESC' },
@@ -45,6 +46,7 @@ export class PatientRepository implements IPatientRepository {
   findOne(uuid: UUID): Promise<PatientEntity | null> {
     return this.repo.findOne({
       where: { uuid },
+      relations: ['userCreated', 'userUpdated'],
       withDeleted: false,
     });
   }
