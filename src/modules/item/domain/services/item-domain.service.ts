@@ -12,6 +12,7 @@ import { ItemEntity } from '../entities/item.entity';
 import { ItemNotFoundException } from '../exceptions/item-not-found.exception';
 import { TypeSubtypeConflictException } from '../exceptions/type-subtype-conflict.exception';
 import { StatusEnum } from 'src/shared/enums/status.enum';
+import { TypeEnum } from '../enums/type.enum';
 
 @Injectable()
 export class ItemDomainService {
@@ -73,12 +74,21 @@ export class ItemDomainService {
   validateTypeAndSubtypeCompatibility(
     type: TypeEntity,
     subtype: SubtypeEntity | null,
-  ): SubtypeEntity | null {
-    if (type.name !== 'MEDICAMENTO' && subtype) {
+  ): void {
+    if (type.name !== TypeEnum.MEDICAMENTO && subtype) {
       subtype = null;
-      throw new TypeSubtypeConflictException();
+
+      throw new TypeSubtypeConflictException(
+        'Subtipo só pode ser definido para Medicamentos',
+      );
     }
 
-    return subtype;
+    if (type.name === TypeEnum.MEDICAMENTO && !subtype) {
+      subtype = null;
+
+      throw new TypeSubtypeConflictException(
+        'Subtipo é obrigatório para Medicamentos',
+      );
+    }
   }
 }
