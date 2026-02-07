@@ -7,6 +7,8 @@ import { FindOneTransferRequestUseCase } from './find-one-transfer-request.use-c
 import { FindOneUserUseCase } from 'src/modules/user/application/use-cases/find-one-user.use-case';
 import { TransferRequestDomainService } from '../../domain/services/transfer-request-domain.service';
 import { DeleteTransferRequestItemUseCase } from './delete-transfer-request-item.use-case';
+import { IEntityUsageChecker } from 'src/shared/interfaces/entity-usage-checker.service.interface';
+import { TransferRequestEntity } from '../../domain/entities/transfer-request.entity';
 
 @Injectable()
 export class DeleteTransferRequestUseCase {
@@ -18,6 +20,8 @@ export class DeleteTransferRequestUseCase {
     private readonly deleteTransferRequestItemUseCase: DeleteTransferRequestItemUseCase,
     private readonly transferRequestDomainService: TransferRequestDomainService,
     private readonly dataSourceProvider: DataSourceProvider,
+    @Inject(IEntityUsageChecker)
+    private readonly entityUsageChecker: IEntityUsageChecker,
   ) {}
 
   async execute(uuid: UUID, userId: number): Promise<void> {
@@ -27,6 +31,12 @@ export class DeleteTransferRequestUseCase {
         const userDeleting = await this.findOneUserUseCase.findById(userId);
         const transferRequest =
           await this.findOneTransferRequestUseCase.findEntityByUuid(uuid);
+
+        await this.entityUsageChecker.assertNotReferenced(
+          TransferRequestEntity,
+          uuid,
+          'Solicitação de transferência',
+        );
 
         this.transferRequestDomainService.validateTransferRequestUser(
           transferRequest.userCreated,
