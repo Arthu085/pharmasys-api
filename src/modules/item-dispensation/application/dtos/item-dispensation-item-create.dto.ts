@@ -5,6 +5,8 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  MaxLength,
+  MinLength,
 } from 'class-validator';
 import { UUID } from 'crypto';
 ('../../domain/entities/inventory-entry.entity');
@@ -30,5 +32,13 @@ export class ItemDispensationItemCreateDto {
     message: 'O número da notificação da prescrição deve ser uma string',
   })
   @IsOptional()
+  @MinLength(3, {
+    message:
+      'O número de notificação da prescrição deve ter no mínimo 3 caracteres',
+  })
+  @MaxLength(50, {
+    message:
+      'O número de notificação da prescrição deve ter no máximo 50 caracteres',
+  })
   prescriptionNotificationNumber?: string;
 }
