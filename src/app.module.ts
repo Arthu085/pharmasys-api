@@ -23,6 +23,7 @@ import { ItemDispensationModule } from './modules/item-dispensation/item-dispens
     AuthModule,
     StockLocationModule,
     PrescriptorModule,
+    ItemDispensationModule,
     ItemModule,
     CompanyModule,
     PatientModule,
@@ -32,7 +33,6 @@ import { ItemDispensationModule } from './modules/item-dispensation/item-dispens
     InventoryExitModule,
     StockTransferModule,
     TransferRequestModule,
-    ItemDispensationModule,
   ],
 })
 export class AppModule {}
