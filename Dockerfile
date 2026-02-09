@@ -8,10 +8,6 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run migration:run
-
-RUN npm run seed:run
-
 RUN npm run build
 
 FROM node:18-alpine
@@ -22,7 +18,9 @@ COPY --from=builder /src/app/node_modules ./node_modules
 COPY --from=builder /src/app/package*.json ./
 
 COPY --from=builder /src/app/dist ./dist
+COPY --from=builder /src/app/src ./src
+COPY --from=builder /src/app/tsconfig.json ./
 
 EXPOSE 3000
 
-CMD ["node", "dist/src/main.js"]
+CMD ["node", "dist/main.js"]
