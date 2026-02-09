@@ -28,7 +28,7 @@ export class AuthPublicController {
       response.cookie('token', result.token, {
         httpOnly: true,
         secure: env.nodeEnv === 'production',
-        sameSite: 'strict',
+        sameSite: env.nodeEnv === 'production' ? 'none' : 'lax',
         maxAge: 4 * 60 * 60 * 1000, // 4 horas
       });
 
@@ -51,7 +51,7 @@ export class AuthPublicController {
       response.cookie('token', result.token, {
         httpOnly: true,
         secure: env.nodeEnv === 'production',
-        sameSite: 'strict',
+        sameSite: env.nodeEnv === 'production' ? 'none' : 'lax',
         maxAge: 4 * 60 * 60 * 1000, // 4 horas
       });
 
@@ -68,7 +68,7 @@ export class AuthPublicController {
     response.cookie('token', '', {
       httpOnly: true,
       secure: env.nodeEnv === 'production',
-      sameSite: 'strict',
+      sameSite: env.nodeEnv === 'production' ? 'none' : 'lax',
       maxAge: 0,
     });
 
