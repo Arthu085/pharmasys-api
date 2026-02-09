@@ -16,6 +16,9 @@ export class PrescriptorResponseAllDto {
   registrationNumber: string;
 
   @Expose()
+  specialty: string | null;
+
+  @Expose()
   @Transform(({ obj }) =>
     obj.state
       ? {

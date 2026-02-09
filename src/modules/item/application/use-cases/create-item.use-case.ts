@@ -39,8 +39,7 @@ export class CreateItemUseCase {
     this.itemDomainService.validatePresentation(binds.presentation);
     this.itemDomainService.validateDosage(binds.dosage);
     this.itemDomainService.validateType(binds.type);
-
-    binds.subtype = this.itemDomainService.validateTypeAndSubtypeCompatibility(
+    this.itemDomainService.validateTypeAndSubtypeCompatibility(
       binds.type,
       binds.subtype,
     );

@@ -17,6 +17,7 @@ export class TransferRequestResponseAllDto {
   @Transform(({ obj }) => {
     return obj.origin
       ? {
+          value: obj.origin.uuid,
           label:
             StockLocationEnumTranslated[
               obj.origin.name as keyof typeof StockLocationEnumTranslated
@@ -24,12 +25,13 @@ export class TransferRequestResponseAllDto {
         }
       : null;
   })
-  origin: { label: string } | null;
+  origin: { value: string; label: string } | null;
 
   @Expose()
   @Transform(({ obj }) => {
     return obj.destination
       ? {
+          value: obj.destination.uuid,
           label:
             StockLocationEnumTranslated[
               obj.destination.name as keyof typeof StockLocationEnumTranslated
@@ -37,12 +39,13 @@ export class TransferRequestResponseAllDto {
         }
       : null;
   })
-  destination: { label: string } | null;
+  destination: { value: string; label: string } | null;
 
   @Expose()
   @Transform(({ obj }) => {
     return obj.reason
       ? {
+          value: obj.reason.name,
           label:
             TransferReasonEnumTranslated[
               obj.reason.name as keyof typeof TransferReasonEnumTranslated
@@ -50,7 +53,7 @@ export class TransferRequestResponseAllDto {
         }
       : null;
   })
-  reason: { label: string } | null;
+  reason: { value: string; label: string } | null;
 
   @Expose()
   @Transform(({ obj }) => {

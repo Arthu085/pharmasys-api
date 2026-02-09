@@ -12,6 +12,7 @@ import { AuthProtectedController } from './infrastructure/controllers/auth-prote
 import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
 import { JwtAuthGuard } from './infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from './infrastructure/guards/roles.guard';
+import { FindOneProfileUseCase } from './application/use-cases/find-one-profile.use-case';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { RolesGuard } from './infrastructure/guards/roles.guard';
     JwtTokenService,
     LoginUseCase,
     RegisterUseCase,
+    FindOneProfileUseCase,
     JwtStrategy,
     JwtAuthGuard,
     RolesGuard,

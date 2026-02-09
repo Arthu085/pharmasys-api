@@ -35,7 +35,12 @@ export class LoginUseCase {
 
     return plainToInstance(
       LoginResponseDto,
-      { token },
+      {
+        token,
+        name: validatedUser.name,
+        role: validatedUser.role,
+        status: validatedUser.status,
+      },
       {
         excludeExtraneousValues: true,
       },

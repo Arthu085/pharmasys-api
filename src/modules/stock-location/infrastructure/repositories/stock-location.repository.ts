@@ -37,7 +37,7 @@ export class StockLocationRepository implements IStockLocationRepository {
       where,
       take,
       skip,
-      order: { id: 'DESC' },
+      order: { isCentralStock: 'DESC', id: 'DESC' },
       withDeleted: false,
     });
   }

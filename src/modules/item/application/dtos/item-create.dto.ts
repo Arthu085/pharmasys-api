@@ -1,6 +1,7 @@
 import {
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -36,10 +37,7 @@ export class ItemCreateDto {
   })
   dosage: DosageEnum;
 
-  @ValidateIf((o) => o.type === 'MEDICAMENTO')
-  @IsNotEmpty({
-    message: 'O subtipo é obrigatório quando o tipo for medicamento',
-  })
+  @IsOptional()
   @IsEnum(SubtypeEnum, {
     message: 'O subtipo deve ser um enum',
   })

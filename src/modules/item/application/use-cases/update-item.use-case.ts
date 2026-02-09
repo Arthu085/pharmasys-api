@@ -64,7 +64,7 @@ export class UpdateItemUseCase {
       this.itemDomainService.validateType(binds.type);
       this.itemDomainService.validateTypeAndSubtypeCompatibility(
         binds.type,
-        item.subtype ?? null,
+        binds.subtype,
       );
 
       item.changeType(binds.type);
