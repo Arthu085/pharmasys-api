@@ -27,19 +27,21 @@ export class TransferRequestItemResponseDto {
   @Transform(({ obj }) =>
     obj.item
       ? {
+          value: obj.item.uuid,
           label: obj.item.name,
         }
       : null,
   )
-  item: { label: string } | null;
+  item: { value: string; label: string } | null;
 
   @Expose()
   @Transform(({ obj }) =>
     obj.batch
       ? {
+          value: obj.batch.uuid,
           label: obj.batch.batchCode,
         }
       : null,
   )
-  batch: { label: string } | null;
+  batch: { value: string; label: string } | null;
 }
